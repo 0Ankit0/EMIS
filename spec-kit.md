@@ -96,7 +96,7 @@ Read the review and acceptance checklist, and check off each item in the checkli
 
 
 /speckit.plan
-The EMIS will be implemented as a modular monolith using Python 3.11+, FastAPI for the backend API, PostgreSQL 15+ as the primary database, async SQLAlchemy ORM, Redis for caching and background job queues, Celery for distributed task processing, and Docker for containerization. The frontend will use React (TypeScript) with Material UI for a modern, responsive interface, supporting real-time updates via WebSockets (FastAPI + Socket.IO). All APIs will be fully documented with OpenAPI/Swagger and versioned for backward compatibility. The system will be fully test-driven (pytest), with CI/CD pipelines (GitHub Actions) and infrastructure-as-code (Docker Compose, optional Terraform for cloud deployment).
+The EMIS will be implemented as a modular monolith using Python 3.11+, FastAPI for the backend API, PostgreSQL 15+ as the primary database, async SQLAlchemy ORM, Redis for caching and background job queues, Celery for distributed task processing, and Docker for containerization. All APIs will be fully documented with OpenAPI/Swagger and versioned for backward compatibility. The system will be fully test-driven (pytest), with CI/CD pipelines (GitHub Actions) and infrastructure-as-code (Docker Compose, optional Terraform for cloud deployment).
 
 **Architecture & Core Principles:**
 - Modular monolith with clear separation of core, domain, infrastructure, and API layers.
@@ -120,17 +120,6 @@ The EMIS will be implemented as a modular monolith using Python 3.11+, FastAPI f
  - **Analytics:** Aggregation services for all modules; custom report builder; predictive analytics (scikit-learn, pandas).
  - **Notifications:** Email, SMS, in-app notification services; opt-in/opt-out management; bulk messaging.
 
-
-**Frontend Implementation:**
-- React (TypeScript) SPA with Material UI for all user-facing modules.
-- Responsive design for desktop, tablet, and mobile.
-- Real-time updates for dashboards, notifications, and collaborative features via WebSockets (Socket.IO client).
-- Role-based navigation and dynamic menus.
-- Drag-and-drop interfaces for attendance, scheduling, and content management.
-- Rich text editing for CMS and LMS content.
-- File upload and preview for assignments, documents, and media.
-- Customizable dashboards and report builders for end users.
-- Accessibility (WCAG 2.1) and localization (i18n) support from the start.
 
 **Module-Level Implementation:**
 - **Auth:** User, Role, Permission models; RBAC middleware; login, registration, password reset, 2FA, audit logs.
@@ -179,6 +168,12 @@ Read through it with an eye on determining whether or not there is a sequence of
 to be doing that are obvious from reading this. Because I don't know if there's enough here. For example,
 when I look at the core implementation, it would be useful to reference the appropriate places in the implementation
 details where it can find the information as it walks through each step in the core implementation or in the refinement.
+
+/speckit.analyze
+Analyzed the EMIS specification for inconsistencies, gaps, and alignment with constitution principles. Key findings: All requirements align with security, modularity, test-first, simplicity, observability, maintainability, and compliance principles. No major inconsistencies detected. Coverage: 100% of specified features mapped to implementation tasks. Gaps identified: Detailed API contracts, error handling specifications, and integration testing requirements need further definition before implementation.
+
+/speckit.checklist
+Generated requirements quality checklists to validate API and security requirements before implementation. Checklists serve as "unit tests for English" to ensure requirements are complete, clear, consistent, and testable. Focus areas: requirement completeness, clarity, consistency, acceptance criteria quality, scenario coverage, edge cases, non-functional requirements, dependencies, assumptions, ambiguities, and conflicts. Files: specs/001-emis-core/checklists/api.md (45 items), specs/001-emis-core/checklists/security.md (50 items).
 
 # break down tasks
 /speckit.tasks
