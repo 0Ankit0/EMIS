@@ -24,13 +24,13 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per plan.md (src/, tests/, cli/, lib/) in /media/ankit/Programming/Projects/python/EMIS/
-- [ ] T002 Initialize Python 3.11+ project with pyproject.toml and requirements.txt in /media/ankit/Programming/Projects/python/EMIS/
-- [ ] T003 Install core dependencies (FastAPI, async SQLAlchemy, Celery, Redis, Alembic, Pydantic, pytest) in /media/ankit/Programming/Projects/python/EMIS/
-- [ ] T004 Configure Docker Compose for PostgreSQL, Redis, Celery in /media/ankit/Programming/Projects/python/EMIS/docker-compose.yml
-- [ ] T005 Set up .env file with required environment variables in /media/ankit/Programming/Projects/python/EMIS/.env
-- [ ] T006 [P] Initialize GitHub Actions CI/CD pipeline in /media/ankit/Programming/Projects/python/EMIS/.github/workflows/ci.yml
-- [ ] T007 [P] Configure linting (flake8, black, isort) and type checking (mypy) in /media/ankit/Programming/Projects/python/EMIS/pyproject.toml
+- [X] T001 Create project structure per plan.md (src/, tests/, cli/, lib/) in /media/ankit/Programming/Projects/python/EMIS/
+- [X] T002 Initialize Python 3.11+ project with pyproject.toml and requirements.txt in /media/ankit/Programming/Projects/python/EMIS/
+- [X] T003 Install core dependencies (FastAPI, async SQLAlchemy, Celery, Redis, Alembic, Pydantic, pytest) in /media/ankit/Programming/Projects/python/EMIS/
+- [X] T004 Configure Docker Compose for PostgreSQL, Redis, Celery in /media/ankit/Programming/Projects/python/EMIS/docker-compose.yml
+- [X] T005 Set up .env file with required environment variables in /media/ankit/Programming/Projects/python/EMIS/.env
+- [X] T006 [P] Initialize GitHub Actions CI/CD pipeline in /media/ankit/Programming/Projects/python/EMIS/.github/workflows/ci.yml
+- [X] T007 [P] Configure linting (flake8, black, isort) and type checking (mypy) in /media/ankit/Programming/Projects/python/EMIS/pyproject.toml
 
 ---
 
@@ -39,17 +39,16 @@
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
-**⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 Setup PostgreSQL database schema and Alembic migrations framework in /media/ankit/Programming/Projects/python/EMIS/alembic/
-- [ ] T009 Define base User, Role, Permission models in /media/ankit/Programming/Projects/python/EMIS/src/models/auth.py
-- [ ] T010 [P] Implement RBAC middleware in /media/ankit/Programming/Projects/python/EMIS/src/middleware/rbac.py
-- [ ] T011 [P] Setup pytest configuration and test fixtures in /media/ankit/Programming/Projects/python/EMIS/tests/conftest.py
-- [ ] T012 [P] Implement centralized logging infrastructure in /media/ankit/Programming/Projects/python/EMIS/src/lib/logging.py
-- [ ] T013 [P] Setup FastAPI application factory and routing structure in /media/ankit/Programming/Projects/python/EMIS/src/app.py
-- [ ] T014 [P] Configure error handling and exception middleware in /media/ankit/Programming/Projects/python/EMIS/src/middleware/errors.py
-- [ ] T015 Implement audit logging infrastructure in /media/ankit/Programming/Projects/python/EMIS/src/lib/audit.py
-- [ ] T016 [P] Setup health check endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/health.py
+- [X] T008 Setup PostgreSQL database schema and Alembic migrations framework in /media/ankit/Programming/Projects/python/EMIS/alembic/
+- [X] T009 Define base User, Role, Permission models in /media/ankit/Programming/Projects/python/EMIS/src/models/auth.py
+- [X] T010 [P] Implement RBAC middleware in /media/ankit/Programming/Projects/python/EMIS/src/middleware/rbac.py
+- [X] T011 [P] Setup pytest configuration and test fixtures in /media/ankit/Programming/Projects/python/EMIS/tests/conftest.py
+- [X] T012 [P] Implement centralized logging infrastructure in /media/ankit/Programming/Projects/python/EMIS/src/lib/logging.py
+- [X] T013 [P] Setup FastAPI application factory and routing structure in /media/ankit/Programming/Projects/python/EMIS/src/app.py
+- [X] T014 [P] Configure error handling and exception middleware in /media/ankit/Programming/Projects/python/EMIS/src/middleware/errors.py
+- [X] T015 Implement audit logging infrastructure in /media/ankit/Programming/Projects/python/EMIS/src/lib/audit.py
+- [X] T016 [P] Setup health check endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/health.py
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -65,25 +64,36 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T017 [P] [US1] Contract test for student admission endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_student_admission.py
-- [ ] T018 [P] [US1] Contract test for enrollment endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_student_enrollment.py
-- [ ] T019 [P] [US1] Integration test for complete student lifecycle journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_student_lifecycle.py
+- [X] T017 [P] [US1] Contract test for student admission endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_student_admission.py
+- [X] T018 [P] [US1] Contract test for enrollment endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_student_enrollment.py
+- [X] T019 [P] [US1] Integration test for complete student lifecycle journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_student_lifecycle.py
 
 ### Implementation for User Story 1
 
-- [ ] T020 [P] [US1] Create Student model in /media/ankit/Programming/Projects/python/EMIS/src/models/student.py
-- [ ] T021 [P] [US1] Create Enrollment model in /media/ankit/Programming/Projects/python/EMIS/src/models/enrollment.py
-- [ ] T022 [P] [US1] Create AcademicRecord model in /media/ankit/Programming/Projects/python/EMIS/src/models/academic_record.py
-- [ ] T023 [P] [US1] Create Attendance model in /media/ankit/Programming/Projects/python/EMIS/src/models/attendance.py
-- [ ] T024 [US1] Implement StudentService with lifecycle methods in /media/ankit/Programming/Projects/python/EMIS/src/services/student_service.py
-- [ ] T025 [US1] Implement admission workflow logic in /media/ankit/Programming/Projects/python/EMIS/src/services/student_workflow.py
-- [ ] T026 [US1] Implement enrollment workflow logic in /media/ankit/Programming/Projects/python/EMIS/src/services/student_workflow.py
-- [ ] T027 [US1] Implement graduation workflow logic in /media/ankit/Programming/Projects/python/EMIS/src/services/student_workflow.py
-- [ ] T028 [US1] Implement alumni tracking logic in /media/ankit/Programming/Projects/python/EMIS/src/services/student_workflow.py
-- [ ] T029 [US1] Create student API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/students.py
-- [ ] T030 [US1] Add validation and error handling for student operations in /media/ankit/Programming/Projects/python/EMIS/src/routes/students.py
-- [ ] T031 [US1] Add audit logging for student lifecycle events in /media/ankit/Programming/Projects/python/EMIS/src/services/student_service.py
-- [ ] T032 [US1] Document student API in /media/ankit/Programming/Projects/python/EMIS/docs/api/students.md
+- [X] T020 [P] [US1] Create Student model in /media/ankit/Programming/Projects/python/EMIS/src/models/student.py
+- [X] T021 [P] [US1] Create Enrollment model in /media/ankit/Programming/Projects/python/EMIS/src/models/enrollment.py
+- [X] T022 [P] [US1] Create AcademicRecord model in /media/ankit/Programming/Projects/python/EMIS/src/models/academic_record.py
+- [X] T023 [P] [US1] Create Attendance model in /media/ankit/Programming/Projects/python/EMIS/src/models/attendance.py
+- [X] T024 [US1] Implement StudentService with lifecycle methods in /media/ankit/Programming/Projects/python/EMIS/src/services/student_service.py
+- [X] T025 [US1] Implement admission workflow logic in /media/ankit/Programming/Projects/python/EMIS/src/services/student_workflow.py
+- [X] T026 [US1] Implement enrollment workflow logic in /media/ankit/Programming/Projects/python/EMIS/src/services/student_workflow.py
+- [X] T027 [US1] Implement graduation workflow logic in /media/ankit/Programming/Projects/python/EMIS/src/services/student_workflow.py
+- [X] T028 [US1] Implement alumni tracking logic in /media/ankit/Programming/Projects/python/EMIS/src/services/student_workflow.py
+- [X] T029 [US1] Create student API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/students.py
+- [X] T030 [US1] Add validation and error handling for student operations in /media/ankit/Programming/Projects/python/EMIS/src/routes/students.py
+- [X] T031 [US1] Add audit logging for student lifecycle events in /media/ankit/Programming/Projects/python/EMIS/src/services/student_service.py
+- [X] T032 [US1] Document student API in /media/ankit/Programming/Projects/python/EMIS/docs/api/students.md
+- [X] T032a [P] [US1] Create ClassSchedule model in /media/ankit/Programming/Projects/python/EMIS/src/models/class_schedule.py
+- [X] T032b [P] [US1] Create Marks model for internal/external evaluation in /media/ankit/Programming/Projects/python/EMIS/src/models/marks.py
+- [X] T032c [P] [US1] Create Exam model for internal and external examinations in /media/ankit/Programming/Projects/python/EMIS/src/models/exam.py
+- [X] T032d [P] [US1] Create ResultSheet model in /media/ankit/Programming/Projects/python/EMIS/src/models/result_sheet.py
+- [X] T032e [US1] Implement class schedule service in /media/ankit/Programming/Projects/python/EMIS/src/services/schedule_service.py
+- [X] T032f [US1] Implement marks and evaluation service in /media/ankit/Programming/Projects/python/EMIS/src/services/marks_service.py
+- [X] T032g [US1] Implement exam management service in /media/ankit/Programming/Projects/python/EMIS/src/services/exam_service.py
+- [X] T032h [US1] Implement result sheet generation service in /media/ankit/Programming/Projects/python/EMIS/src/services/result_service.py
+- [X] T032i [US1] Create schedule API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/schedule.py
+- [X] T032j [US1] Create marks/exam API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/exams.py
+- [X] T032k [US1] Document schedule and exam API in /media/ankit/Programming/Projects/python/EMIS/docs/api/schedule_exams.md
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -97,24 +107,24 @@
 
 ### Tests for User Story 2
 
-- [ ] T033 [P] [US2] Contract test for HR endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_hr.py
-- [ ] T034 [P] [US2] Contract test for payroll endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_payroll.py
-- [ ] T035 [P] [US2] Integration test for HR lifecycle journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_hr_lifecycle.py
+- [X] T033 [P] [US2] Contract test for HR endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_hr.py
+- [X] T034 [P] [US2] Contract test for payroll endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_payroll.py
+- [X] T035 [P] [US2] Integration test for HR lifecycle journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_hr_lifecycle.py
 
 ### Implementation for User Story 2
 
-- [ ] T036 [P] [US2] Create Employee model in /media/ankit/Programming/Projects/python/EMIS/src/models/employee.py
-- [ ] T037 [P] [US2] Create Payroll model in /media/ankit/Programming/Projects/python/EMIS/src/models/payroll.py
-- [ ] T038 [P] [US2] Create Leave model in /media/ankit/Programming/Projects/python/EMIS/src/models/leave.py
-- [ ] T039 [P] [US2] Create PerformanceReview model in /media/ankit/Programming/Projects/python/EMIS/src/models/performance.py
-- [ ] T040 [P] [US2] Create Recruitment model in /media/ankit/Programming/Projects/python/EMIS/src/models/recruitment.py
-- [ ] T041 [US2] Implement HRService in /media/ankit/Programming/Projects/python/EMIS/src/services/hr_service.py
-- [ ] T042 [US2] Implement payroll rules engine in /media/ankit/Programming/Projects/python/EMIS/src/services/payroll_engine.py
-- [ ] T043 [US2] Implement leave approval workflow in /media/ankit/Programming/Projects/python/EMIS/src/services/leave_workflow.py
-- [ ] T044 [US2] Create HR API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/hr.py
-- [ ] T045 [US2] Add validation and error handling for HR operations in /media/ankit/Programming/Projects/python/EMIS/src/routes/hr.py
-- [ ] T046 [US2] Add audit logging for HR events in /media/ankit/Programming/Projects/python/EMIS/src/services/hr_service.py
-- [ ] T047 [US2] Document HR API in /media/ankit/Programming/Projects/python/EMIS/docs/api/hr.md
+- [X] T036 [P] [US2] Create Employee model in /media/ankit/Programming/Projects/python/EMIS/src/models/employee.py
+- [X] T037 [P] [US2] Create Payroll model in /media/ankit/Programming/Projects/python/EMIS/src/models/payroll.py
+- [X] T038 [P] [US2] Create Leave model in /media/ankit/Programming/Projects/python/EMIS/src/models/leave.py
+- [X] T039 [P] [US2] Create PerformanceReview model in /media/ankit/Programming/Projects/python/EMIS/src/models/performance.py
+- [X] T040 [P] [US2] Create Recruitment model in /media/ankit/Programming/Projects/python/EMIS/src/models/recruitment.py
+- [X] T041 [US2] Implement HRService in /media/ankit/Programming/Projects/python/EMIS/src/services/hr_service.py
+- [X] T042 [US2] Implement payroll rules engine in /media/ankit/Programming/Projects/python/EMIS/src/services/payroll_engine.py
+- [X] T043 [US2] Implement leave approval workflow in /media/ankit/Programming/Projects/python/EMIS/src/services/leave_workflow.py
+- [X] T044 [US2] Create HR API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/hr.py
+- [X] T045 [US2] Add validation and error handling for HR operations in /media/ankit/Programming/Projects/python/EMIS/src/routes/hr.py
+- [X] T046 [US2] Add audit logging for HR events in /media/ankit/Programming/Projects/python/EMIS/src/services/hr_service.py
+- [X] T047 [US2] Document HR API in /media/ankit/Programming/Projects/python/EMIS/docs/api/hr.md
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -128,32 +138,36 @@
 
 ### Tests for User Story 3
 
-- [ ] T048 [P] [US3] Contract test for library endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_library.py
-- [ ] T049 [P] [US3] Contract test for LMS endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_lms.py
-- [ ] T050 [P] [US3] Integration test for library circulation journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_library_circulation.py
-- [ ] T051 [P] [US3] Integration test for course completion journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_course_completion.py
+- [X] T048 [P] [US3] Contract test for library endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_library.py
+- [X] T049 [P] [US3] Contract test for LMS endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_lms.py
+- [X] T050 [P] [US3] Integration test for library circulation journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_library_circulation.py
+- [X] T051 [P] [US3] Integration test for course completion journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_course_completion.py
 
 ### Implementation for User Story 3
 
-- [ ] T052 [P] [US3] Create Book model in /media/ankit/Programming/Projects/python/EMIS/src/models/book.py
-- [ ] T053 [P] [US3] Create LibraryMember model in /media/ankit/Programming/Projects/python/EMIS/src/models/library_member.py
-- [ ] T054 [P] [US3] Create Issue, Reservation, Fine models in /media/ankit/Programming/Projects/python/EMIS/src/models/circulation.py
-- [ ] T055 [P] [US3] Create DigitalResource model in /media/ankit/Programming/Projects/python/EMIS/src/models/digital_resource.py
-- [ ] T056 [P] [US3] Create Course model in /media/ankit/Programming/Projects/python/EMIS/src/models/course.py
-- [ ] T057 [P] [US3] Create Module, Lesson models in /media/ankit/Programming/Projects/python/EMIS/src/models/course_content.py
-- [ ] T058 [P] [US3] Create Assignment, Quiz, Submission models in /media/ankit/Programming/Projects/python/EMIS/src/models/assessment.py
-- [ ] T059 [US3] Implement LibraryService with circulation logic in /media/ankit/Programming/Projects/python/EMIS/src/services/library_service.py
-- [ ] T060 [US3] Implement barcode/RFID integration in /media/ankit/Programming/Projects/python/EMIS/src/lib/barcode.py
-- [ ] T061 [US3] Implement LMSService with course management in /media/ankit/Programming/Projects/python/EMIS/src/services/lms_service.py
-- [ ] T062 [US3] Implement content delivery engine in /media/ankit/Programming/Projects/python/EMIS/src/services/content_delivery.py
-- [ ] T063 [US3] Implement assessment/grading engine in /media/ankit/Programming/Projects/python/EMIS/src/services/assessment_engine.py
-- [ ] T064 [US3] Integrate plagiarism detection (external API) in /media/ankit/Programming/Projects/python/EMIS/src/lib/plagiarism.py
-- [ ] T065 [US3] Integrate video conferencing (Zoom/Teams API) in /media/ankit/Programming/Projects/python/EMIS/src/lib/video_conferencing.py
-- [ ] T066 [US3] Create library API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/library.py
-- [ ] T067 [US3] Create LMS API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/lms.py
-- [ ] T068 [US3] Add validation and error handling in /media/ankit/Programming/Projects/python/EMIS/src/routes/library.py and /media/ankit/Programming/Projects/python/EMIS/src/routes/lms.py
-- [ ] T069 [US3] Add audit logging for library/LMS events in /media/ankit/Programming/Projects/python/EMIS/src/services/library_service.py and /media/ankit/Programming/Projects/python/EMIS/src/services/lms_service.py
-- [ ] T070 [US3] Document library/LMS API in /media/ankit/Programming/Projects/python/EMIS/docs/api/library_lms.md
+- [X] T052 [P] [US3] Create Book model in /media/ankit/Programming/Projects/python/EMIS/src/models/book.py
+- [X] T053 [P] [US3] Create LibraryMember model in /media/ankit/Programming/Projects/python/EMIS/src/models/library_member.py
+- [X] T054 [P] [US3] Create Issue, Reservation, Fine models in /media/ankit/Programming/Projects/python/EMIS/src/models/circulation.py
+- [X] T055 [P] [US3] Create DigitalResource model in /media/ankit/Programming/Projects/python/EMIS/src/models/digital_resource.py
+- [X] T056 [P] [US3] Create Course model in /media/ankit/Programming/Projects/python/EMIS/src/models/course.py
+- [X] T057 [P] [US3] Create Module, Lesson models in /media/ankit/Programming/Projects/python/EMIS/src/models/course_content.py
+- [X] T058 [P] [US3] Create Assignment, Quiz, Submission models in /media/ankit/Programming/Projects/python/EMIS/src/models/assessment.py
+- [X] T059 [US3] Implement LibraryService with circulation logic in /media/ankit/Programming/Projects/python/EMIS/src/services/library_service.py
+- [X] T060 [US3] Implement barcode/RFID integration in /media/ankit/Programming/Projects/python/EMIS/src/lib/barcode.py
+- [X] T061 [US3] Implement LMSService with course management in /media/ankit/Programming/Projects/python/EMIS/src/services/lms_service.py
+- [X] T062 [US3] Implement content delivery engine in /media/ankit/Programming/Projects/python/EMIS/src/services/content_delivery.py
+- [X] T063 [US3] Implement assessment/grading engine in /media/ankit/Programming/Projects/python/EMIS/src/services/assessment_engine.py
+- [X] T064 [US3] Integrate plagiarism detection (external API) in /media/ankit/Programming/Projects/python/EMIS/src/lib/plagiarism.py
+- [X] T065 [US3] Integrate video conferencing (Zoom/Teams API) in /media/ankit/Programming/Projects/python/EMIS/src/lib/video_conferencing.py
+- [X] T066 [US3] Create library API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/library.py
+- [X] T067 [US3] Create LMS API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/lms.py
+- [X] T068 [US3] Add validation and error handling in /media/ankit/Programming/Projects/python/EMIS/src/routes/library.py and /media/ankit/Programming/Projects/python/EMIS/src/routes/lms.py
+- [X] T069 [US3] Add audit logging for library/LMS events in /media/ankit/Programming/Projects/python/EMIS/src/services/library_service.py and /media/ankit/Programming/Projects/python/EMIS/src/services/lms_service.py
+- [X] T070 [US3] Document library/LMS API in /media/ankit/Programming/Projects/python/EMIS/docs/api/library_lms.md
+- [X] T070a [P] [US3] Create LibrarySettings model for fine configuration in /media/ankit/Programming/Projects/python/EMIS/src/models/library_settings.py
+- [X] T070b [US3] Implement configurable fine system (late days, amount, max fine) in /media/ankit/Programming/Projects/python/EMIS/src/services/fine_service.py
+- [X] T070c [US3] Create library settings API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/library_settings.py
+- [X] T070d [US3] Document library fine system in /media/ankit/Programming/Projects/python/EMIS/docs/api/library_settings.md
 
 **Checkpoint**: At this point, User Stories 1, 2, AND 3 should all work independently
 
@@ -167,30 +181,30 @@
 
 ### Tests for User Story 4
 
-- [ ] T071 [P] [US4] Contract test for admissions endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_admissions.py
-- [ ] T072 [P] [US4] Contract test for financial endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_finance.py
-- [ ] T073 [P] [US4] Integration test for admission application journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_admission_journey.py
-- [ ] T074 [P] [US4] Integration test for fee payment and accounting in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_financial_flow.py
+- [X] T071 [P] [US4] Contract test for admissions endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_admissions.py
+- [X] T072 [P] [US4] Contract test for financial endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_finance.py
+- [X] T073 [P] [US4] Integration test for admission application journey in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_admission_journey.py
+- [X] T074 [P] [US4] Integration test for fee payment and accounting in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_financial_flow.py
 
 ### Implementation for User Story 4
 
-- [ ] T075 [P] [US4] Create Application model in /media/ankit/Programming/Projects/python/EMIS/src/models/application.py
-- [ ] T076 [P] [US4] Create Document model in /media/ankit/Programming/Projects/python/EMIS/src/models/document.py
-- [ ] T077 [P] [US4] Create Test, Interview models in /media/ankit/Programming/Projects/python/EMIS/src/models/admission_process.py
-- [ ] T078 [P] [US4] Create FeeStructure, Payment models in /media/ankit/Programming/Projects/python/EMIS/src/models/fee.py
-- [ ] T079 [P] [US4] Create Expense, Budget, JournalEntry models in /media/ankit/Programming/Projects/python/EMIS/src/models/accounting.py
-- [ ] T080 [US4] Implement AdmissionsService in /media/ankit/Programming/Projects/python/EMIS/src/services/admissions_service.py
-- [ ] T081 [US4] Implement multi-step application wizard logic in /media/ankit/Programming/Projects/python/EMIS/src/services/application_workflow.py
-- [ ] T082 [US4] Integrate payment gateway (Razorpay/PayU) in /media/ankit/Programming/Projects/python/EMIS/src/lib/payment_gateway.py
-- [ ] T083 [US4] Integrate document verification (DigiLocker API) in /media/ankit/Programming/Projects/python/EMIS/src/lib/document_verification.py
-- [ ] T084 [US4] Implement merit list automation in /media/ankit/Programming/Projects/python/EMIS/src/services/merit_list.py
-- [ ] T085 [US4] Implement AccountsService with double-entry accounting in /media/ankit/Programming/Projects/python/EMIS/src/services/accounts_service.py
-- [ ] T086 [US4] Implement UGC/AICTE reporting logic in /media/ankit/Programming/Projects/python/EMIS/src/services/compliance_reporting.py
-- [ ] T087 [US4] Create admissions API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/admissions.py
-- [ ] T088 [US4] Create finance API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/finance.py
-- [ ] T089 [US4] Add validation and error handling in /media/ankit/Programming/Projects/python/EMIS/src/routes/admissions.py and /media/ankit/Programming/Projects/python/EMIS/src/routes/finance.py
-- [ ] T090 [US4] Add audit logging for admissions/finance events in /media/ankit/Programming/Projects/python/EMIS/src/services/admissions_service.py and /media/ankit/Programming/Projects/python/EMIS/src/services/accounts_service.py
-- [ ] T091 [US4] Document admissions/finance API in /media/ankit/Programming/Projects/python/EMIS/docs/api/admissions_finance.md
+- [X] T075 [P] [US4] Create Application model in /media/ankit/Programming/Projects/python/EMIS/src/models/application.py
+- [X] T076 [P] [US4] Create Document model in /media/ankit/Programming/Projects/python/EMIS/src/models/document.py
+- [X] T077 [P] [US4] Create Test, Interview models in /media/ankit/Programming/Projects/python/EMIS/src/models/admission_process.py
+- [X] T078 [P] [US4] Create FeeStructure, Payment models in /media/ankit/Programming/Projects/python/EMIS/src/models/fee.py
+- [X] T079 [P] [US4] Create Expense, Budget, JournalEntry models in /media/ankit/Programming/Projects/python/EMIS/src/models/accounting.py
+- [X] T080 [US4] Implement AdmissionsService in /media/ankit/Programming/Projects/python/EMIS/src/services/admissions_service.py
+- [X] T081 [US4] Implement multi-step application wizard logic in /media/ankit/Programming/Projects/python/EMIS/src/services/application_workflow.py
+- [X] T082 [US4] Integrate payment gateway (Razorpay/PayU) in /media/ankit/Programming/Projects/python/EMIS/src/lib/payment_gateway.py
+- [X] T083 [US4] Integrate document verification (DigiLocker API) in /media/ankit/Programming/Projects/python/EMIS/src/lib/document_verification.py
+- [X] T084 [US4] Implement merit list automation in /media/ankit/Programming/Projects/python/EMIS/src/services/merit_list.py
+- [X] T085 [US4] Implement AccountsService with double-entry accounting in /media/ankit/Programming/Projects/python/EMIS/src/services/accounts_service.py
+- [X] T086 [US4] Implement UGC/AICTE reporting logic in /media/ankit/Programming/Projects/python/EMIS/src/services/compliance_reporting.py
+- [X] T087 [US4] Create admissions API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/admissions.py
+- [X] T088 [US4] Create finance API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/finance.py
+- [X] T089 [US4] Add validation and error handling in /media/ankit/Programming/Projects/python/EMIS/src/routes/admissions.py and /media/ankit/Programming/Projects/python/EMIS/src/routes/finance.py
+- [X] T090 [US4] Add audit logging for admissions/finance events in /media/ankit/Programming/Projects/python/EMIS/src/services/admissions_service.py and /media/ankit/Programming/Projects/python/EMIS/src/services/accounts_service.py
+- [X] T091 [US4] Document admissions/finance API in /media/ankit/Programming/Projects/python/EMIS/docs/api/admissions_finance.md
 
 **Checkpoint**: At this point, User Stories 1-4 should all work independently
 
@@ -204,26 +218,26 @@
 
 ### Tests for User Story 5
 
-- [ ] T092 [P] [US5] Contract test for analytics endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_analytics.py
-- [ ] T093 [P] [US5] Contract test for notification endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_notifications.py
-- [ ] T094 [P] [US5] Integration test for report generation in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_reporting.py
+- [X] T092 [P] [US5] Contract test for analytics endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_analytics.py
+- [X] T093 [P] [US5] Contract test for notification endpoints in /media/ankit/Programming/Projects/python/EMIS/tests/contract/test_notifications.py
+- [X] T094 [P] [US5] Integration test for report generation in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_reporting.py
 
 ### Implementation for User Story 5
 
-- [ ] T095 [P] [US5] Create Notification model in /media/ankit/Programming/Projects/python/EMIS/src/models/notification.py
-- [ ] T096 [P] [US5] Create Report, Dashboard models in /media/ankit/Programming/Projects/python/EMIS/src/models/analytics.py
-- [ ] T097 [US5] Implement AnalyticsService with aggregation logic in /media/ankit/Programming/Projects/python/EMIS/src/services/analytics_service.py
-- [ ] T098 [US5] Implement custom report builder in /media/ankit/Programming/Projects/python/EMIS/src/services/report_builder.py
-- [ ] T099 [US5] Implement predictive analytics (scikit-learn, pandas) in /media/ankit/Programming/Projects/python/EMIS/src/services/predictive_analytics.py
-- [ ] T100 [US5] Implement NotificationService (email, SMS, in-app) in /media/ankit/Programming/Projects/python/EMIS/src/services/notification_service.py
-- [ ] T101 [US5] Integrate email service (SMTP/SendGrid) in /media/ankit/Programming/Projects/python/EMIS/src/lib/email.py
-- [ ] T102 [US5] Integrate SMS service (Twilio/MSG91) in /media/ankit/Programming/Projects/python/EMIS/src/lib/sms.py
-- [ ] T103 [US5] Implement opt-in/opt-out management in /media/ankit/Programming/Projects/python/EMIS/src/services/notification_preferences.py
-- [ ] T104 [US5] Implement bulk messaging with Celery tasks in /media/ankit/Programming/Projects/python/EMIS/src/tasks/bulk_notifications.py
-- [ ] T105 [US5] Create analytics API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/analytics.py
-- [ ] T106 [US5] Create notification API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/notifications.py
-- [ ] T107 [US5] Add validation and error handling in /media/ankit/Programming/Projects/python/EMIS/src/routes/analytics.py and /media/ankit/Programming/Projects/python/EMIS/src/routes/notifications.py
-- [ ] T108 [US5] Document analytics/notification API in /media/ankit/Programming/Projects/python/EMIS/docs/api/analytics_notifications.md
+- [X] T095 [P] [US5] Create Notification model in /media/ankit/Programming/Projects/python/EMIS/src/models/notification.py
+- [X] T096 [P] [US5] Create Report, Dashboard models in /media/ankit/Programming/Projects/python/EMIS/src/models/analytics.py
+- [X] T097 [US5] Implement AnalyticsService with aggregation logic in /media/ankit/Programming/Projects/python/EMIS/src/services/analytics_service.py
+- [X] T098 [US5] Implement custom report builder in /media/ankit/Programming/Projects/python/EMIS/src/services/report_builder.py
+- [X] T099 [US5] Implement predictive analytics (scikit-learn, pandas) in /media/ankit/Programming/Projects/python/EMIS/src/services/predictive_analytics.py
+- [X] T100 [US5] Implement NotificationService (email, SMS, in-app) in /media/ankit/Programming/Projects/python/EMIS/src/services/notification_service.py
+- [X] T101 [US5] Integrate email service (SMTP/SendGrid) in /media/ankit/Programming/Projects/python/EMIS/src/lib/email.py
+- [X] T102 [US5] Integrate SMS service (Twilio/MSG91) in /media/ankit/Programming/Projects/python/EMIS/src/lib/sms.py
+- [X] T103 [US5] Implement opt-in/opt-out management in /media/ankit/Programming/Projects/python/EMIS/src/services/notification_preferences.py
+- [X] T104 [US5] Implement bulk messaging with Celery tasks in /media/ankit/Programming/Projects/python/EMIS/src/tasks/bulk_notifications.py
+- [X] T105 [US5] Create analytics API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/analytics.py
+- [X] T106 [US5] Create notification API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/notifications.py
+- [X] T107 [US5] Add validation and error handling in /media/ankit/Programming/Projects/python/EMIS/src/routes/analytics.py and /media/ankit/Programming/Projects/python/EMIS/src/routes/notifications.py
+- [X] T108 [US5] Document analytics/notification API in /media/ankit/Programming/Projects/python/EMIS/docs/api/analytics_notifications.md
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -233,20 +247,101 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T109 [P] Implement GDPR data export tool in /media/ankit/Programming/Projects/python/EMIS/src/cli/gdpr_export.py
-- [ ] T110 [P] Implement GDPR data deletion tool in /media/ankit/Programming/Projects/python/EMIS/src/cli/gdpr_delete.py
-- [ ] T111 [P] Implement Indian IT Act compliance checks in /media/ankit/Programming/Projects/python/EMIS/src/lib/compliance.py
-- [ ] T112 [P] Setup Prometheus metrics collection in /media/ankit/Programming/Projects/python/EMIS/src/lib/metrics.py
-- [ ] T113 [P] Setup Grafana dashboards in /media/ankit/Programming/Projects/python/EMIS/monitoring/grafana/
-- [ ] T114 [P] Integrate Sentry for error tracking in /media/ankit/Programming/Projects/python/EMIS/src/lib/sentry.py
-- [ ] T115 [P] Create CLI commands for admin operations in /media/ankit/Programming/Projects/python/EMIS/src/cli/
-- [ ] T116 [P] Finalize OpenAPI/Swagger documentation in /media/ankit/Programming/Projects/python/EMIS/docs/
-- [ ] T117 [P] Create deployment documentation in /media/ankit/Programming/Projects/python/EMIS/docs/deployment.md
-- [ ] T118 [P] Create user/admin manuals in /media/ankit/Programming/Projects/python/EMIS/docs/manuals/
-- [ ] T119 Code cleanup and refactoring across all modules in /media/ankit/Programming/Projects/python/EMIS/src/
-- [ ] T120 Performance optimization and caching strategies in /media/ankit/Programming/Projects/python/EMIS/src/
-- [ ] T121 Security hardening and penetration testing across all endpoints
-- [ ] T122 Run complete integration test suite and validate all user stories
+- [X] T109 [P] Implement GDPR data export tool in /media/ankit/Programming/Projects/python/EMIS/src/cli/gdpr_export.py
+- [X] T110 [P] Implement GDPR data deletion tool in /media/ankit/Programming/Projects/python/EMIS/src/cli/gdpr_delete.py
+- [X] T111 [P] Implement Indian IT Act compliance checks in /media/ankit/Programming/Projects/python/EMIS/src/lib/compliance.py
+- [X] T112 [P] Setup Prometheus metrics collection in /media/ankit/Programming/Projects/python/EMIS/src/lib/metrics.py
+- [X] T113 [P] Setup Grafana dashboards in /media/ankit/Programming/Projects/python/EMIS/monitoring/grafana/
+- [X] T114 [P] Integrate Sentry for error tracking in /media/ankit/Programming/Projects/python/EMIS/src/lib/sentry.py
+- [X] T115 [P] Create CLI commands for admin operations in /media/ankit/Programming/Projects/python/EMIS/src/cli/
+- [X] T116 [P] Finalize OpenAPI/Swagger documentation in /media/ankit/Programming/Projects/python/EMIS/docs/
+- [X] T117 [P] Create deployment documentation in /media/ankit/Programming/Projects/python/EMIS/docs/deployment.md
+- [X] T118 [P] Create user/admin manuals in /media/ankit/Programming/Projects/python/EMIS/docs/manuals/
+- [X] T119 Code cleanup and refactoring across all modules in /media/ankit/Programming/Projects/python/EMIS/src/
+- [X] T120 Performance optimization and caching strategies in /media/ankit/Programming/Projects/python/EMIS/src/
+- [X] T121 Security hardening and penetration testing across all endpoints
+- [X] T122 Run complete integration test suite and validate all user stories
+- [X] T123 [P] Create database migrations for all models in /media/ankit/Programming/Projects/python/EMIS/alembic/versions/
+- [X] T124 [P] Create comprehensive API documentation for all modules in /media/ankit/Programming/Projects/python/EMIS/docs/api/
+- [X] T125 [P] Create unit tests for all services in /media/ankit/Programming/Projects/python/EMIS/tests/unit/
+- [X] T126 [P] Create CLI commands for all modules in /media/ankit/Programming/Projects/python/EMIS/src/cli/
+- [X] T127 [P] Create middleware tests in /media/ankit/Programming/Projects/python/EMIS/tests/middleware/
+- [X] T128 [P] Create task tests in /media/ankit/Programming/Projects/python/EMIS/tests/tasks/
+- [X] T129 Verify all routes are properly registered and documented
+- [X] T130 Create comprehensive README with setup and usage instructions
+
+---
+
+## Phase 9: Enhanced Billing, Reporting & Library System (NEW)
+
+**Purpose**: Comprehensive financial billing system, quarterly reporting, admin dashboard, and enhanced library features
+
+### Enhanced Library Features
+
+- [X] T131 [P] [LIB] Extend LibrarySettings to support faculty borrowing in /media/ankit/Programming/Projects/python/EMIS/src/models/library_settings.py
+- [X] T132 [P] [LIB] Create BookLoss model for tracking lost books in /media/ankit/Programming/Projects/python/EMIS/src/models/book_loss.py
+- [X] T133 [P] [LIB] Add lost book fine calculation settings in /media/ankit/Programming/Projects/python/EMIS/src/models/book_loss.py
+- [X] T134 [LIB] Implement lost book handling service in /media/ankit/Programming/Projects/python/EMIS/src/services/book_loss_service.py
+- \[ \] T135 [LIB] Add lost book endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/library.py
+- \[ \] T136 [LIB] Document lost book API in /media/ankit/Programming/Projects/python/EMIS/docs/api/library_lost_books.md
+
+### Billing System
+
+- [X] T137 [P] [BILL] Create Bill model in /media/ankit/Programming/Projects/python/EMIS/src/models/billing.py
+- [X] T138 [P] [BILL] Create BillItem model in /media/ankit/Programming/Projects/python/EMIS/src/models/billing.py
+- [X] T139 [P] [BILL] Create MaintenanceFee model in /media/ankit/Programming/Projects/python/EMIS/src/models/billing.py
+- [X] T140 [P] [BILL] Create EmergencyExpense model in /media/ankit/Programming/Projects/python/EMIS/src/models/billing.py
+- [X] T141 [P] [BILL] Create TransactionType enum for credit/debit in /media/ankit/Programming/Projects/python/EMIS/src/models/billing.py
+- [X] T142 [BILL] Implement BillingService with bill generation in /media/ankit/Programming/Projects/python/EMIS/src/services/billing_service.py
+- \[ \] T143 [BILL] Implement fee structure templates in /media/ankit/Programming/Projects/python/EMIS/src/services/billing_service.py
+- \[ \] T144 [BILL] Create billing API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/billing.py
+- \[ \] T145 [BILL] Implement bill PDF generation in /media/ankit/Programming/Projects/python/EMIS/src/lib/pdf_generator.py
+- \[ \] T146 [BILL] Add bill printing endpoint in /media/ankit/Programming/Projects/python/EMIS/src/routes/billing.py
+
+### Accounting & Expense Tracking
+
+- [X] T147 [P] [ACC] Extend JournalEntry model for all transaction types in /media/ankit/Programming/Projects/python/EMIS/src/models/accounting.py
+- [X] T148 [P] [ACC] Create ExpenseCategory model in /media/ankit/Programming/Projects/python/EMIS/src/models/accounting.py
+- [X] T149 [P] [ACC] Create IncomeCategory model in /media/ankit/Programming/Projects/python/EMIS/src/models/accounting.py
+- [X] T150 [ACC] Implement double-entry accounting service in /media/ankit/Programming/Projects/python/EMIS/src/services/accounting_service.py
+- \[ \] T151 [ACC] Add expense tracking endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/accounting.py
+- \[ \] T152 [ACC] Add income tracking endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/accounting.py
+
+### Quarterly Reporting System
+
+- [X] T153 [P] [RPT] Create QuarterlyReport model in /media/ankit/Programming/Projects/python/EMIS/src/models/reports.py
+- [X] T154 [P] [RPT] Create ReportTemplate model in /media/ankit/Programming/Projects/python/EMIS/src/models/reports.py
+- [X] T155 [RPT] Implement quarterly report generation service in /media/ankit/Programming/Projects/python/EMIS/src/services/quarterly_report_service.py
+- [X] T156 [RPT] Add income vs expense analysis in /media/ankit/Programming/Projects/python/EMIS/src/services/quarterly_report_service.py
+- \[ \] T157 [RPT] Create quarterly report endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/reports.py
+- [X] T158 [RPT] Implement report PDF export in /media/ankit/Programming/Projects/python/EMIS/src/lib/report_pdf.py
+- [X] T159 [RPT] Add Excel export for quarterly reports in /media/ankit/Programming/Projects/python/EMIS/src/lib/excel_export.py
+
+### Admin Dashboard
+
+- [X] T160 [P] [DASH] Create DashboardMetrics model in /media/ankit/Programming/Projects/python/EMIS/src/models/reports.py
+- [X] T161 [DASH] Implement dashboard service with KPIs in /media/ankit/Programming/Projects/python/EMIS/src/services/dashboard_service.py
+- [X] T162 [DASH] Add financial metrics (revenue, expenses, profit) in /media/ankit/Programming/Projects/python/EMIS/src/services/dashboard_service.py
+- [X] T163 [DASH] Add student metrics (enrollment, attendance, performance) in /media/ankit/Programming/Projects/python/EMIS/src/services/dashboard_service.py
+- [X] T164 [DASH] Add library metrics (circulation, overdue, fines) in /media/ankit/Programming/Projects/python/EMIS/src/services/dashboard_service.py
+- \[ \] T165 [DASH] Create dashboard API endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/dashboard.py
+- \[ \] T166 [DASH] Add real-time data refresh for dashboard in /media/ankit/Programming/Projects/python/EMIS/src/routes/dashboard.py
+
+### Documentation & Testing
+
+- \[ \] T167 [P] [DOC] Document billing API in /media/ankit/Programming/Projects/python/EMIS/docs/api/billing.md
+- \[ \] T168 [P] [DOC] Document accounting API in /media/ankit/Programming/Projects/python/EMIS/docs/api/accounting.md
+- \[ \] T169 [P] [DOC] Document quarterly reports API in /media/ankit/Programming/Projects/python/EMIS/docs/api/reports.md
+- \[ \] T170 [P] [DOC] Document dashboard API in /media/ankit/Programming/Projects/python/EMIS/docs/api/dashboard.md
+- \[ \] T171 [P] [TEST] Create unit tests for billing service in /media/ankit/Programming/Projects/python/EMIS/tests/unit/test_billing_service.py
+- \[ \] T172 [P] [TEST] Create unit tests for quarterly report service in /media/ankit/Programming/Projects/python/EMIS/tests/unit/test_quarterly_report_service.py
+- \[ \] T173 [P] [TEST] Create integration tests for billing workflow in /media/ankit/Programming/Projects/python/EMIS/tests/integration/test_billing_workflow.py
+
+### Database Migrations
+
+- \[ \] T174 [MIG] Create migration for billing tables in /media/ankit/Programming/Projects/python/EMIS/alembic/versions/
+- \[ \] T175 [MIG] Create migration for enhanced library settings in /media/ankit/Programming/Projects/python/EMIS/alembic/versions/
+- \[ \] T176 [MIG] Create migration for reporting tables in /media/ankit/Programming/Projects/python/EMIS/alembic/versions/
 
 ---
 
