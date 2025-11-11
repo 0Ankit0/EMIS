@@ -1,5 +1,22 @@
 
 
+"""Attendance API routes for EMIS."""
+from datetime import date
+from typing import Optional
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.database import get_db
+from src.middleware.rbac import require_permissions
+from src.services.attendance_service import AttendanceService
+
+
+router = APIRouter(prefix="/api/v1/attendance", tags=["Attendance"])
+
+
 # T070: Leave request endpoints
 class LeaveRequestCreate(BaseModel):
     course_id: UUID
