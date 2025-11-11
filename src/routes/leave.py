@@ -1,5 +1,5 @@
 """Leave management API routes for EMIS."""
-from datetime import date
+from datetime import date, datetime
 from typing import List
 from uuid import UUID
 
