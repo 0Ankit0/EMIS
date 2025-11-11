@@ -1,0 +1,77 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: emis_test
+          POSTGRES_USER: emis_user
+          POSTGRES_PASSWORD: emis_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 3s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run Black
+      run: black --check src/ tests/
+    
+    - name: Run isort
+      run: isort --check-only src/ tests/
+    
+    - name: Run flake8
+      run: flake8 src/ tests/ --max-line-length=100 --extend-ignore=E203,W503
+    
+    - name: Run mypy
+      run: mypy src/ --ignore-missing-imports
+    
+    - name: Run tests with coverage
+      env:
+        DATABASE_URL: postgresql+asyncpg://emis_user:emis_password@localhost:5432/emis_test
+        REDIS_URL: redis://localhost:6379/0
+        SECRET_KEY: test-secret-key
+        JWT_SECRET_KEY: test-jwt-secret-key
+      run: |
+        pytest --cov=src --cov-report=xml --cov-report=term-missing
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: false
