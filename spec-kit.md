@@ -96,57 +96,75 @@ Read the review and acceptance checklist, and check off each item in the checkli
 
 
 /speckit.plan
-The EMIS will be implemented as a modular monolith using Python 3.11+, FastAPI for the backend API, PostgreSQL 15+ as the primary database, async SQLAlchemy ORM, Redis for caching and background job queues, Celery for distributed task processing, and Docker for containerization. All APIs will be fully documented with OpenAPI/Swagger and versioned for backward compatibility. The system will be fully test-driven (pytest), with CI/CD pipelines (GitHub Actions) and infrastructure-as-code (Docker Compose, optional Terraform for cloud deployment).
+The EMIS will be implemented as a full-stack application with:
+- **Backend**: Python 3.11+, FastAPI for REST API, PostgreSQL 15+ as primary database, async SQLAlchemy ORM, Redis for caching and background job queues, Celery for distributed task processing
+- **Frontend**: Streamlit for web UI, providing role-based interfaces for all user types (students, faculty, staff, administrators, management)
+- **Infrastructure**: Docker for containerization, Docker Compose for orchestration, optional Terraform for cloud deployment
+- **Quality**: Fully test-driven (pytest), CI/CD pipelines (GitHub Actions), comprehensive test coverage (unit, integration, E2E)
+- **Documentation**: OpenAPI/Swagger for API docs, user guides for each role, technical documentation for deployment and maintenance
 
 **Architecture & Core Principles:**
-- Modular monolith with clear separation of core, domain, infrastructure, and API layers.
-- Each domain module (auth, students, attendance, HR, library, LMS, CMS, accounts, analytics, notifications) is independently testable and observable.
-- Contract-first and test-driven development enforced for all modules.
-- All business logic in domain layer; API layer is thin and stateless.
-- CLI for admin/devops operations (manage users, migrations, jobs, etc.).
-- RBAC and audit logging for all sensitive actions.
-- GDPR and Indian IT Act compliance enforced at all layers.
+- **Backend**: Modular monolith with clear separation of core, domain, infrastructure, and API layers
+- **Frontend**: Component-based Streamlit application with reusable UI components, service layer for API integration, and role-based navigation
+- Each domain module (auth, students, attendance, HR, library, LMS, CMS, accounts, analytics, notifications) is independently testable and observable
+- Contract-first and test-driven development enforced for all modules (backend and frontend)
+- All business logic in backend domain layer; API layer is thin and stateless; frontend is purely presentational
+- CLI for admin/devops operations (manage users, migrations, jobs, etc.)
+- RBAC enforced at both backend (source of truth) and frontend (UI visibility)
+- Audit logging for all sensitive actions
+- GDPR and Indian IT Act compliance enforced at all layers
 
 
 **Module-Level Implementation:**
- - **Auth:** User, Role, Permission models; RBAC middleware; login, registration, password reset, 2FA, audit logs.
- - **Students:** Student, Enrollment, AcademicRecord, Attendance models; lifecycle workflows; alumni tracking.
- - **HR:** Employee, Payroll, Leave, PerformanceReview, Recruitment models; payroll rules engine; leave approval workflows.
- - **Library:** Book, Member, Issue, Reservation, Fine, DigitalResource models; circulation policies; barcode/RFID integration; analytics.
- - **LMS:** Course, Module, Lesson, Assignment, Quiz, Submission models; content delivery; assessment engine; plagiarism detection; video conferencing integration.
- - **CMS:** Page, Menu, Media, News, Event, Gallery models; approval workflows; multi-language content; SEO tools.
- - **Admissions:** Application, Document, Fee, Test, Interview models; multi-step wizard; payment gateway integration; merit list automation.
- - **Accounts:** FeeStructure, Payment, Expense, Budget, JournalEntry models; double-entry accounting; UGC/AICTE reporting.
- - **Analytics:** Aggregation services for all modules; custom report builder; predictive analytics (scikit-learn, pandas).
- - **Notifications:** Email, SMS, in-app notification services; opt-in/opt-out management; bulk messaging.
 
+**Backend Modules:**
+- **Auth:** User, Role, Permission models; RBAC middleware; login, registration, password reset, 2FA, audit logs
+- **Students:** Student, Enrollment, AcademicRecord, Attendance models; lifecycle workflows; alumni tracking
+- **HR:** Employee, Payroll, Leave, PerformanceReview, Recruitment models; payroll rules engine; leave approval workflows
+- **Library:** Book, Member, Issue, Reservation, Fine, DigitalResource models; circulation policies; barcode/RFID integration; analytics
+- **LMS:** Course, Module, Lesson, Assignment, Quiz, Submission models; content delivery; assessment engine; plagiarism detection; video conferencing integration
+- **CMS:** Page, Menu, Media, News, Event, Gallery models; approval workflows; multi-language content; SEO tools
+- **Admissions:** Application, Document, Fee, Test, Interview models; multi-step wizard; payment gateway integration; merit list automation
+- **Accounts:** FeeStructure, Payment, Expense, Budget, JournalEntry models; double-entry accounting; UGC/AICTE reporting
+- **Analytics:** Aggregation services for all modules; custom report builder; predictive analytics (scikit-learn, pandas)
+- **Notifications:** Email, SMS, in-app notification services; opt-in/opt-out management; bulk messaging
 
-**Module-Level Implementation:**
-- **Auth:** User, Role, Permission models; RBAC middleware; login, registration, password reset, 2FA, audit logs.
-- **Students:** Student, Enrollment, AcademicRecord, Attendance models; lifecycle workflows; alumni tracking.
-- **HR:** Employee, Payroll, Leave, PerformanceReview, Recruitment models; payroll rules engine; leave approval workflows.
-- **Library:** Book, Member, Issue, Reservation, Fine, DigitalResource models; circulation policies; barcode/RFID integration; analytics.
-- **LMS:** Course, Module, Lesson, Assignment, Quiz, Submission models; content delivery; assessment engine; plagiarism detection; video conferencing integration.
-- **CMS:** Page, Menu, Media, News, Event, Gallery models; approval workflows; multi-language content; SEO tools.
-- **Admissions:** Application, Document, Fee, Test, Interview models; multi-step wizard; payment gateway integration; merit list automation.
-- **Accounts:** FeeStructure, Payment, Expense, Budget, JournalEntry models; double-entry accounting; UGC/AICTE reporting.
-- **Analytics:** Aggregation services for all modules; custom report builder; predictive analytics (scikit-learn, pandas).
-- **Notifications:** Email, SMS, in-app notification services; opt-in/opt-out management; bulk messaging.
+**Frontend Modules (Streamlit):**
+- **Authentication:** Login, registration, password reset, 2FA setup, session management; JWT token handling
+- **Student Portal:** Dashboard, profile management, courses, assignments, exams, attendance, fees, library, hostel, transport, placement
+- **Faculty Portal:** Dashboard, my courses, attendance marking, assignments, grading, exams, timetable, leave management
+- **Administrative:** Admissions processing, student/employee management, library, hostel, transport, inventory, events
+- **Finance:** Fee management, payments, billing, expenses, accounting, payroll, budget, financial reports
+- **Analytics:** Executive dashboard, module-specific analytics, custom report builder, scheduled reports
+- **LMS:** Course viewer, video player, assignments, quizzes, discussions, gradebook, certificates; instructor tools
+- **CMS:** Page editor, menu management, news, events, gallery, media library, forms, SEO settings
+- **Notifications:** Inbox, compose messages, announcements, templates, preferences, delivery tracking
+- **System Admin:** User management, roles & permissions, system settings, audit logs, monitoring, backup/restore
+
+**Component Architecture:**
+- **Reusable Components:** Sidebar navigation, header, footer, charts, tables, forms, widgets, modals, breadcrumbs
+- **Services Layer:** API client wrapper, auth service, student service, faculty service, admin service, finance service, analytics service
+- **Utilities:** Authentication, session management, validators, formatters, file handlers, date/time helpers, notifications
+- **State Management:** Streamlit session state for user data, tokens, preferences, and application state
 
 **DevOps & Operations:**
-- Docker Compose for local development; Dockerfiles for all services.
-- GitHub Actions for CI/CD: lint, test, build, deploy.
-- Environment variables managed via .env files and secrets manager (for production).
-- Infrastructure-as-code for cloud deployment (optional: Terraform, AWS/GCP/Azure modules).
-- Automated database migrations and seed scripts.
-- Centralized logging and monitoring (Prometheus, Grafana, Sentry).
+- **Backend**: Docker Compose for local development; Dockerfiles for backend services
+- **Frontend**: Dockerfile for Streamlit app; nginx reverse proxy configuration
+- **CI/CD**: GitHub Actions for lint, test, build, deploy (separate workflows for backend and frontend)
+- **Environment**: .env files and secrets manager for configuration (backend and frontend)
+- **Infrastructure**: Optional Terraform for cloud deployment (AWS/GCP/Azure modules)
+- **Database**: Automated migrations (Alembic) and seed scripts
+- **Monitoring**: Centralized logging and monitoring (Prometheus, Grafana, Sentry) for both backend and frontend
+- **Deployment**: Systemd service files, deployment scripts, backup automation
 
 **Testing & Quality:**
-- pytest for all unit, integration, and end-to-end tests.
-- 100% test coverage goal for core business logic.
-- Contract tests for all APIs (OpenAPI schema validation).
-- Linting (flake8, black, isort) and type checking (mypy) enforced in CI.
-- Manual and automated accessibility and usability testing.
+- **Backend**: pytest for all unit, integration, and end-to-end tests; 100% test coverage goal for core business logic
+- **Frontend**: pytest for utility and service tests; integration tests for API calls; E2E tests for critical user journeys
+- **Contract Testing**: OpenAPI schema validation for all API endpoints
+- **Code Quality**: Linting (flake8, black, isort) and type checking (mypy) enforced in CI for both backend and frontend
+- **Accessibility**: Manual and automated accessibility testing (WCAG 2.1 Level AA compliance)
+- **Performance**: Load testing for backend APIs; frontend performance monitoring
+- **Security**: Vulnerability scanning; dependency updates; security audit logging
 
 **Security & Compliance:**
 - End-to-end encryption (HTTPS, TLS for all services).
@@ -156,8 +174,12 @@ The EMIS will be implemented as a modular monolith using Python 3.11+, FastAPI f
 - Regular vulnerability scanning and dependency updates.
 
 **Documentation:**
-- Auto-generated API docs (Swagger/OpenAPI).
-- User/admin manuals and onboarding guides (Markdown, static site).
+- **API Documentation**: Auto-generated API docs (Swagger/OpenAPI) for all backend endpoints
+- **User Manuals**: Role-specific user guides (student, faculty, admin, finance, system admin) with screenshots
+- **Technical Documentation**: Setup guides, deployment guides, API integration guides, component library docs
+- **Code Documentation**: Comprehensive docstrings for all modules, services, and utilities
+- **Onboarding**: Quick start guides, video tutorials, FAQs
+- **Static Site**: Documentation hosted on static site (MkDocs or similar)
 - Architecture decision records (ADR) and change logs.
 
 This plan ensures a robust, scalable, and maintainable EMIS platform that meets all functional, technical, and compliance requirements.
