@@ -52,50 +52,26 @@ def show_login_page():
 
 
 def show_dashboard():
-    """Display main dashboard"""
-    from pages import (
-        dashboard,
-        students,
-        admissions,
-        academics,
-        hr,
-        library,
-        finance,
-        reports,
-        settings
-    )
+    """Display main dashboard based on user role"""
+    from utils.navigation import get_menu_items, get_page_title
+    
+    user_role = st.session_state.user_role
+    menu_items = get_menu_items(user_role)
     
     # Sidebar navigation
     with st.sidebar:
         st.title(f"👤 {st.session_state.user.get('name', 'User')}")
-        st.caption(f"Role: {st.session_state.user_role.title()}")
+        st.caption(f"Role: {user_role.title()}")
         st.divider()
         
         # Main menu
+        options = [item['title'] for item in menu_items]
+        icons = [item['icon'] for item in menu_items]
+        
         selected = option_menu(
             menu_title="Main Menu",
-            options=[
-                "Dashboard",
-                "Students",
-                "Admissions",
-                "Academics",
-                "HR & Payroll",
-                "Library",
-                "Finance",
-                "Reports",
-                "Settings"
-            ],
-            icons=[
-                "speedometer2",
-                "people",
-                "file-earmark-text",
-                "book",
-                "briefcase",
-                "journal-text",
-                "currency-dollar",
-                "bar-chart",
-                "gear"
-            ],
+            options=options,
+            icons=icons,
             menu_icon="cast",
             default_index=0,
             key="main_menu"
@@ -107,25 +83,93 @@ def show_dashboard():
             api_client.logout()
             st.rerun()
     
-    # Display selected page
-    if selected == "Dashboard":
+    # Get selected page key
+    selected_item = next((item for item in menu_items if item['title'] == selected), None)
+    
+    if selected_item:
+        page_key = selected_item['page']
+        route_to_page(page_key)
+    else:
+        st.error("Page not found")
+
+
+def route_to_page(page_key):
+    """Route to the appropriate page based on page key"""
+    # Import pages dynamically to avoid circular imports
+    
+    # Common pages
+    if page_key == "dashboard":
+        from pages import dashboard
         dashboard.show()
-    elif selected == "Students":
-        students.show()
-    elif selected == "Admissions":
-        admissions.show()
-    elif selected == "Academics":
-        academics.show()
-    elif selected == "HR & Payroll":
-        hr.show()
-    elif selected == "Library":
+    elif page_key == "profile":
+        from pages.common import profile
+        profile.show()
+    
+    # Student pages
+    elif page_key == "student_courses":
+        from pages.student import courses
+        courses.show()
+    elif page_key == "student_assignments":
+        from pages.student import assignments
+        assignments.show()
+    elif page_key == "student_attendance":
+        from pages.student import attendance
+        attendance.show()
+    elif page_key == "student_exams":
+        from pages.student import exams
+        exams.show()
+    elif page_key == "student_fees":
+        from pages.student import fees
+        fees.show()
+    elif page_key == "student_library":
+        from pages.student import library
         library.show()
-    elif selected == "Finance":
+    
+    # Faculty pages
+    elif page_key == "faculty_courses":
+        from pages.faculty import courses
+        courses.show()
+    elif page_key == "faculty_attendance":
+        from pages.faculty import attendance
+        attendance.show()
+    elif page_key == "faculty_assignments":
+        from pages.faculty import assignments
+        assignments.show()
+    elif page_key == "faculty_grading":
+        from pages.faculty import grading
+        grading.show()
+    elif page_key == "faculty_timetable":
+        from pages.faculty import timetable
+        timetable.show()
+    
+    # Admin pages
+    elif page_key == "students":
+        from pages import students
+        students.show()
+    elif page_key == "admissions":
+        from pages import admissions
+        admissions.show()
+    elif page_key == "academics":
+        from pages import academics
+        academics.show()
+    elif page_key == "hr":
+        from pages import hr
+        hr.show()
+    elif page_key == "library":
+        from pages import library
+        library.show()
+    elif page_key == "finance":
+        from pages import finance
         finance.show()
-    elif selected == "Reports":
+    elif page_key == "reports":
+        from pages import reports
         reports.show()
-    elif selected == "Settings":
+    elif page_key == "settings":
+        from pages import settings
         settings.show()
+    
+    else:
+        st.error(f"Page '{page_key}' not found")
 
 
 def main():
