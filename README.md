@@ -423,6 +423,23 @@ alembic current
 └── monitoring/        # Monitoring configs
 ```
 
+## Documentation
+
+Comprehensive documentation is available in the `docs/` folder:
+
+- **[Quick Start Guide](docs/QUICK_START.md)** - Get up and running in 5 minutes
+- **[Frontend Quick Start](docs/FRONTEND_QUICKSTART.md)** - Frontend setup guide
+- **[Architecture](docs/ARCHITECTURE.md)** - System architecture and design
+- **[Development Guide](docs/DEVELOPMENT.md)** - Development setup and workflows
+- **[Complete Guide](docs/COMPLETE_GUIDE.md)** - Comprehensive system documentation
+- **[API Documentation](docs/API_DOCUMENTATION.md)** - REST API reference
+- **[Services Documentation](docs/SERVICES_DOCUMENTATION.md)** - Business logic layer
+- **[Calendar Usage Guide](docs/CALENDAR_USAGE_GUIDE.md)** - Calendar system guide
+- **[Frontend Navigation](docs/NAVIGATION.md)** - Frontend navigation structure
+- **[Frontend Integration](docs/INTEGRATION.md)** - Frontend-backend integration
+- **[Frontend Quick Reference](docs/QUICK_REFERENCE.md)** - Quick reference guide
+- **[Implementation Summary](docs/IMPLEMENTATION_SUMMARY.md)** - Implementation details
+
 ## License
 
 Copyright © 2025 EMIS Team
