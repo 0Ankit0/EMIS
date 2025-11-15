@@ -34,32 +34,34 @@ services:
   celery-worker:
     build: .
     container_name: emis-celery-worker
-    command: celery -A src.tasks.worker worker --loglevel=info
+    command: celery -A config worker --loglevel=info
     depends_on:
       - redis
       - postgres
     environment:
-      DATABASE_URL: postgresql+asyncpg://emis_user:emis_password@postgres:5432/emis_db
+      DATABASE_URL: postgresql://emis_user:emis_password@postgres:5432/emis_db
       REDIS_URL: redis://redis:6379/0
+      DJANGO_SETTINGS_MODULE: config.settings
     volumes:
       - .:/app
 
   celery-beat:
     build: .
     container_name: emis-celery-beat
-    command: celery -A src.tasks.worker beat --loglevel=info
+    command: celery -A config beat --loglevel=info
     depends_on:
       - redis
       - postgres
     environment:
-      DATABASE_URL: postgresql+asyncpg://emis_user:emis_password@postgres:5432/emis_db
+      DATABASE_URL: postgresql://emis_user:emis_password@postgres:5432/emis_db
       REDIS_URL: redis://redis:6379/0
+      DJANGO_SETTINGS_MODULE: config.settings
     volumes:
       - .:/app
 
-  app:
+  web:
     build: .
-    container_name: emis-app
+    container_name: emis-web
     ports:
       - "8000:8000"
     depends_on:
@@ -68,13 +70,16 @@ services:
       redis:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql+asyncpg://emis_user:emis_password@postgres:5432/emis_db
+      DATABASE_URL: postgresql://emis_user:emis_password@postgres:5432/emis_db
       REDIS_URL: redis://redis:6379/0
+      DJANGO_SETTINGS_MODULE: config.settings
     volumes:
       - .:/app
       - uploads:/app/uploads
+      - static:/app/staticfiles
 
 volumes:
   postgres_data:
   redis_data:
   uploads:
+  static:

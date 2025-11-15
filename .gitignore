@@ -43,8 +43,13 @@ htmlcov/
 .tox/
 .nox/
 
-# Alembic
-alembic/versions/*.pyc
+# Django
+*.log
+staticfiles/
+media/
+db.sqlite3
+db.sqlite3-journal
+local_settings.py
 
 # Environment
 .env
@@ -70,7 +75,6 @@ Thumbs.db
 
 # Uploads
 uploads/
-media/
 
 # Temporary files
 *.tmp

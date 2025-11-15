@@ -1,6 +1,6 @@
 # EMIS - Educational Management Information System
 
-A comprehensive backend API for educational institutions built with FastAPI, PostgreSQL, and modern Python.
+A comprehensive full-stack web application for educational institutions built with Django, PostgreSQL, and modern Python.
 
 ## Features
 
@@ -97,11 +97,13 @@ A comprehensive backend API for educational institutions built with FastAPI, Pos
 
 ## Tech Stack
 
-- **Framework**: FastAPI
-- **Database**: PostgreSQL 15+ with async SQLAlchemy
+- **Framework**: Django 4.2+
+- **Database**: PostgreSQL 15+ with Django ORM
+- **API**: Django REST Framework
+- **Frontend**: Bootstrap 5, HTMX, Chart.js
 - **Task Queue**: Celery with Redis
-- **Authentication**: JWT-based auth with RBAC
-- **Testing**: pytest with async support
+- **Authentication**: JWT + Session-based auth with RBAC
+- **Testing**: pytest-django
 - **Code Quality**: Black, isort, flake8, mypy
 - **CI/CD**: GitHub Actions
 
@@ -114,17 +116,24 @@ A comprehensive backend API for educational institutions built with FastAPI, Pos
 
 ## Architecture
 
-The system follows a modular, service-oriented architecture:
+The system follows Django's MVT (Model-View-Template) architecture:
 
 ```
-src/
-├── models/          # SQLAlchemy ORM models
-├── services/        # Business logic layer
-├── routes/          # FastAPI route handlers
-├── middleware/      # Authentication, RBAC, error handling
-├── lib/             # Shared utilities (logging, metrics, integrations)
-├── cli/             # Command-line tools
-└── tasks/           # Celery background tasks
+config/              # Django settings and configuration
+apps/                # Django applications
+├── authentication/  # User management and auth
+├── students/       # Student portal
+├── faculty/        # Faculty portal
+├── hr/             # HR management
+├── finance/        # Finance module
+├── library/        # Library management
+├── admissions/     # Admissions
+├── exams/          # Exam management
+├── attendance/     # Attendance tracking
+├── lms/            # Learning Management System
+└── (9 more apps)
+templates/          # HTML templates
+static/             # CSS, JS, images
 ```
 
 ## Getting Started
@@ -132,16 +141,17 @@ src/
 ### Option 1: Docker Compose (Recommended)
 
 ```bash
-# Start all services (PostgreSQL, Redis, API, Celery)
-docker-compose up -d
+# Start all services (PostgreSQL, Redis, Django, Celery)
+./start-prod.sh
 
 # Check services are running
 docker-compose ps
 
 # View logs
-docker-compose logs -f api
+docker-compose logs -f web
 
-# API will be available at http://localhost:8000
+# Application will be available at http://localhost:8000
+# Admin panel at http://localhost:8000/admin
 ```
 
 ### Option 2: Local Development
@@ -169,17 +179,17 @@ pip install -r requirements.txt
 #### 4. Set up environment variables
 
 ```bash
-cp .env.example .env
+cp .env.development .env
 # Edit .env with your database and service credentials
 ```
 
 Required environment variables:
 ```
-DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/emis
+DATABASE_URL=postgresql://user:password@localhost:5432/emis
 REDIS_URL=redis://localhost:6379/0
 SECRET_KEY=your-secret-key
-JWT_ALGORITHM=HS256
-JWT_EXPIRATION_MINUTES=60
+ALLOWED_HOSTS=localhost,127.0.0.1
+DEBUG=True
 ```
 
 #### 5. Start required services
@@ -195,49 +205,54 @@ docker-compose up -d postgres redis
 #### 6. Run database migrations
 
 ```bash
-alembic upgrade head
+python manage.py migrate
 ```
 
-#### 7. Initialize default data (optional)
+#### 7. Create superuser
 
 ```bash
-# Initialize library settings
-python -m src.cli.library_commands init-settings
-
-# Create initial admin user
-python -m src.cli.user_commands create-admin --email admin@example.com --password admin123
+python manage.py createsuperuser
 ```
 
-#### 8. Start the application
+#### 8. Collect static files
+
+```bash
+python manage.py collectstatic
+```
+
+#### 9. Start the application
 
 ```bash
 # Development server with auto-reload
-uvicorn src.app:app --reload --host 0.0.0.0 --port 8000
+./start-dev.sh
+# or
+python manage.py runserver
 
 # Production server
-gunicorn src.app:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
+gunicorn config.wsgi:application --bind 0.0.0.0:8000
 ```
 
-The API will be available at `http://localhost:8000`
+The application will be available at `http://localhost:8000`
 
-**Interactive API documentation**: `http://localhost:8000/docs` (Swagger UI)
+**Admin Panel**: `http://localhost:8000/admin`
 
-**Alternative API docs**: `http://localhost:8000/redoc` (ReDoc)
+**API Documentation**: `http://localhost:8000/api/v1/`
 
-## CLI Commands
+## Django Management Commands
 
-The system provides CLI commands for common administrative tasks:
+The system provides Django management commands for common administrative tasks:
 
 ### Database Management
 
 ```bash
 # Run migrations
-python -m src.cli.db_commands migrate
+python manage.py migrate
 
-# Rollback migration
-python -m src.cli.db_commands rollback
+# Create migrations
+python manage.py makemigrations
 
-# Reset database (WARNING: destroys all data)
+# Show migrations
+python manage.py showmigrations
 python -m src.cli.db_commands reset
 ```
 
