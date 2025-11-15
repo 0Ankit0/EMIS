@@ -8,12 +8,12 @@ ios/ or android/
 
 ## Summary
 
-Build a modular monolith EMIS for a college, centralizing and automating all core administrative, academic, and operational processes. The system will use Python 3.11+, FastAPI, PostgreSQL 15+, async SQLAlchemy, Redis, Celery, and Docker. All APIs will be documented and versioned. The system will be test-driven, CI/CD-enabled, and compliant with GDPR/Indian IT Act.
+Build a modular monolith EMIS for a college, centralizing and automating all core administrative, academic, and operational processes. The system will use Python 3.11+, Django, PostgreSQL 15+, async Django ORM, Redis, Celery, and Docker. All APIs will be documented and versioned. The system will be test-driven, CI/CD-enabled, and compliant with GDPR/Indian IT Act.
 
 ## Technical Context
 
 **Language/Version**: Python 3.11+
-**Primary Dependencies**: FastAPI, async SQLAlchemy, Celery, Redis, Alembic, Pydantic, pytest
+**Primary Dependencies**: Django, async Django ORM, Celery, Redis, Django Migrations, Django Serializers, pytest
 **Storage**: PostgreSQL 15+ (primary), Redis (cache, queue)
 **Testing**: pytest (unit, integration, end-to-end), contract tests (OpenAPI schema validation)
 **Target Platform**: Linux server (cloud or on-prem)

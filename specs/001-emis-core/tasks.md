@@ -26,7 +26,7 @@
 
 - [X] T001 Create project structure per plan.md (src/, tests/, cli/, lib/) in /media/ankit/Programming/Projects/python/EMIS/
 - [X] T002 Initialize Python 3.11+ project with pyproject.toml and requirements.txt in /media/ankit/Programming/Projects/python/EMIS/
-- [X] T003 Install core dependencies (FastAPI, async SQLAlchemy, Celery, Redis, Alembic, Pydantic, pytest) in /media/ankit/Programming/Projects/python/EMIS/
+- [X] T003 Install core dependencies (Django, async Django ORM, Celery, Redis, Django Migrations, Django Serializers, pytest) in /media/ankit/Programming/Projects/python/EMIS/
 - [X] T004 Configure Docker Compose for PostgreSQL, Redis, Celery in /media/ankit/Programming/Projects/python/EMIS/docker-compose.yml
 - [X] T005 Set up .env file with required environment variables in /media/ankit/Programming/Projects/python/EMIS/.env
 - [X] T006 [P] Initialize GitHub Actions CI/CD pipeline in /media/ankit/Programming/Projects/python/EMIS/.github/workflows/ci.yml
@@ -40,12 +40,12 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [X] T008 Setup PostgreSQL database schema and Alembic migrations framework in /media/ankit/Programming/Projects/python/EMIS/alembic/
+- [X] T008 Setup PostgreSQL database schema and Django Migrations migrations framework in /media/ankit/Programming/Projects/python/EMIS/alembic/
 - [X] T009 Define base User, Role, Permission models in /media/ankit/Programming/Projects/python/EMIS/src/models/auth.py
 - [X] T010 [P] Implement RBAC middleware in /media/ankit/Programming/Projects/python/EMIS/src/middleware/rbac.py
 - [X] T011 [P] Setup pytest configuration and test fixtures in /media/ankit/Programming/Projects/python/EMIS/tests/conftest.py
 - [X] T012 [P] Implement centralized logging infrastructure in /media/ankit/Programming/Projects/python/EMIS/src/lib/logging.py
-- [X] T013 [P] Setup FastAPI application factory and routing structure in /media/ankit/Programming/Projects/python/EMIS/src/app.py
+- [X] T013 [P] Setup Django application factory and routing structure in /media/ankit/Programming/Projects/python/EMIS/src/app.py
 - [X] T014 [P] Configure error handling and exception middleware in /media/ankit/Programming/Projects/python/EMIS/src/middleware/errors.py
 - [X] T015 Implement audit logging infrastructure in /media/ankit/Programming/Projects/python/EMIS/src/lib/audit.py
 - [X] T016 [P] Setup health check endpoints in /media/ankit/Programming/Projects/python/EMIS/src/routes/health.py

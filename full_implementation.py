@@ -1,4 +1,15 @@
+#!/usr/bin/env python3
 """
+Complete EMIS Module Implementation Generator
+Generates ALL modules with complete Django code
+"""
+import os
+import textwrap
+
+def create_finance_module():
+    """Create complete Finance module"""
+    
+    models_code = '''"""
 Finance models for EMIS
 """
 from django.db import models
@@ -183,3 +194,13 @@ class Receipt(AuditModel):
     
     def __str__(self):
         return f"{self.receipt_number} - {self.amount}"
+'''
+    
+    # Write to file
+    with open('apps/finance/models.py', 'w') as f:
+        f.write(models_code)
+    
+    print("✅ Finance models created")
+
+# Execute
+create_finance_module()

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Frontend Django module provides a comprehensive web-based user interface for the EMIS (Education Management Information System). Built with Django, it delivers an intuitive, responsive, and role-based interface that connects seamlessly with the FastAPI backend. This frontend serves all user roles including students, faculty, staff, administrators, and management.
+The Frontend Django module provides a comprehensive web-based user interface for the EMIS (Education Management Information System). Built with Django, it delivers an intuitive, responsive, and role-based interface that connects seamlessly with the Django backend. This frontend serves all user roles including students, faculty, staff, administrators, and management.
 
 ## Core Principles
 
@@ -19,7 +19,7 @@ The Frontend Django module provides a comprehensive web-based user interface for
 - **Secure Access**: Frontend enforces RBAC with backend verification
 
 ### 3. Integration & Architecture
-- **API-First**: All data operations through FastAPI backend endpoints
+- **API-First**: All data operations through Django backend endpoints
 - **State Management**: Django session framework for user experience continuity
 - **Real-Time Updates**: WebSocket integration for notifications and live data
 - **Offline Support**: Graceful degradation when backend unavailable
@@ -517,10 +517,10 @@ class APIClient:
         self.base_url = base_url
         self.token = token
     
-    async def get(self, endpoint: str):
+    def get(self, endpoint: str):
         headers = {"Authorization": f"Bearer {self.token}"}
         async with httpx.AsyncClient() as client:
-            response = await client.get(f"{self.base_url}{endpoint}", headers=headers)
+            response = client.get(f"{self.base_url}{endpoint}", headers=headers)
             return response.json()
 ```
 
