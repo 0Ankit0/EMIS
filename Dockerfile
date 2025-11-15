@@ -18,16 +18,21 @@ ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
 # Copy application code
 COPY . .
 
-# Create uploads directory
-RUN mkdir -p uploads
+# Create necessary directories
+RUN mkdir -p uploads staticfiles logs
+
+# Collect static files
+RUN python manage.py collectstatic --no-input || true
 
 # Expose port
 EXPOSE 8000
 
-# Run the application
-CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run migrations and start server
+CMD python manage.py migrate && \
+    gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 4

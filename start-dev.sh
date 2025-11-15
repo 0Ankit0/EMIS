@@ -41,7 +41,7 @@ echo "🔌 Activating virtual environment..."
 source venv/bin/activate
 
 # Verify virtual environment setup
-echo "� Verifying virtual environment..."
+echo "✓ Verifying virtual environment..."
 ./check-venv.sh || exit 1
 
 # Install/update dependencies (only in virtual environment)
@@ -50,12 +50,16 @@ pip install -r requirements.txt --quiet
 
 # Run database migrations (in virtual environment)
 echo "🗄️  Running database migrations..."
-alembic upgrade head
+python manage.py migrate
+
+# Collect static files
+echo "📦 Collecting static files..."
+python manage.py collectstatic --no-input
 
 # Start the application (in virtual environment)
-echo "🎯 Starting FastAPI server on http://localhost:8000"
-echo "📖 API Documentation: http://localhost:8000/docs"
+echo "🎯 Starting Django server on http://localhost:8000"
+echo "📖 Admin Panel: http://localhost:8000/admin"
 echo ""
 echo "Press Ctrl+C to stop the server"
 echo "================================"
-uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload
+python manage.py runserver 0.0.0.0:8000

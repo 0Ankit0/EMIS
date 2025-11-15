@@ -40,6 +40,14 @@ $CONTAINER_CMD up -d
 echo "⏳ Waiting for services to start..."
 sleep 5
 
+# Run migrations
+echo "🗄️  Running migrations..."
+$CONTAINER_CMD exec web python manage.py migrate
+
+# Collect static files
+echo "📦 Collecting static files..."
+$CONTAINER_CMD exec web python manage.py collectstatic --no-input
+
 # Check service status
 echo ""
 echo "📊 Service Status:"
@@ -47,8 +55,8 @@ $CONTAINER_CMD ps
 
 echo ""
 echo "✅ EMIS is running in production mode!"
-echo "🎯 API: http://localhost:8000"
-echo "📖 API Docs: http://localhost:8000/docs"
+echo "🎯 Application: http://localhost:8000"
+echo "👤 Admin Panel: http://localhost:8000/admin"
 echo "🗄️  PostgreSQL: localhost:5433"
 echo "🔴 Redis: localhost:6379"
 echo ""
