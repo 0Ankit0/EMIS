@@ -1,4 +1,16 @@
+#!/usr/bin/env python3
 """
+Module Generator for EMIS Django Project
+Generates complete module structure with models, views, serializers, etc.
+"""
+import os
+import sys
+
+def generate_exams_module():
+    """Generate Exams module"""
+    
+    # Create models.py
+    models_content = '''"""
 Exams models for EMIS
 """
 from django.db import models
@@ -133,3 +145,12 @@ class ExamResult(AuditModel):
             self.grade = self.calculate_grade()
             self.is_passed = self.marks_obtained >= self.exam.passing_marks
         super().save(*args, **kwargs)
+'''
+    
+    with open('apps/exams/models.py', 'w') as f:
+        f.write(models_content)
+    
+    print("✅ Exams module models created")
+
+if __name__ == '__main__':
+    generate_exams_module()
