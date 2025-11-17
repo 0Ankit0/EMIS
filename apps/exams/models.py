@@ -36,7 +36,7 @@ class Exam(AuditModel):
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=50, unique=True)
     exam_type = models.CharField(max_length=20, choices=ExamType.choices)
-    course = models.ForeignKey('courses.Course', on_delete=models.CASCADE, related_name='exams', null=True, blank=True)
+    course = models.ForeignKey('lms.Course', on_delete=models.CASCADE, related_name='exams', null=True, blank=True)
     
     # Schedule
     exam_date = models.DateField()
