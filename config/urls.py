@@ -1,30 +1,20 @@
-"""
-EMIS URL Configuration
-"""
+"""Main URL configuration"""
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
-    # Admin
     path('admin/', admin.site.urls),
-    
-    # API
     path('api/v1/', include('apps.core.api_urls')),
     
-    # Frontend URLs
-    path('', include('apps.core.urls')),
-    path('auth/', include('apps.authentication.urls')),
-    path('student/', include('apps.students.urls')),
-    path('faculty/', include('apps.faculty.urls')),
-    path('admin-portal/', include('apps.hr.urls')),
-    path('finance/', include('apps.finance.urls')),
-    path('library/', include('apps.library.urls')),
-    path('lms/', include('apps.lms.urls')),
+    # OpenAPI/Swagger documentation
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
-# Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
