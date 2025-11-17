@@ -1,64 +1,36 @@
-"""
-Django test configuration
-"""
+"""Django test configuration"""
 import pytest
 from django.conf import settings
-from django.test import RequestFactory
-from rest_framework.test import APIClient
-from apps.authentication.models import User
+import os
+
+
+# Set test database to SQLite before Django setup
+os.environ.setdefault('TEST_DB_ENGINE', 'sqlite3')
+
+
+@pytest.fixture(scope='session', autouse=True)
+def setup_test_db(django_db_blocker):
+    """Setup test database with migrations"""
+    with django_db_blocker.unblock():
+        from django.core.management import call_command
+        # Run migrations
+        call_command('migrate', verbosity=0)
 
 
 @pytest.fixture
 def api_client():
     """DRF API test client"""
+    from rest_framework.test import APIClient
     return APIClient()
-
-
-@pytest.fixture
-def authenticated_client(api_client, user):
-    """Authenticated API client"""
-    api_client.force_authenticate(user=user)
-    return api_client
 
 
 @pytest.fixture
 def user(db):
     """Create a test user"""
-    return User.objects.create_user(
+    from apps.authentication.models import User
+    return User.objects.create(
         username='testuser',
         email='test@example.com',
-        password='testpass123'
+        first_name='Test',
+        last_name='User'
     )
-
-
-@pytest.fixture
-def admin_user(db):
-    """Create an admin user"""
-    return User.objects.create_superuser(
-        username='admin',
-        email='admin@example.com',
-        password='admin123'
-    )
-
-
-@pytest.fixture
-def request_factory():
-    """Django request factory"""
-    return RequestFactory()
-
-
-@pytest.fixture
-def sample_data(db):
-    """Create sample test data"""
-    # Add sample data creation here
-    pass
-
-
-# Configure pytest-django
-def pytest_configure(config):
-    """Configure Django settings for tests"""
-    settings.DEBUG = False
-    settings.DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
-    }
