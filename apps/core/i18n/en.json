@@ -1,0 +1,107 @@
+{
+  "common": {
+    "success": "Operation completed successfully",
+    "error": "An error occurred",
+    "validation_error": "Validation error",
+    "not_found": "Resource not found",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "bad_request": "Bad request",
+    "internal_server_error": "Internal server error",
+    "created": "Resource created successfully",
+    "updated": "Resource updated successfully",
+    "deleted": "Resource deleted successfully"
+  },
+  "auth": {
+    "login_success": "Login successful",
+    "login_failed": "Invalid credentials",
+    "logout_success": "Logged out successfully",
+    "register_success": "Registration successful",
+    "password_changed": "Password changed successfully",
+    "token_expired": "Token has expired",
+    "token_invalid": "Invalid token",
+    "user_not_found": "User not found",
+    "email_required": "Email is required",
+    "password_required": "Password is required",
+    "weak_password": "Password is too weak",
+    "email_exists": "Email already exists",
+    "invalid_email": "Invalid email format"
+  },
+  "validation": {
+    "required_field": "This field is required",
+    "invalid_format": "Invalid format",
+    "min_length": "Minimum length is {min}",
+    "max_length": "Maximum length is {max}",
+    "min_value": "Minimum value is {min}",
+    "max_value": "Maximum value is {max}",
+    "invalid_choice": "Invalid choice"
+  },
+  "admissions": {
+    "application_submitted": "Application submitted successfully",
+    "application_accepted": "Application accepted",
+    "application_rejected": "Application rejected",
+    "application_pending": "Application is pending review",
+    "merit_list_generated": "Merit list generated successfully",
+    "invalid_status_transition": "Invalid status transition",
+    "application_not_found": "Application not found",
+    "duplicate_application": "Duplicate application detected"
+  },
+  "courses": {
+    "course_created": "Course created successfully",
+    "course_updated": "Course updated successfully",
+    "course_deleted": "Course deleted successfully",
+    "course_not_found": "Course not found",
+    "assignment_submitted": "Assignment submitted successfully",
+    "assignment_late": "Assignment submitted after deadline",
+    "grade_recorded": "Grade recorded successfully",
+    "prerequisite_not_met": "Course prerequisites not met",
+    "enrollment_success": "Enrolled successfully",
+    "module_created": "Module created successfully"
+  },
+  "finance": {
+    "invoice_generated": "Invoice generated successfully",
+    "payment_recorded": "Payment recorded successfully",
+    "late_fee_applied": "Late fee applied",
+    "payment_failed": "Payment processing failed",
+    "insufficient_amount": "Insufficient payment amount",
+    "invalid_payment_method": "Invalid payment method",
+    "fee_structure_created": "Fee structure created successfully"
+  },
+  "students": {
+    "enrollment_created": "Enrollment created successfully",
+    "transcript_generated": "Transcript generated successfully",
+    "student_not_found": "Student not found",
+    "enrollment_not_found": "Enrollment not found"
+  },
+  "analytics": {
+    "dashboard_refreshed": "Dashboard metrics refreshed",
+    "report_generated": "Report generated successfully",
+    "no_data_available": "No data available for the selected period"
+  },
+  "ui": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "next": "Next",
+    "previous": "Previous",
+    "page": "Page",
+    "loading": "Loading...",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close"
+  },
+  "pagination": {
+    "showing": "Showing {start} to {end} of {total} entries",
+    "no_results": "No results found",
+    "first_page": "First",
+    "last_page": "Last"
+  }
+}
