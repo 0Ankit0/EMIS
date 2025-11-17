@@ -2,13 +2,13 @@
 Authentication API URLs
 """
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from . import api_views
+from apps.authentication import api_views
+
+app_name = 'authentication'
 
 urlpatterns = [
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('register/', api_views.RegisterAPIView.as_view(), name='register'),
-    path('me/', api_views.UserProfileAPIView.as_view(), name='user_profile'),
-    path('password/change/', api_views.ChangePasswordAPIView.as_view(), name='change_password'),
+    path('register/', api_views.register, name='register'),
+    path('login/', api_views.login, name='login'),
+    path('logout/', api_views.logout, name='logout'),
+    path('me/', api_views.me, name='me'),
 ]
