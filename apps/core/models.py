@@ -56,3 +56,20 @@ class AuditModel(TimeStampedModel):
 
     class Meta:
         abstract = True
+
+
+class Program(TimeStampedModel):
+    """Academic program/degree model"""
+    name = models.CharField(max_length=200)
+    code = models.CharField(max_length=50, unique=True)
+    degree_type = models.CharField(max_length=50)  # e.g., Bachelor, Master, Diploma
+    duration_years = models.IntegerField(default=4)
+    description = models.TextField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        db_table = 'programs'
+        ordering = ['name']
+    
+    def __str__(self):
+        return f"{self.code} - {self.name}"

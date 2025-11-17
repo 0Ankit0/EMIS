@@ -1,24 +1,24 @@
-"""
-Core API URL patterns
-"""
+"""Core API URL configuration"""
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
-router = DefaultRouter()
+from apps.core.api.health import health_check, readiness_check, liveness_check
+from apps.core.api.metrics import metrics
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('auth/', include('apps.authentication.api_urls')),
-    path('students/', include('apps.students.api_urls')),
-    path('faculty/', include('apps.faculty.api_urls')),
-    path('hr/', include('apps.hr.api_urls')),
-    path('finance/', include('apps.finance.api_urls')),
-    path('library/', include('apps.library.api_urls')),
+    # Health and monitoring endpoints
+    path('health/', health_check, name='health'),
+    path('readiness/', readiness_check, name='readiness'),
+    path('liveness/', liveness_check, name='liveness'),
+    path('metrics/', metrics, name='metrics'),
+    
+    # Authentication URLs
+    path('auth/', include('apps.authentication.urls')),
+    
+    # Admissions URLs
     path('admissions/', include('apps.admissions.api_urls')),
-    path('exams/', include('apps.exams.api_urls')),
-    path('attendance/', include('apps.attendance.api_urls')),
-    path('lms/', include('apps.lms.api_urls')),
-    path('analytics/', include('apps.analytics.api_urls')),
-    path('notifications/', include('apps.notifications.api_urls')),
-    path('reports/', include('apps.reports.api_urls')),
+    
+    # Students URLs
+    path('students/', include('apps.students.api_urls')),
+    
+    # Courses URLs
+    path('courses/', include('apps.courses.urls')),
 ]
