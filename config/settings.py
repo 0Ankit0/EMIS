@@ -40,11 +40,13 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_htmx',
     'widget_tweaks',
+    'drf_spectacular',
     
     # Local apps
     'apps.core',
     'apps.authentication',
     'apps.students',
+    'apps.courses',
     'apps.faculty',
     'apps.hr',
     'apps.finance',
@@ -73,6 +75,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
+    'apps.core.middleware.security_headers.SecurityHeadersMiddleware',
+    'apps.core.middleware.rate_limit.RateLimitMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -100,6 +104,17 @@ ASGI_APPLICATION = 'config.asgi.application'
 DATABASES = {
     'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3'),
 }
+
+# PostgreSQL connection pooling configuration
+if 'postgresql' in DATABASES['default']['ENGINE'] or 'postgis' in DATABASES['default']['ENGINE']:
+    DATABASES['default']['CONN_MAX_AGE'] = 600  # 10 minutes
+    DATABASES['default']['OPTIONS'] = {
+        'connect_timeout': 10,
+        'options': '-c statement_timeout=30000',  # 30 seconds
+    }
+    # If using pgbouncer or connection pooler
+    if env.bool('USE_PGBOUNCER', default=False):
+        DATABASES['default']['DISABLE_SERVER_SIDE_CURSORS'] = True
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -155,6 +170,7 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # JWT Settings
@@ -170,9 +186,33 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS
-CORS_ALLOWED_ORIGINS = env.list('ALLOWED_ORIGINS', default=['http://localhost:3000'])
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=['http://localhost:3000', 'http://localhost:8000'])
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'x-correlation-id',
+]
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+CORS_EXPOSE_HEADERS = [
+    'x-correlation-id',
+    'x-request-id',
+]
 
 # Celery Configuration
 CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://localhost:6379/0')
@@ -185,13 +225,19 @@ CELERY_TIMEZONE = TIME_ZONE
 # Redis
 REDIS_URL = env('REDIS_URL', default='redis://localhost:6379/0')
 
-# Cache
+# Cache Configuration
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': REDIS_URL,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        },
+        'KEY_PREFIX': 'emis',
+        'TIMEOUT': 300,  # 5 minutes default
     }
 }
+CACHE_DEFAULT_TIMEOUT = 300
 
 # Session
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
@@ -201,32 +247,19 @@ SESSION_CACHE_ALIAS = 'default'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-# Logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'emis.log',
-            'formatter': 'verbose',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': env('LOG_LEVEL', default='INFO'),
-    },
+# DRF Spectacular (OpenAPI/Swagger)
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'EMIS API',
+    'DESCRIPTION': 'Education Management Information System API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SCHEMA_PATH_PREFIX': r'/api/v[0-9]',
 }
+
+# Logging - Use structured logging configuration
+from apps.core.logging import configure_logging
+LOGGING = configure_logging()
 
 # Security Settings (Production)
 if not DEBUG:
