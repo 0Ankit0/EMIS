@@ -2,11 +2,6 @@
 from typing import Dict, Any
 from django.utils import timezone
 from django.core.cache import cache
-from apps.analytics.models import DashboardMetric
-from apps.analytics.services.admissions_metrics_service import AdmissionsMetricsService
-from apps.analytics.services.attendance_metrics_service import AttendanceMetricsService
-from apps.analytics.services.fee_metrics_service import FeeMetricsService
-from apps.analytics.services.course_metrics_service import CourseMetricsService
 
 
 class DashboardService:
@@ -22,6 +17,12 @@ class DashboardService:
         cached = cache.get('dashboard_summary')
         if cached:
             return cached
+        
+        # Import services
+        from apps.analytics.services.admissions_metrics_service import AdmissionsMetricsService
+        from apps.analytics.services.attendance_metrics_service import AttendanceMetricsService
+        from apps.analytics.services.fee_metrics_service import FeeMetricsService
+        from apps.analytics.services.course_metrics_service import CourseMetricsService
         
         # Calculate all metrics
         summary = {
@@ -43,20 +44,25 @@ class DashboardService:
     @staticmethod
     def _store_metrics(summary: Dict[str, Any]):
         """Store calculated metrics in database"""
-        for category, metrics in summary.items():
-            if category == 'last_updated':
-                continue
+        try:
+            from apps.analytics.models import DashboardMetric
             
-            metric_key = f"{category}_summary"
-            DashboardMetric.objects.update_or_create(
-                metric_key=metric_key,
-                defaults={
-                    'metric_name': category.replace('_', ' ').title(),
-                    'computed_value': metrics,
-                    'category': category.split('_')[0],
-                    'is_active': True,
-                }
-            )
+            for category, metrics in summary.items():
+                if category == 'last_updated':
+                    continue
+                
+                metric_key = f"{category}_summary"
+                DashboardMetric.objects.update_or_create(
+                    metric_key=metric_key,
+                    defaults={
+                        'metric_name': category.replace('_', ' ').title(),
+                        'computed_value': metrics,
+                        'category': category.split('_')[0],
+                        'is_active': True,
+                    }
+                )
+        except Exception:
+            pass
     
     @staticmethod
     def refresh_metrics():
