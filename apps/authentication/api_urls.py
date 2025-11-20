@@ -4,7 +4,7 @@ Authentication API URLs
 from django.urls import path
 from apps.authentication import api_views
 
-app_name = 'authentication'
+app_name = 'authentication_api'
 
 urlpatterns = [
     path('register/', api_views.register, name='register'),
