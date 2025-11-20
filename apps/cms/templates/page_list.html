@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pages - CMS - EMIS{% endblock %}
+
+{% block main_class %}with-sidebar{% endblock %}
+
+{% block sidebar %}
+{% include 'cms/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-file mr-2"></i>Pages
+            </h1>
+            <p class="text-gray-600">Manage your website pages</p>
+        </div>
+        <a href="{% url 'cms:page_create' %}" class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors shadow-md hover:shadow-lg">
+            <i class="fas fa-plus mr-2"></i>Add New Page
+        </a>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <form method="get" class="flex flex-wrap gap-4">
+            <div class="flex-grow">
+                <input type="text" name="search" value="{{ search_query }}" placeholder="Search pages..." 
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+            </div>
+            <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                <option value="">All Status</option>
+                <option value="draft" {% if status_filter == 'draft' %}selected{% endif %}>Draft</option>
+                <option value="published" {% if status_filter == 'published' %}selected{% endif %}>Published</option>
+                <option value="archived" {% if status_filter == 'archived' %}selected{% endif %}>Archived</option>
+            </select>
+            <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                <i class="fas fa-search mr-2"></i>Search
+            </button>
+        </form>
+    </div>
+
+    <!-- Pages List -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        {% if pages %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for page in pages %}
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900">
+                                                <a href="{% url 'cms:page_detail' page.pk %}" class="hover:text-primary-600">{{ page.title }}</a>
+                                            </div>
+                                            {% if page.is_homepage %}
+                                                <span class="text-xs text-green-600"><i class="fas fa-home mr-1"></i>Homepage</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500">{{ page.slug }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                        {% if page.status == 'published' %}bg-green-100 text-green-800
+                                        {% elif page.status == 'draft' %}bg-yellow-100 text-yellow-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ page.status }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {{ page.created_at|date:"M d, Y" }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="{% url 'cms:page_update' page.pk %}" class="text-blue-600 hover:text-blue-900 mr-3">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="post" action="{% url 'cms:page_delete' page.pk %}" class="inline" onsubmit="return confirm('Are you sure you want to delete this page?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if pages.has_other_pages %}
+                <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                    <div class="flex-1 flex justify-between sm:hidden">
+                        {% if pages.has_previous %}
+                            <a href="?page={{ pages.previous_page_number }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</a>
+                        {% endif %}
+                        {% if pages.has_next %}
+                            <a href="?page={{ pages.next_page_number }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</a>
+                        {% endif %}
+                    </div>
+                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                Showing page <span class="font-medium">{{ pages.number }}</span> of <span class="font-medium">{{ pages.paginator.num_pages }}</span>
+                            </p>
+                        </div>
+                        <div>
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                {% if pages.has_previous %}
+                                    <a href="?page={{ pages.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                {% endif %}
+                                {% if pages.has_next %}
+                                    <a href="?page={{ pages.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                {% endif %}
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-12">
+                <i class="fas fa-file text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No pages found</h3>
+                <p class="text-gray-500 mb-4">Get started by creating your first page.</p>
+                <a href="{% url 'cms:page_create' %}" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700">
+                    <i class="fas fa-plus mr-2"></i>Create Page
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
