@@ -1,0 +1,65 @@
+<!-- Attendance Sidebar -->
+<aside id="sidebar" class="sidebar">
+    <div class="p-6">
+        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-calendar-check text-primary-500"></i>
+            Attendance
+        </h3>
+        <nav>
+            <ul class="space-y-1">
+                <li>
+                    <a href="{% url 'attendance:dashboard' %}" class="list-group-item {% if 'dashboard' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="mt-4">
+                    <div class="px-5 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Attendance
+                    </div>
+                </li>
+                <li>
+                    <a href="{% url 'attendance:take' %}" class="list-group-item {% if 'take' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-check-square"></i>
+                        Take Attendance
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'attendance:list' %}" class="list-group-item {% if 'list' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-list"></i>
+                        View Records
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'attendance:by_date' %}" class="list-group-item {% if 'by_date' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-calendar"></i>
+                        By Date
+                    </a>
+                </li>
+                <li class="mt-4">
+                    <div class="px-5 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Reports
+                    </div>
+                </li>
+                <li>
+                    <a href="{% url 'attendance:daily_report' %}" class="list-group-item {% if 'daily_report' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-file-alt"></i>
+                        Daily Report
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'attendance:monthly_report' %}" class="list-group-item {% if 'monthly_report' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-chart-line"></i>
+                        Monthly Report
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'attendance:student_wise' %}" class="list-group-item {% if 'student_wise' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-user"></i>
+                        Student Wise
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
