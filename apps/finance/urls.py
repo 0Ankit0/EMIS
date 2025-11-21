@@ -1,17 +1,28 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from apps.finance.api.fee_structures import FeeStructureViewSet
-from apps.finance.api.invoices import InvoiceViewSet
-from apps.finance.api.payments import PaymentViewSet
-from apps.finance.api.reports import ReportViewSet
-
-router = DefaultRouter()
-router.register(r'fee-structures', FeeStructureViewSet, basename='fee-structure')
-router.register(r'invoices', InvoiceViewSet, basename='invoice')
-router.register(r'payments', PaymentViewSet, basename='payment')
-router.register(r'reports', ReportViewSet, basename='report')
+"""Finance URL Configuration"""
+from django.urls import path
+from . import views
 
 app_name = 'finance'
+
 urlpatterns = [
-    path('', include(router.urls)),
+    # Dashboard
+    path('', views.dashboard, name='dashboard'),
+    
+    # Invoices
+    path('invoices/', views.invoice_list, name='invoice_list'),
+    path('invoices/create/', views.invoice_create, name='invoice_create'),
+    path('invoices/<uuid:pk>/', views.invoice_detail, name='invoice_detail'),
+    
+    # Payments
+    path('payments/create/', views.payment_create, name='payment_create'),
+    
+    # Expenses
+    path('expenses/', views.expense_list, name='expense_list'),
+    path('expenses/create/', views.expense_create, name='expense_create'),
+    
+    # Scholarships
+    path('scholarships/', views.scholarship_list, name='scholarship_list'),
+    
+    # Export
+    path('export/invoices/csv/', views.export_invoices_csv, name='export_invoices_csv'),
 ]
