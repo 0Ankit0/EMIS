@@ -12,12 +12,12 @@ class FeeStructure(TimeStampedModel):
     # Basic information
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=50, unique=True)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, default='')
     
     # Program/Course association
-    program = models.CharField(max_length=100, help_text="Program name (e.g., 'Computer Science BS')")
-    academic_year = models.CharField(max_length=20, blank=True)
-    semester = models.CharField(max_length=50, blank=True)
+    program = models.CharField(max_length=100, blank=True, default='', help_text="Program name (e.g., 'Computer Science BS')")
+    academic_year = models.CharField(max_length=20, blank=True, default='')
+    semester = models.CharField(max_length=50, blank=True, default='')
     
     # Fee components (JSON field to store flexible fee breakdown)
     components = models.JSONField(
