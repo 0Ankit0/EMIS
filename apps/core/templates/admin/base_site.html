@@ -1,0 +1,66 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<div class="admin-header">
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            <i class="fas fa-graduation-cap me-2"></i>
+            {{ site_header|default:_('Django administration') }}
+        </a>
+    </h1>
+</div>
+{% endblock %}
+
+{% block nav-global %}
+<nav class="admin-nav">
+    <a href="/" class="btn btn-sm btn-outline-primary">
+        <i class="fas fa-home me-1"></i>View Site
+    </a>
+</nav>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root {
+        --primary: #667eea;
+        --primary-fg: #fff;
+        --header-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --header-link-color: #fff;
+        --link-fg: #667eea;
+        --link-hover-color: #764ba2;
+        --button-bg: #667eea;
+        --button-hover-bg: #764ba2;
+    }
+    
+    .admin-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 15px 20px;
+    }
+    
+    #site-name a {
+        color: white !important;
+        text-decoration: none;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    
+    .admin-nav {
+        padding: 10px 20px;
+        background: white;
+        border-bottom: 1px solid #e1e1e1;
+    }
+    
+    #header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .module h2, .module caption, .inline-group h2 {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+</style>
+{% endblock %}

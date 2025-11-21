@@ -1,0 +1,65 @@
+<div class="sidebar bg-light border-end" id="sidebar">
+    <div class="list-group list-group-flush">
+        <a href="{% url 'core:dashboard' %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        
+        {% if user.is_student %}
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-book"></i> My Courses
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-tasks"></i> Assignments
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-file-alt"></i> Exams
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-dollar-sign"></i> Fees
+        </a>
+        {% endif %}
+        
+        {% if user.is_faculty %}
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-chalkboard-teacher"></i> My Classes
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-check-square"></i> Attendance
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-clipboard-list"></i> Grading
+        </a>
+        {% endif %}
+        
+        {% if user.is_staff %}
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-users"></i> Students
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-user-tie"></i> Faculty
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-chart-bar"></i> Reports
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.sidebar {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    width: 250px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+}
+.main-content {
+    margin-left: 250px;
+    margin-top: 56px;
+    padding: 20px;
+}
+</style>
