@@ -180,63 +180,6 @@ class User(AbstractUser):
         return codes  # Return unhashed codes to display to user
 
 
-class Role(models.Model):
-    """User roles for RBAC"""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, unique=True, db_index=True)
-    description = models.TextField(blank=True)
-    permissions = models.JSONField(default=dict)
-    is_system_role = models.BooleanField(
-        default=False,
-        help_text="System roles cannot be deleted"
-    )
-    is_active = models.BooleanField(default=True)
-    priority = models.IntegerField(default=0, help_text="Higher priority roles take precedence")
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        db_table = 'roles'
-        ordering = ['-priority', 'name']
-    
-    def __str__(self):
-        return self.name
-
-
-class UserRole(models.Model):
-    """User role assignments"""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_roles')
-    role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='user_assignments')
-    assigned_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='assigned_roles'
-    )
-    assigned_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    
-    class Meta:
-        db_table = 'user_roles'
-        unique_together = ['user', 'role']
-        ordering = ['-assigned_at']
-        indexes = [
-            models.Index(fields=['user', 'is_active']),
-        ]
-    
-    def __str__(self):
-        return f"{self.user.username} - {self.role.name}"
-    
-    def is_expired(self):
-        """Check if role assignment has expired"""
-        if self.expires_at:
-            return timezone.now() > self.expires_at
-        return False
-
-
 class LoginAttempt(models.Model):
     """Track login attempts for security monitoring"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -457,3 +400,126 @@ class APIKey(models.Model):
         if self.expires_at and timezone.now() > self.expires_at:
             return False
         return True
+
+
+class AuditLog(models.Model):
+    """
+    Audit log for tracking user actions
+    """
+    ACTION_CHOICES = [
+        ('login', 'Login'),
+        ('logout', 'Logout'),
+        ('create', 'Create'),
+        ('update', 'Update'),
+        ('delete', 'Delete'),
+        ('view', 'View'),
+        ('export', 'Export'),
+        ('import', 'Import'),
+        ('other', 'Other'),
+    ]
+    
+    OUTCOME_CHOICES = [
+        ('success', 'Success'),
+        ('failure', 'Failure'),
+        ('error', 'Error'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    actor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='audit_logs')
+    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+    target_model = models.CharField(max_length=100, blank=True)
+    target_id = models.CharField(max_length=100, blank=True)
+    outcome = models.CharField(max_length=20, choices=OUTCOME_CHOICES, default='success')
+    details = models.JSONField(default=dict, blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    
+    class Meta:
+        db_table = 'audit_logs'
+        ordering = ['-timestamp']
+        indexes = [
+            models.Index(fields=['actor', 'timestamp']),
+            models.Index(fields=['action', 'timestamp']),
+            models.Index(fields=['target_model', 'target_id']),
+        ]
+    
+    def __str__(self):
+        return f"{self.actor} - {self.action} - {self.timestamp}"
+
+
+class Permission(models.Model):
+    """
+    Permission model for RBAC
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100, unique=True)
+    resource_group = models.CharField(max_length=100, db_index=True)
+    action = models.CharField(max_length=50)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'permissions'
+        ordering = ['resource_group', 'action']
+        unique_together = ['resource_group', 'action']
+    
+    def __str__(self):
+        return f"{self.resource_group}:{self.action}"
+
+
+class Role(models.Model):
+    """
+    Role model for RBAC
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+    permissions = models.ManyToManyField(Permission, through='RolePermission')
+    is_system = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'roles'
+        ordering = ['name']
+    
+    def __str__(self):
+        return self.name
+
+
+class RolePermission(models.Model):
+    """
+    Through model for Role-Permission relationship
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    permission = models.ForeignKey(Permission, on_delete=models.CASCADE)
+    granted_at = models.DateTimeField(auto_now_add=True)
+    granted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    
+    class Meta:
+        db_table = 'role_permissions'
+        unique_together = ['role', 'permission']
+    
+    def __str__(self):
+        return f"{self.role.name} - {self.permission.name}"
+
+
+class UserRole(models.Model):
+    """
+    User-Role assignment
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_roles')
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    assigned_at = models.DateTimeField(auto_now_add=True)
+    assigned_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='assigned_roles')
+    
+    class Meta:
+        db_table = 'user_roles'
+        unique_together = ['user', 'role']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.role.name}"
