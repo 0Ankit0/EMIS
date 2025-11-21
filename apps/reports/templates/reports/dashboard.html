@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Reports Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Reports Dashboard</h1>
+    
+    <!-- Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-gray-500 text-sm">Total Templates</div>
+            <div class="text-3xl font-bold">{{ stats.total_templates }}</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-gray-500 text-sm">Generated Reports</div>
+            <div class="text-3xl font-bold">{{ stats.total_generated }}</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-gray-500 text-sm">Favorites</div>
+            <div class="text-3xl font-bold">{{ stats.favorites_count }}</div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="text-gray-500 text-sm">Pending</div>
+            <div class="text-3xl font-bold">{{ stats.pending_reports }}</div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
+        <div class="flex gap-4">
+            <a href="{% url 'reports:template_list' %}" class="btn btn-primary">Browse Templates</a>
+            <a href="{% url 'reports:generated_list' %}" class="btn btn-secondary">My Reports</a>
+            <a href="{% url 'reports:favorites_list' %}" class="btn btn-secondary">Favorites</a>
+        </div>
+    </div>
+    
+    <!-- Recent Reports -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Recent Reports</h2>
+        {% if recent_reports %}
+            <table class="min-w-full">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left py-2">Title</th>
+                        <th class="text-left py-2">Format</th>
+                        <th class="text-left py-2">Status</th>
+                        <th class="text-left py-2">Generated</th>
+                        <th class="text-right py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in recent_reports %}
+                    <tr class="border-b">
+                        <td class="py-2">{{ report.title }}</td>
+                        <td class="py-2">{{ report.get_format_display }}</td>
+                        <td class="py-2">
+                            <span class="px-2 py-1 rounded text-sm {% if report.status == 'completed' %}bg-green-100 text-green-800{% elif report.status == 'failed' %}bg-red-100 text-red-800{% else %}bg-yellow-100 text-yellow-800{% endif %}">
+                                {{ report.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="py-2">{{ report.generated_at|date:"Y-m-d H:i" }}</td>
+                        <td class="py-2 text-right">
+                            <a href="{% url 'reports:generated_detail' report.pk %}" class="text-blue-600 hover:underline">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-gray-500">No recent reports</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
