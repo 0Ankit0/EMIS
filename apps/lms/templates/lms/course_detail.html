@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ course.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Course Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg p-8 mb-6">
+        <div class="flex items-start justify-between">
+            <div class="flex-1">
+                <h1 class="text-4xl font-bold mb-4">{{ course.title }}</h1>
+                <p class="text-xl mb-4">{{ course.short_description }}</p>
+                
+                <div class="flex items-center gap-6 mb-4">
+                    {% if course.instructor %}
+                    <div class="flex items-center">
+                        <span class="font-semibold">Instructor:</span>
+                        <span class="ml-2">{{ course.instructor.get_full_name }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="flex items-center">
+                        <span class="font-semibold">Duration:</span>
+                        <span class="ml-2">{{ total_duration }} minutes</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-semibold">Level:</span>
+                        <span class="ml-2">{{ course.get_difficulty_level_display }}</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    {% if course.is_free %}
+                    <span class="px-4 py-2 bg-green-500 rounded-full font-semibold">Free Course</span>
+                    {% else %}
+                    <span class="px-4 py-2 bg-white text-blue-600 rounded-full font-semibold">${{ course.price }}</span>
+                    {% endif %}
+                    <span class="px-4 py-2 bg-white bg-opacity-20 rounded-full">{{ course.enrollment_count }} Students</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Content -->
+        <div class="lg:col-span-2">
+            <!-- Course Description -->
+            <div class="bg-white rounded-lg shadow p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4">About This Course</h2>
+                <p class="text-gray-700 whitespace-pre-line">{{ course.description }}</p>
+            </div>
+            
+            {% if course.learning_objectives %}
+            <!-- Learning Objectives -->
+            <div class="bg-white rounded-lg shadow p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4">What You'll Learn</h2>
+                <p class="text-gray-700 whitespace-pre-line">{{ course.learning_objectives }}</p>
+            </div>
+            {% endif %}
+            
+            {% if course.prerequisites %}
+            <!-- Prerequisites -->
+            <div class="bg-white rounded-lg shadow p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4">Prerequisites</h2>
+                <p class="text-gray-700 whitespace-pre-line">{{ course.prerequisites }}</p>
+            </div>
+            {% endif %}
+            
+            <!-- Course Curriculum -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-semibold mb-4">Course Curriculum</h2>
+                <div class="space-y-4">
+                    {% for module in modules %}
+                    <div class="border rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-semibold">{{ module.title }}</h3>
+                            <span class="text-sm text-gray-600">{{ module.lessons.count }} lessons</span>
+                        </div>
+                        {% if module.description %}
+                        <p class="text-gray-600 text-sm mb-3">{{ module.description }}</p>
+                        {% endif %}
+                        
+                        <div class="space-y-2">
+                            {% for lesson in module.lessons.all %}
+                            <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded">
+                                <div class="flex items-center">
+                                    <span class="mr-3">
+                                        {% if lesson.content_type == 'video' %}📹
+                                        {% elif lesson.content_type == 'text' %}📄
+                                        {% elif lesson.content_type == 'quiz' %}📝
+                                        {% elif lesson.content_type == 'assignment' %}✏️
+                                        {% else %}📚{% endif %}
+                                    </span>
+                                    <span>{{ lesson.title }}</span>
+                                    {% if lesson.is_preview %}
+                                    <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded">Preview</span>
+                                    {% endif %}
+                                </div>
+                                <span class="text-sm text-gray-600">{{ lesson.duration_minutes }} min</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-600">No modules available yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow p-6 sticky top-6">
+                {% if is_enrolled %}
+                <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-semibold">Your Progress</span>
+                        <span class="text-sm text-gray-600">{{ progress }}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div class="bg-blue-600 h-3 rounded-full" style="width: {{ progress }}%"></div>
+                    </div>
+                </div>
+                
+                <a href="{% url 'lms:my_learning' %}" 
+                   class="block w-full text-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold mb-3">
+                    Continue Learning
+                </a>
+                
+                {% if enrollment.certificate_issued %}
+                <a href="{% url 'lms:my_certificates' %}" 
+                   class="block w-full text-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold">
+                    View Certificate
+                </a>
+                {% endif %}
+                {% else %}
+                <a href="{% url 'lms:course_enroll' course.pk %}" 
+                   class="block w-full text-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold mb-3">
+                    Enroll Now
+                </a>
+                {% endif %}
+                
+                <div class="border-t pt-4 mt-4">
+                    <h3 class="font-semibold mb-3">Course Information</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex justify-between">
+                            <span class="text-gray-600">Lessons:</span>
+                            <span class="font-semibold">{{ total_lessons }}</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span class="text-gray-600">Duration:</span>
+                            <span class="font-semibold">{{ course.duration_hours }}h</span>
+                        </li>
+                        <li class="flex justify-between">
+                            <span class="text-gray-600">Category:</span>
+                            <span class="font-semibold">{{ course.category }}</span>
+                        </li>
+                        {% if course.start_date %}
+                        <li class="flex justify-between">
+                            <span class="text-gray-600">Start Date:</span>
+                            <span class="font-semibold">{{ course.start_date|date:"M d, Y" }}</span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                {% if user.is_staff %}
+                <div class="border-t pt-4 mt-4">
+                    <h3 class="font-semibold mb-3">Admin Actions</h3>
+                    <a href="{% url 'lms:update' course.pk %}" class="block w-full text-center px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 mb-2">
+                        Edit Course
+                    </a>
+                    <a href="{% url 'lms:delete' course.pk %}" class="block w-full text-center px-4 py-2 bg-red-200 text-red-700 rounded hover:bg-red-300">
+                        Delete Course
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

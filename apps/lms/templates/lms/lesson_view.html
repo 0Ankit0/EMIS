@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ lesson.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <nav class="mb-6 text-sm text-gray-600">
+        <a href="{% url 'lms:course_detail' course.pk %}" class="hover:text-blue-600">{{ course.title }}</a>
+        <span class="mx-2">/</span>
+        <span>{{ lesson.title }}</span>
+    </nav>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h1 class="text-3xl font-bold mb-4">{{ lesson.title }}</h1>
+                
+                {% if lesson.content_type == 'video' %}
+                    {% if lesson.video_file %}
+                    <video controls class="w-full mb-4">
+                        <source src="{{ lesson.video_file.url }}" type="video/mp4">
+                    </video>
+                    {% elif lesson.video_url %}
+                    <iframe src="{{ lesson.video_url }}" class="w-full h-96 mb-4"></iframe>
+                    {% endif %}
+                {% elif lesson.content_type == 'text' %}
+                    <div class="prose max-w-none">{{ lesson.text_content|safe }}</div>
+                {% elif lesson.content_type == 'pdf' %}
+                    {% if lesson.pdf_file %}
+                    <a href="{{ lesson.pdf_file.url }}" target="_blank" class="btn btn-primary">Download PDF</a>
+                    {% endif %}
+                {% endif %}
+                
+                {% if lesson.description %}
+                <div class="mt-6">
+                    <h2 class="text-xl font-semibold mb-2">Description</h2>
+                    <p class="text-gray-700">{{ lesson.description }}</p>
+                </div>
+                {% endif %}
+                
+                {% if enrollment %}
+                <div class="mt-6 flex gap-4">
+                    {% if prev_lesson %}
+                    <a href="{% url 'lms:lesson_view' prev_lesson.pk %}" class="px-6 py-2 bg-gray-200 rounded hover:bg-gray-300">Previous</a>
+                    {% endif %}
+                    
+                    {% if not progress.is_completed %}
+                    <button onclick="markComplete()" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                        Mark as Complete
+                    </button>
+                    {% else %}
+                    <span class="px-6 py-2 bg-green-100 text-green-700 rounded">✓ Completed</span>
+                    {% endif %}
+                    
+                    {% if next_lesson %}
+                    <a href="{% url 'lms:lesson_view' next_lesson.pk %}" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Next</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            
+            {% if quizzes %}
+            <div class="bg-white rounded-lg shadow p-6 mt-6">
+                <h2 class="text-2xl font-semibold mb-4">Quizzes</h2>
+                {% for quiz in quizzes %}
+                <div class="border rounded p-4 mb-4">
+                    <h3 class="font-semibold mb-2">{{ quiz.title }}</h3>
+                    <p class="text-gray-600 text-sm mb-3">{{ quiz.description }}</p>
+                    <a href="{% url 'lms:quiz_detail' quiz.pk %}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        Take Quiz
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            {% if assignments %}
+            <div class="bg-white rounded-lg shadow p-6 mt-6">
+                <h2 class="text-2xl font-semibold mb-4">Assignments</h2>
+                {% for assignment in assignments %}
+                <div class="border rounded p-4 mb-4">
+                    <h3 class="font-semibold mb-2">{{ assignment.title }}</h3>
+                    <p class="text-gray-600 text-sm mb-3">{{ assignment.description }}</p>
+                    <a href="{% url 'lms:assignment_detail' assignment.pk %}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                        View Assignment
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="font-semibold mb-4">Lesson Info</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><span class="text-gray-600">Duration:</span> <span class="font-semibold">{{ lesson.duration_minutes }} min</span></li>
+                    <li><span class="text-gray-600">Type:</span> <span class="font-semibold">{{ lesson.get_content_type_display }}</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function markComplete() {
+    fetch("{% url 'lms:lesson_complete' lesson.pk %}", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}
