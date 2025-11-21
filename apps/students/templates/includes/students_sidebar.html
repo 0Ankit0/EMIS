@@ -1,0 +1,30 @@
+<div class="sidebar" id="sidebar">
+    <div class="p-3 border-bottom">
+        <h5 class="mb-0 fw-bold text-primary">
+            <i class="fas fa-users me-2"></i>Students Module
+        </h5>
+    </div>
+    <div class="list-group list-group-flush">
+        <a href="{% url 'core:dashboard' %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <a href="{% url 'students:list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'list' %}active{% endif %}">
+            <i class="fas fa-list"></i> Student List
+        </a>
+        <a href="{% url 'students:create' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'create' %}active{% endif %}">
+            <i class="fas fa-user-plus"></i> Add Student
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-search"></i> Advanced Search
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-chart-bar"></i> Student Reports
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-file-import"></i> Import Students
+        </a>
+        <a href="#" class="list-group-item list-group-item-action">
+            <i class="fas fa-file-export"></i> Export Data
+        </a>
+    </div>
+</div>
