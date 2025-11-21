@@ -1,0 +1,65 @@
+<!-- Hostel Management Sidebar -->
+<aside id="sidebar" class="sidebar">
+    <div class="p-6">
+        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <i class="fas fa-bed text-primary-500"></i>
+            Hostel Management
+        </h3>
+        <nav>
+            <ul class="space-y-1">
+                <li>
+                    <a href="{% url 'hostel:dashboard' %}" class="list-group-item {% if 'dashboard' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="mt-4">
+                    <div class="px-5 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Rooms
+                    </div>
+                </li>
+                <li>
+                    <a href="{% url 'hostel:rooms' %}" class="list-group-item {% if 'rooms' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-door-open"></i>
+                        All Rooms
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'hostel:add_room' %}" class="list-group-item {% if 'add_room' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-plus-circle"></i>
+                        Add Room
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'hostel:allocation' %}" class="list-group-item {% if 'allocation' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-bed"></i>
+                        Room Allocation
+                    </a>
+                </li>
+                <li class="mt-4">
+                    <div class="px-5 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        Management
+                    </div>
+                </li>
+                <li>
+                    <a href="{% url 'hostel:residents' %}" class="list-group-item {% if 'residents' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-users"></i>
+                        Residents
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'hostel:visitors' %}" class="list-group-item {% if 'visitors' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-user-friends"></i>
+                        Visitors
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'hostel:complaints' %}" class="list-group-item {% if 'complaints' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Complaints
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
