@@ -11,7 +11,7 @@ urlpatterns = [
     path('metrics/', metrics, name='metrics'),
     
     # Authentication URLs
-    path('auth/', include('apps.authentication.urls')),
+    path('auth/', include('apps.authentication.api_urls')),
     
     # Admissions URLs
     path('admissions/', include('apps.admissions.api_urls')),

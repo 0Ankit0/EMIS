@@ -10,17 +10,17 @@ class Migration(migrations.Migration):
         ("authentication", "0001_initial"),
         ("admissions", "0001_initial"),
         ("courses", "0001_initial"),
-        ("finance", "0001_initial"),
+        ("finance", "0002_payment_remove_feepayment_created_by_and_more"),
     ]
 
     operations = [
         # Indexes for authentication.User model
         migrations.RunSQL(
             sql="""
-                CREATE INDEX IF NOT EXISTS idx_user_email ON authentication_user(email);
-                CREATE INDEX IF NOT EXISTS idx_user_username ON authentication_user(username);
-                CREATE INDEX IF NOT EXISTS idx_user_is_active ON authentication_user(is_active);
-                CREATE INDEX IF NOT EXISTS idx_user_created_at ON authentication_user(created_at);
+                CREATE INDEX IF NOT EXISTS idx_user_email ON users(email);
+                CREATE INDEX IF NOT EXISTS idx_user_username ON users(username);
+                CREATE INDEX IF NOT EXISTS idx_user_is_active ON users(is_active);
+                CREATE INDEX IF NOT EXISTS idx_user_created_at ON users(created_at);
             """,
             reverse_sql="""
                 DROP INDEX IF EXISTS idx_user_email;
@@ -33,11 +33,11 @@ class Migration(migrations.Migration):
         # Indexes for admissions.Application model
         migrations.RunSQL(
             sql="""
-                CREATE INDEX IF NOT EXISTS idx_application_status ON admissions_application(status);
-                CREATE INDEX IF NOT EXISTS idx_application_email ON admissions_application(email);
-                CREATE INDEX IF NOT EXISTS idx_application_program ON admissions_application(program);
-                CREATE INDEX IF NOT EXISTS idx_application_submitted_at ON admissions_application(submitted_at);
-                CREATE INDEX IF NOT EXISTS idx_application_created_at ON admissions_application(created_at);
+                CREATE INDEX IF NOT EXISTS idx_application_status ON applications(status);
+                CREATE INDEX IF NOT EXISTS idx_application_email ON applications(email);
+                CREATE INDEX IF NOT EXISTS idx_application_program ON applications(program);
+                CREATE INDEX IF NOT EXISTS idx_application_submitted_at ON applications(submitted_at);
+                CREATE INDEX IF NOT EXISTS idx_application_created_at ON applications(created_at);
             """,
             reverse_sql="""
                 DROP INDEX IF EXISTS idx_application_status;
@@ -51,9 +51,9 @@ class Migration(migrations.Migration):
         # Indexes for courses.Course model
         migrations.RunSQL(
             sql="""
-                CREATE INDEX IF NOT EXISTS idx_course_status ON courses_course(status);
-                CREATE INDEX IF NOT EXISTS idx_course_code ON courses_course(code);
-                CREATE INDEX IF NOT EXISTS idx_course_created_at ON courses_course(created_at);
+                CREATE INDEX IF NOT EXISTS idx_course_status ON courses(status);
+                CREATE INDEX IF NOT EXISTS idx_course_code ON courses(code);
+                CREATE INDEX IF NOT EXISTS idx_course_created_at ON courses(created_at);
             """,
             reverse_sql="""
                 DROP INDEX IF EXISTS idx_course_status;
@@ -65,9 +65,9 @@ class Migration(migrations.Migration):
         # Indexes for finance.Invoice model
         migrations.RunSQL(
             sql="""
-                CREATE INDEX IF NOT EXISTS idx_invoice_status ON finance_invoice(status);
-                CREATE INDEX IF NOT EXISTS idx_invoice_due_date ON finance_invoice(due_date);
-                CREATE INDEX IF NOT EXISTS idx_invoice_created_at ON finance_invoice(created_at);
+                CREATE INDEX IF NOT EXISTS idx_invoice_status ON finance_invoices(status);
+                CREATE INDEX IF NOT EXISTS idx_invoice_due_date ON finance_invoices(due_date);
+                CREATE INDEX IF NOT EXISTS idx_invoice_created_at ON finance_invoices(created_at);
             """,
             reverse_sql="""
                 DROP INDEX IF EXISTS idx_invoice_status;
@@ -79,8 +79,8 @@ class Migration(migrations.Migration):
         # Indexes for finance.Payment model
         migrations.RunSQL(
             sql="""
-                CREATE INDEX IF NOT EXISTS idx_payment_timestamp ON finance_payment(timestamp);
-                CREATE INDEX IF NOT EXISTS idx_payment_method ON finance_payment(method);
+                CREATE INDEX IF NOT EXISTS idx_payment_timestamp ON finance_payments(payment_date);
+                CREATE INDEX IF NOT EXISTS idx_payment_method ON finance_payments(method);
             """,
             reverse_sql="""
                 DROP INDEX IF EXISTS idx_payment_timestamp;
@@ -91,13 +91,13 @@ class Migration(migrations.Migration):
         # Full-text search indexes for PostgreSQL
         migrations.RunSQL(
             sql="""
-                CREATE INDEX IF NOT EXISTS idx_user_search ON authentication_user 
+                CREATE INDEX IF NOT EXISTS idx_user_search ON users 
                     USING GIN (to_tsvector('english', coalesce(username,'') || ' ' || coalesce(email,'') || ' ' || coalesce(first_name,'') || ' ' || coalesce(last_name,'')));
                 
-                CREATE INDEX IF NOT EXISTS idx_course_search ON courses_course 
+                CREATE INDEX IF NOT EXISTS idx_course_search ON courses 
                     USING GIN (to_tsvector('english', coalesce(title,'') || ' ' || coalesce(code,'') || ' ' || coalesce(description,'')));
                 
-                CREATE INDEX IF NOT EXISTS idx_application_search ON admissions_application 
+                CREATE INDEX IF NOT EXISTS idx_application_search ON applications 
                     USING GIN (to_tsvector('english', coalesce(first_name,'') || ' ' || coalesce(last_name,'') || ' ' || coalesce(email,'') || ' ' || coalesce(program,'')));
             """,
             reverse_sql="""

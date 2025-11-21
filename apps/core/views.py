@@ -3,26 +3,27 @@ Core views
 """
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from .permissions_utils import get_user_modules
 
 
 def home(request):
-    """Home page - redirect to dashboard if logged in"""
+    """Home page - redirect to dashboard if logged in, otherwise to login"""
     if request.user.is_authenticated:
         return redirect('core:dashboard')
-    return render(request, 'core/home.html')
+    return redirect('authentication:login')
 
 
 @login_required
 def dashboard(request):
-    """Main dashboard - role-based redirect"""
+    """Main dashboard - role-based modules display"""
     user = request.user
     
-    # Redirect based on user role
-    if hasattr(user, 'student_profile'):
-        return redirect('students:dashboard')
-    elif hasattr(user, 'faculty_profile'):
-        return redirect('faculty:dashboard')
-    elif user.is_staff:
-        return redirect('hr:dashboard')
+    # Get modules based on user's roles
+    modules = get_user_modules(user)
     
-    return render(request, 'core/dashboard.html')
+    context = {
+        'modules': modules,
+        'user': user,
+    }
+    
+    return render(request, 'core/dashboard.html', context)
