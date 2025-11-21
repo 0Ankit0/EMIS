@@ -1,0 +1,35 @@
+{% extends 'courses/base_courses.html' %}
+{% load static %}
+
+{% block title %}{{ module.title }} - EMIS{% endblock %}
+
+{% block content %}
+<div class="container-fluid max-w-7xl mx-auto">
+    <div class="mb-8">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ module.title }}</h1>
+                <p class="text-gray-600">Module {{ module.sequence_order }} • {{ course.code }}</p>
+            </div>
+            <div class="flex gap-2">
+                <a href="{% url 'courses:module_list' course.id %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left mr-2"></i>Back
+                </a>
+                <a href="{% url 'courses:module_update' module.id %}" class="btn btn-primary">
+                    <i class="fas fa-edit mr-2"></i>Edit
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-8">
+        <div class="prose max-w-none">
+            <h2 class="text-xl font-bold mb-4">Description</h2>
+            <p class="text-gray-700 mb-6">{{ module.description|linebreaks }}</p>
+            
+            <h2 class="text-xl font-bold mb-4">Content</h2>
+            <div class="text-gray-700">{{ module.content|linebreaks }}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

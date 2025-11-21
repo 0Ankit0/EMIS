@@ -1,0 +1,220 @@
+{% extends 'courses/base_courses.html' %}
+{% load static %}
+
+{% block title %}{{ course.title }} - EMIS{% endblock %}
+
+{% block content %}
+<div class="container-fluid max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <div class="flex items-center gap-4">
+                <a href="{% url 'courses:list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left mr-2"></i>Back
+                </a>
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-1">{{ course.title }}</h1>
+                    <p class="text-gray-600 flex items-center gap-3">
+                        <span class="font-mono font-semibold">{{ course.code }}</span>
+                        <span class="text-gray-400">•</span>
+                        <span>{{ course.credits }} Credits</span>
+                        {% if course.department %}
+                        <span class="text-gray-400">•</span>
+                        <span>{{ course.department }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <a href="{% url 'courses:update' course.id %}" class="btn btn-primary">
+                    <i class="fas fa-edit mr-2"></i>Edit Course
+                </a>
+                <form method="post" action="{% url 'courses:delete' course.id %}" class="inline" onsubmit="return confirm('Are you sure you want to delete this course?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash mr-2"></i>Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Banner -->
+    <div class="mb-6">
+        <div class="bg-{% if course.status == 'active' %}green{% elif course.status == 'draft' %}gray{% else %}red{% endif %}-50 border-l-4 border-{% if course.status == 'active' %}green{% elif course.status == 'draft' %}gray{% else %}red{% endif %}-500 p-4 rounded">
+            <div class="flex items-center">
+                <i class="fas fa-info-circle text-{% if course.status == 'active' %}green{% elif course.status == 'draft' %}gray{% else %}red{% endif %}-600 text-xl mr-3"></i>
+                <p class="text-{% if course.status == 'active' %}green{% elif course.status == 'draft' %}gray{% else %}red{% endif %}-700">
+                    <span class="font-semibold">Status:</span> {{ course.get_status_display }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Description -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-info-circle text-primary-500"></i>Description
+                </h2>
+                <div class="text-gray-700 leading-relaxed">
+                    {{ course.description|default:"No description provided"|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Syllabus -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fas fa-file-alt text-primary-500"></i>Syllabus
+                </h2>
+                <div class="text-gray-700 leading-relaxed">
+                    {{ course.syllabus|default:"No syllabus available"|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Modules -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 border-b px-6 py-4 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fas fa-list text-primary-500"></i>Course Modules
+                    </h2>
+                    <a href="{% url 'courses:module_create' course.id %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus mr-2"></i>Add Module
+                    </a>
+                </div>
+                <div class="p-6">
+                    {% if modules %}
+                    <div class="space-y-3">
+                        {% for module in modules %}
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span class="text-primary-600 font-semibold">{{ forloop.counter }}</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-gray-800">{{ module.title }}</h3>
+                                    {% if module.description %}
+                                    <p class="text-sm text-gray-600">{{ module.description|truncatewords:15 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="{% url 'courses:module_detail' module.id %}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'courses:module_update' module.id %}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-center text-gray-500 py-8">No modules added yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Assignments -->
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 border-b px-6 py-4 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fas fa-tasks text-primary-500"></i>Assignments
+                    </h2>
+                    <a href="{% url 'courses:assignment_create' course.id %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus mr-2"></i>Add Assignment
+                    </a>
+                </div>
+                <div class="p-6">
+                    {% if assignments %}
+                    <div class="space-y-3">
+                        {% for assignment in assignments %}
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <div class="flex-grow">
+                                <h3 class="font-semibold text-gray-800">{{ assignment.title }}</h3>
+                                <p class="text-sm text-gray-600 flex items-center gap-3 mt-1">
+                                    <span><i class="fas fa-calendar mr-1"></i>Due: {{ assignment.due_date|date:"M d, Y" }}</span>
+                                    <span><i class="fas fa-star mr-1"></i>{{ assignment.max_score }} points</span>
+                                </p>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="{% url 'courses:assignment_detail' assignment.id %}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'courses:assignment_update' assignment.id %}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-center text-gray-500 py-8">No assignments created yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="space-y-6">
+            <!-- Course Details Card -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Course Details</h3>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Course Code</p>
+                        <p class="font-semibold text-gray-800">{{ course.code }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Credits</p>
+                        <p class="font-semibold text-gray-800">{{ course.credits }}</p>
+                    </div>
+                    {% if course.department %}
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Department</p>
+                        <p class="font-semibold text-gray-800">{{ course.department }}</p>
+                    </div>
+                    {% endif %}
+                    {% if course.semester %}
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Semester</p>
+                        <p class="font-semibold text-gray-800">{{ course.semester }}</p>
+                    </div>
+                    {% endif %}
+                    {% if course.academic_year %}
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Academic Year</p>
+                        <p class="font-semibold text-gray-800">{{ course.academic_year }}</p>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <p class="text-sm text-gray-600 mb-1">Created</p>
+                        <p class="font-semibold text-gray-800">{{ course.created_at|date:"M d, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Quick Actions</h3>
+                <div class="space-y-2">
+                    <a href="{% url 'courses:module_list' course.id %}" class="block btn btn-outline-primary w-full text-left">
+                        <i class="fas fa-list mr-2"></i>Manage Modules
+                    </a>
+                    <a href="{% url 'courses:assignment_list' course.id %}" class="block btn btn-outline-primary w-full text-left">
+                        <i class="fas fa-tasks mr-2"></i>Manage Assignments
+                    </a>
+                    <a href="{% url 'courses:enrollments' %}" class="block btn btn-outline-primary w-full text-left">
+                        <i class="fas fa-user-check mr-2"></i>View Enrollments
+                    </a>
+                    <a href="{% url 'courses:materials' %}" class="block btn btn-outline-primary w-full text-left">
+                        <i class="fas fa-folder mr-2"></i>Course Materials
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

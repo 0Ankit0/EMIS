@@ -1,0 +1,33 @@
+<div class="sidebar" id="sidebar">
+    <div class="p-3 border-bottom">
+        <h5 class="mb-0 fw-bold text-primary">
+            <i class="fas fa-book-open me-2"></i>Courses Module
+        </h5>
+    </div>
+    <div class="list-group list-group-flush">
+        <a href="{% url 'core:dashboard' %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <a href="{% url 'courses:dashboard' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="{% url 'courses:course_list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'course_list' %}active{% endif %}">
+            <i class="fas fa-list"></i> Course List
+        </a>
+        <a href="{% url 'courses:create_course' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'create_course' %}active{% endif %}">
+            <i class="fas fa-plus"></i> Create Course
+        </a>
+        <a href="{% url 'courses:curriculum' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'curriculum' %}active{% endif %}">
+            <i class="fas fa-book-open"></i> Curriculum
+        </a>
+        <a href="{% url 'courses:syllabus' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'syllabus' %}active{% endif %}">
+            <i class="fas fa-file-alt"></i> Syllabus
+        </a>
+        <a href="{% url 'courses:course_materials' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'course_materials' %}active{% endif %}">
+            <i class="fas fa-folder"></i> Course Materials
+        </a>
+        <a href="{% url 'courses:enrollments' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'enrollments' %}active{% endif %}">
+            <i class="fas fa-users"></i> Enrollments
+        </a>
+    </div>
+</div>

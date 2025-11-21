@@ -1,0 +1,76 @@
+{% extends 'courses/base_courses.html' %}
+{% load static %}
+
+{% block title %}Assignments - {{ course.title }} - EMIS{% endblock %}
+
+{% block content %}
+<div class="container-fluid max-w-7xl mx-auto">
+    <div class="mb-8">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-tasks mr-2 text-primary-500"></i>Assignments
+                </h1>
+                <p class="text-gray-600">{{ course.code }} - {{ course.title }}</p>
+            </div>
+            <div class="flex gap-2">
+                <a href="{% url 'courses:detail' course.id %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Course
+                </a>
+                <a href="{% url 'courses:assignment_create' course.id %}" class="btn btn-primary">
+                    <i class="fas fa-plus mr-2"></i>Create Assignment
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="p-6">
+            {% if assignments %}
+            <div class="space-y-4">
+                {% for assignment in assignments %}
+                <div class="p-6 bg-gray-50 rounded-lg hover:shadow-md transition-all">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-grow">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ assignment.title }}</h3>
+                            <p class="text-sm text-gray-600 mb-3">{{ assignment.description|truncatewords:30 }}</p>
+                            <div class="flex gap-4 text-sm text-gray-600">
+                                <span><i class="fas fa-calendar mr-1"></i>Due: {{ assignment.due_date|date:"M d, Y H:i" }}</span>
+                                <span><i class="fas fa-star mr-1"></i>{{ assignment.max_score }} points</span>
+                                <span class="badge {% if assignment.is_published %}bg-green-100 text-green-700{% else %}bg-gray-100 text-gray-700{% endif %}">
+                                    {% if assignment.is_published %}Published{% else %}Draft{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2">
+                            <a href="{% url 'courses:assignment_detail' assignment.id %}" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{% url 'courses:assignment_update' assignment.id %}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form method="post" action="{% url 'courses:assignment_delete' assignment.id %}" class="inline"
+                                  onsubmit="return confirm('Delete this assignment?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-12 text-gray-500">
+                <i class="fas fa-inbox text-5xl mb-4"></i>
+                <p class="text-lg">No assignments yet</p>
+                <a href="{% url 'courses:assignment_create' course.id %}" class="btn btn-primary mt-4">
+                    <i class="fas fa-plus mr-2"></i>Create First Assignment
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

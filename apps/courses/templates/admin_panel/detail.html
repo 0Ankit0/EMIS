@@ -1,0 +1,117 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}{{ course.name }} - Course Details{% endblock %}
+
+{% block page_title %}Course Details{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'courses:list' %}">Courses</a></li>
+<li class="breadcrumb-item active">{{ course.code }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3><i class="fas fa-book me-2"></i>{{ course.name }}</h3>
+        <p class="text-muted mb-0">Course Code: {{ course.code }}</p>
+    </div>
+    <div>
+        <a href="{% url 'courses:edit' course.pk %}" class="btn btn-primary">
+            <i class="fas fa-edit me-2"></i>Edit Course
+        </a>
+        <button class="btn btn-outline-danger" onclick="if(confirmDelete('{{ course.name }}')) window.location.href='{% url 'courses:delete' course.pk %}'">
+            <i class="fas fa-trash me-2"></i>Delete
+        </button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <div class="bg-primary bg-opacity-10 rounded-circle p-4 mx-auto mb-3" style="width:120px;height:120px">
+                    <i class="fas fa-book fa-4x text-primary"></i>
+                </div>
+                <h4>{{ course.name }}</h4>
+                <p class="text-muted">{{ course.code }}</p>
+                <div class="d-flex justify-content-center gap-2 mb-3">
+                    <span class="badge bg-primary">{{ course.credits|default:"3" }} Credits</span>
+                    {% if course.is_active %}
+                    <span class="badge bg-success">Active</span>
+                    {% else %}
+                    <span class="badge bg-danger">Inactive</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Quick Stats</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Enrolled Students</span>
+                    <strong>0</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Assignments</span>
+                    <strong>0</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Resources</span>
+                    <strong>0</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Course Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Course Code</label>
+                        <p class="mb-0 fw-semibold">{{ course.code }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Course Name</label>
+                        <p class="mb-0 fw-semibold">{{ course.name }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Credits</label>
+                        <p class="mb-0">{{ course.credits|default:"3" }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Status</label>
+                        <p class="mb-0">
+                            {% if course.is_active %}
+                            <span class="badge bg-success">Active</span>
+                            {% else %}
+                            <span class="badge bg-danger">Inactive</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <label class="text-muted small">Description</label>
+                        <p class="mb-0">{{ course.description|default:"No description provided" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Enrolled Students</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">No students enrolled yet</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
