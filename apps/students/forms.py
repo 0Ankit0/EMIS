@@ -1,102 +1,178 @@
 """
-Student forms
+Students Forms
 """
 from django import forms
-from django.core.exceptions import ValidationError
-from datetime import date
-from dateutil.relativedelta import relativedelta
-
-from .models import Student, Gender
+from .models import Student, Enrollment, AttendanceRecord
 
 
-class StudentCreateForm(forms.ModelForm):
-    """Form for creating a new student"""
+class StudentForm(forms.ModelForm):
+    """
+    Form for creating and updating student records
+    """
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+            'placeholder': 'Password'
+        }),
+        required=False,
+        help_text='Leave blank to keep existing password'
+    )
     
     class Meta:
         model = Student
         fields = [
-            'first_name', 'middle_name', 'last_name', 'email', 'phone',
-            'date_of_birth', 'gender', 'nationality',
-            'address', 'city', 'state', 'postal_code', 'country',
-            'emergency_contact_name', 'emergency_contact_phone',
-            'emergency_contact_relationship'
+            'email', 'first_name', 'last_name', 'phone',
+            'student_id', 'admission_year', 'program', 'batch', 'section',
+            'guardian_name', 'guardian_phone', 'guardian_email', 'guardian_relation',
+            'emergency_contact_name', 'emergency_contact_phone', 'student_status'
         ]
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'middle_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'gender': forms.Select(attrs={'class': 'form-select'}),
-            'nationality': forms.TextInput(attrs={'class': 'form-control'}),
-            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'state': forms.TextInput(attrs={'class': 'form-control'}),
-            'postal_code': forms.TextInput(attrs={'class': 'form-control'}),
-            'country': forms.TextInput(attrs={'class': 'form-control'}),
-            'emergency_contact_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'emergency_contact_phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'emergency_contact_relationship': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Email'
+            }),
+            'first_name': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'First Name'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Last Name'
+            }),
+            'phone': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Phone'
+            }),
+            'student_id': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Student ID (auto-generated if left blank)',
+                'required': False
+            }),
+            'admission_year': forms.NumberInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Admission Year'
+            }),
+            'program': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Program'
+            }),
+            'batch': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Batch'
+            }),
+            'section': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Section'
+            }),
+            'guardian_name': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Guardian Name'
+            }),
+            'guardian_phone': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Guardian Phone'
+            }),
+            'guardian_email': forms.EmailInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Guardian Email'
+            }),
+            'guardian_relation': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Guardian Relation'
+            }),
+            'emergency_contact_name': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Emergency Contact Name'
+            }),
+            'emergency_contact_phone': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Emergency Contact Phone'
+            }),
+            'student_status': forms.Select(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500'
+            }),
         }
     
-    def clean_email(self):
-        """Ensure email is unique"""
-        email = self.cleaned_data.get('email')
-        if Student.objects.filter(email=email).exists():
-            raise ValidationError("A student with this email already exists")
-        return email
-    
-    def clean_date_of_birth(self):
-        """Validate date of birth"""
-        dob = self.cleaned_data.get('date_of_birth')
-        if not dob:
-            raise ValidationError("Date of birth is required")
+    def save(self, commit=True):
+        student = super().save(commit=False)
+        password = self.cleaned_data.get('password')
         
-        today = date.today()
-        age = relativedelta(today, dob).years
+        if password:
+            student.set_password(password)
+        elif not student.pk:
+            # New student, set a default password
+            student.set_password('student123')
         
-        if age < 5:
-            raise ValidationError("Student must be at least 5 years old")
-        if age > 100:
-            raise ValidationError("Invalid date of birth")
-        
-        return dob
+        if commit:
+            student.save()
+        return student
 
 
-class StudentUpdateForm(forms.ModelForm):
-    """Form for updating student information"""
-    
+class EnrollmentForm(forms.ModelForm):
+    """
+    Form for creating and updating enrollment records
+    """
     class Meta:
-        model = Student
-        fields = [
-            'first_name', 'middle_name', 'last_name', 'phone',
-            'gender', 'nationality',
-            'address', 'city', 'state', 'postal_code', 'country',
-            'emergency_contact_name', 'emergency_contact_phone',
-            'emergency_contact_relationship', 'current_gpa'
-        ]
+        model = Enrollment
+        fields = ['student', 'program', 'batch', 'section', 'start_date', 'expected_end_date', 'status']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'middle_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'gender': forms.Select(attrs={'class': 'form-select'}),
-            'nationality': forms.TextInput(attrs={'class': 'form-control'}),
-            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'state': forms.TextInput(attrs={'class': 'form-control'}),
-            'postal_code': forms.TextInput(attrs={'class': 'form-control'}),
-            'country': forms.TextInput(attrs={'class': 'form-control'}),
-            'emergency_contact_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'emergency_contact_phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'emergency_contact_relationship': forms.TextInput(attrs={'class': 'form-control'}),
-            'current_gpa': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0', 'max': '4'}),
+            'student': forms.Select(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500'
+            }),
+            'program': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Program'
+            }),
+            'batch': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Batch'
+            }),
+            'section': forms.TextInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'placeholder': 'Section'
+            }),
+            'start_date': forms.DateInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'type': 'date'
+            }),
+            'expected_end_date': forms.DateInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'type': 'date'
+            }),
+            'status': forms.Select(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500'
+            }),
         }
-    
-    def clean_current_gpa(self):
-        """Validate GPA"""
-        gpa = self.cleaned_data.get('current_gpa')
-        if gpa is not None and (gpa < 0 or gpa > 4.0):
-            raise ValidationError("GPA must be between 0.0 and 4.0")
-        return gpa
+
+
+class AttendanceForm(forms.ModelForm):
+    """
+    Form for marking attendance
+    """
+    class Meta:
+        model = AttendanceRecord
+        fields = ['student', 'course', 'session_date', 'session_time', 'status', 'notes']
+        widgets = {
+            'student': forms.Select(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500'
+            }),
+            'course': forms.Select(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500'
+            }),
+            'session_date': forms.DateInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'type': 'date'
+            }),
+            'session_time': forms.TimeInput(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'type': 'time'
+            }),
+            'status': forms.Select(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500'
+            }),
+            'notes': forms.Textarea(attrs={
+                'class': 'w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500',
+                'rows': 3,
+                'placeholder': 'Notes'
+            }),
+        }
