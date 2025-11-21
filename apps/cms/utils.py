@@ -5,7 +5,7 @@ from django.utils.text import slugify as django_slugify
 import os
 from PIL import Image
 from io import BytesIO
-from django.core.files.uploadedfile import InMemediateUploadedFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
 import mimetypes
 
 
