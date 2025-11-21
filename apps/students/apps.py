@@ -1,5 +1,5 @@
 """
-Students app configuration
+Students App Configuration
 """
 from django.apps import AppConfig
 
@@ -11,5 +11,7 @@ class StudentsConfig(AppConfig):
     
     def ready(self):
         """Import signals when app is ready"""
-        # Import signals here if needed
-        pass
+        try:
+            import apps.students.signals
+        except ImportError:
+            pass
