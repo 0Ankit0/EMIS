@@ -1,0 +1,66 @@
+{% extends 'base_module.html' %}
+{% load static %}
+
+{% block title %}Timetable Dashboard - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/timetable_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-calendar-week mr-3"></i>Timetable Dashboard
+        </h2>
+        <p class="text-gray-600">Timetable and scheduling</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 font-semibold uppercase">Total Items</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-2">0</h3>
+                </div>
+                <div class="bg-blue-100 rounded-full p-4">
+                    <i class="fas fa-calendar-week text-2xl text-blue-500"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+            <i class="fas fa-bolt mr-2"></i>Quick Actions
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a href="{% url 'timetable:view_timetable' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">View Timetable</span>
+            </a>
+            <a href="{% url 'timetable:create_timetable' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Create Timetable</span>
+            </a>
+            <a href="{% url 'timetable:class_schedule' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Class Schedule</span>
+            </a>
+            <a href="{% url 'timetable:teacher_schedule' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Teacher Schedule</span>
+            </a>
+            <a href="{% url 'timetable:room_allocation' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Room Allocation</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+            <i class="fas fa-list mr-2"></i>Recent Activity
+        </h3>
+        <p class="text-gray-600">No recent activity to display.</p>
+    </div>
+</div>
+{% endwith %}
+{% endblock %}
