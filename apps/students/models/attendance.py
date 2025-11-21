@@ -13,12 +13,12 @@ class AttendanceRecord(TimeStampedModel):
     student = models.ForeignKey(
         'students.Student',
         on_delete=models.CASCADE,
-        related_name='attendance_records'
+        related_name='student_attendance_records'
     )
     course = models.ForeignKey(
         'courses.Course',
         on_delete=models.CASCADE,
-        related_name='attendance_records'
+        related_name='student_attendance_records'
     )
     
     session_date = models.DateField()
@@ -37,7 +37,7 @@ class AttendanceRecord(TimeStampedModel):
     notes = models.TextField(blank=True)
     
     class Meta:
-        db_table = 'attendance_records'
+        db_table = 'student_attendance_records'
         ordering = ['-session_date']
         unique_together = [['student', 'course', 'session_date']]
         indexes = [
