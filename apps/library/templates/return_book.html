@@ -1,0 +1,110 @@
+{% extends 'base_module.html' %}
+{% load static %}
+
+{% block title %}Return Book - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/library_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mb-6">
+        <nav class="text-sm mb-4">
+            <a href="{% url 'core:dashboard' %}" class="text-blue-600 hover:text-blue-800">Home</a>
+            <span class="mx-2">/</span>
+            <a href="{% url 'library:dashboard' %}" class="text-blue-600 hover:text-blue-800">Library</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-600">Return Book</span>
+        </nav>
+        <h2 class="text-3xl font-bold text-gray-800">
+            <i class="fas fa-undo mr-3"></i>Return Book
+        </h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="mb-4 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Return Date *</label>
+                            {{ form.return_date }}
+                            {% if form.return_date.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.return_date.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Fine Amount</label>
+                            {{ form.fine_amount }}
+                            {% if form.fine_amount.errors %}
+                                <p class="text-red-600 text-sm mt-1">{{ form.fine_amount.errors.0 }}</p>
+                            {% endif %}
+                            <p class="text-xs text-gray-500 mt-1">Automatically calculated based on overdue days</p>
+                        </div>
+
+                        <div class="flex items-center">
+                            {{ form.fine_paid }}
+                            <label class="ml-2 text-sm font-semibold text-gray-700">Fine Paid</label>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Notes</label>
+                            {{ form.notes }}
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-4 mt-6 pt-6 border-t">
+                        <a href="{% url 'library:issued_books' %}" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </a>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                            <i class="fas fa-check mr-2"></i>Return Book
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Issue Details</h3>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-sm text-gray-600">Book</p>
+                        <p class="font-semibold">{{ issue.book.title }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Borrower</p>
+                        <p class="font-semibold">{{ issue.borrower_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Issue Date</p>
+                        <p class="font-semibold">{{ issue.issue_date }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Due Date</p>
+                        <p class="font-semibold">{{ issue.due_date }}</p>
+                    </div>
+                    {% if issue.is_overdue %}
+                        <div>
+                            <p class="text-sm text-gray-600">Days Overdue</p>
+                            <p class="font-semibold text-red-600">{{ issue.days_overdue }} days</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endwith %}
+{% endblock %}

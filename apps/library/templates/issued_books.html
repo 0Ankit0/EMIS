@@ -1,0 +1,107 @@
+{% extends 'base_module.html' %}
+{% load static %}
+
+{% block title %}Issued Books - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/library_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-list mr-3"></i>Issued Books
+        </h2>
+        <nav class="text-sm">
+            <a href="{% url 'core:dashboard' %}" class="text-blue-600 hover:text-blue-800">Home</a>
+            <span class="mx-2">/</span>
+            <a href="{% url 'library:dashboard' %}" class="text-blue-600 hover:text-blue-800">Library</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-600">Issued Books</span>
+        </nav>
+    </div>
+
+    <!-- Search -->
+    <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+        <form method="get" class="flex gap-4">
+            <input type="text" name="search" value="{{ search }}" placeholder="Search by book title, ISBN, or borrower..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                <i class="fas fa-search mr-2"></i>Search
+            </button>
+        </form>
+    </div>
+
+    <!-- Issues List -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        {% if issues %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Book</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ISBN</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Borrower</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for issue in issues %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-medium text-gray-900">{{ issue.book.title }}</div>
+                                    <div class="text-sm text-gray-500">{{ issue.book.author }}</div>
+                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{{ issue.book.isbn }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{{ issue.borrower_name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{{ issue.issue_date }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{{ issue.due_date }}</td>
+                                <td class="px-6 py-4">
+                                    {% if issue.is_overdue %}
+                                        <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Overdue</span>
+                                    {% else %}
+                                        <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Issued</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 text-sm">
+                                    <a href="{% url 'library:return_book_detail' issue.pk %}" class="text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-undo mr-1"></i>Return
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if issues.has_other_pages %}
+                <div class="bg-gray-50 px-4 py-3 flex items-center justify-between border-t border-gray-200">
+                    <div class="flex-1 flex justify-between sm:hidden">
+                        {% if issues.has_previous %}
+                            <a href="?page={{ issues.previous_page_number }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</a>
+                        {% endif %}
+                        {% if issues.has_next %}
+                            <a href="?page={{ issues.next_page_number }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</a>
+                        {% endif %}
+                    </div>
+                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                Page <span class="font-medium">{{ issues.number }}</span> of <span class="font-medium">{{ issues.paginator.num_pages }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="text-center py-12">
+                <i class="fas fa-book text-6xl text-gray-300 mb-4"></i>
+                <p class="text-gray-600 text-lg">No issued books found.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'admin_panel/base.html' %}
+{% block title %}Library Dashboard{% endblock %}
+{% block page_title %}Library Dashboard{% endblock %}
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Home</a></li>
+<li class="breadcrumb-item active">Library</li>
+{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="page-header">
+        <h3><i class="fas fa-book me-2"></i>Library Dashboard</h3>
+        <p class="text-muted">Manage library resources and circulation</p>
+    </div>
+    <div>
+        <a href="{% url 'library:book_list' %}" class="btn btn-primary">
+            <i class="fas fa-book me-2"></i>View Books
+        </a>
+    </div>
+</div>
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Total Books</div>
+                        <div class="stat-value">{{ total_books|default:0 }}</div>
+                    </div>
+                    <div class="stat-icon bg-primary bg-opacity-10 text-primary">
+                        <i class="fas fa-book"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Books Issued</div>
+                        <div class="stat-value">{{ books_issued|default:0 }}</div>
+                    </div>
+                    <div class="stat-icon bg-warning bg-opacity-10 text-warning">
+                        <i class="fas fa-book-reader"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Available</div>
+                        <div class="stat-value">{{ books_available|default:0 }}</div>
+                    </div>
+                    <div class="stat-icon bg-success bg-opacity-10 text-success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card danger">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-label">Overdue</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                    <div class="stat-icon bg-danger bg-opacity-10 text-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent Issues</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted text-center py-4">No recent issues</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-star me-2"></i>Popular Books</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted text-center py-4">No data available</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

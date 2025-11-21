@@ -1,0 +1,101 @@
+{% extends 'base_module.html' %}
+{% load static %}
+
+{% block title %}Issue Book - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/library_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mb-6">
+        <nav class="text-sm mb-4">
+            <a href="{% url 'core:dashboard' %}" class="text-blue-600 hover:text-blue-800">Home</a>
+            <span class="mx-2">/</span>
+            <a href="{% url 'library:dashboard' %}" class="text-blue-600 hover:text-blue-800">Library</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-600">Issue Book</span>
+        </nav>
+        <h2 class="text-3xl font-bold text-gray-800">
+            <i class="fas fa-hand-holding mr-3"></i>Issue Book
+        </h2>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md p-6">
+        <form method="post">
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-4 p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Select Book *</label>
+                    {{ form.book }}
+                    {% if form.book.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.book.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Student</label>
+                    {{ form.student }}
+                    {% if form.student.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.student.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Faculty</label>
+                    {{ form.faculty }}
+                    {% if form.faculty.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.faculty.errors.0 }}</p>
+                    {% endif %}
+                    <p class="text-xs text-gray-500 mt-1">Select either Student or Faculty, not both</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Issue Date *</label>
+                    {{ form.issue_date }}
+                    {% if form.issue_date.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.issue_date.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Due Date *</label>
+                    {{ form.due_date }}
+                    {% if form.due_date.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.due_date.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Notes</label>
+                    {{ form.notes }}
+                </div>
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="mt-4 p-4 bg-red-100 text-red-800 rounded-lg">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <div class="flex justify-end gap-4 mt-6 pt-6 border-t">
+                <a href="{% url 'library:dashboard' %}" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    Cancel
+                </a>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                    <i class="fas fa-check mr-2"></i>Issue Book
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endwith %}
+{% endblock %}

@@ -1,0 +1,36 @@
+<div class="sidebar" id="sidebar">
+    <div class="p-3 border-bottom">
+        <h5 class="mb-0 fw-bold text-primary">
+            <i class="fas fa-tachometer-alt me-2"></i>Library Module
+        </h5>
+    </div>
+    <div class="list-group list-group-flush">
+        <a href="{% url 'core:dashboard' %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <a href="{% url 'library:dashboard' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="{% url 'library:books_catalog' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'books_catalog' %}active{% endif %}">
+            <i class="fas fa-books"></i> Books Catalog
+        </a>
+        <a href="{% url 'library:add_book' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'add_book' %}active{% endif %}">
+            <i class="fas fa-book-medical"></i> Add Book
+        </a>
+        <a href="{% url 'library:issue_book' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'issue_book' %}active{% endif %}">
+            <i class="fas fa-hand-holding"></i> Issue Book
+        </a>
+        <a href="{% url 'library:return_book' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'return_book' %}active{% endif %}">
+            <i class="fas fa-undo"></i> Return Book
+        </a>
+        <a href="{% url 'library:issued_books' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'issued_books' %}active{% endif %}">
+            <i class="fas fa-list-alt"></i> Issued Books
+        </a>
+        <a href="{% url 'library:overdue' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'overdue' %}active{% endif %}">
+            <i class="fas fa-exclamation-circle"></i> Overdue Books
+        </a>
+        <a href="{% url 'library:reports' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'reports' %}active{% endif %}">
+            <i class="fas fa-chart-bar"></i> Library Reports
+        </a>
+    </div>
+</div>
