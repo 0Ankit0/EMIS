@@ -1,31 +1,58 @@
+"""
+Courses URL Configuration
+Complete CRUD and additional operations
+"""
 from django.urls import path
-from apps.courses.api import courses, assignments, submissions, grades
+from . import views
+
+app_name = 'courses'
 
 urlpatterns = [
-    # Course endpoints (T169-T173)
-    path('courses/', courses.list_courses, name='list_courses'),
-    path('courses/create/', courses.create_course, name='create_course'),
-    path('courses/<uuid:course_id>/', courses.get_course, name='get_course'),
-    path('courses/<uuid:course_id>/update/', courses.update_course, name='update_course'),
-    path('courses/<uuid:course_id>/modules/', courses.list_modules, name='list_modules'),
-    path('courses/<uuid:course_id>/modules/create/', courses.create_module, name='create_module'),
+    # Dashboard
+    path('', views.dashboard, name='dashboard'),
     
-    # Assignment endpoints (T174-T175)
-    path('assignments/', assignments.list_assignments, name='list_assignments'),
-    path('assignments/create/', assignments.create_assignment, name='create_assignment'),
-    path('assignments/<uuid:assignment_id>/', assignments.get_assignment, name='get_assignment'),
-    path('assignments/<uuid:assignment_id>/update/', assignments.update_assignment, name='update_assignment'),
+    # Course CRUD Operations
+    path('list/', views.item_list, name='list'),
+    path('create/', views.item_create, name='create'),
+    path('<uuid:pk>/', views.item_detail, name='detail'),
+    path('<uuid:pk>/update/', views.item_update, name='update'),
+    path('<uuid:pk>/delete/', views.item_delete, name='delete'),
     
-    # Submission endpoints (T176-T177)
-    path('submissions/', submissions.list_submissions, name='list_submissions'),
-    path('submissions/create/', submissions.create_submission, name='create_submission'),
-    path('submissions/<uuid:submission_id>/', submissions.get_submission, name='get_submission'),
-    path('submissions/<uuid:submission_id>/grade/', submissions.grade_submission, name='grade_submission'),
+    # Module Management
+    path('<uuid:course_pk>/modules/', views.module_list, name='module_list'),
+    path('<uuid:course_pk>/modules/create/', views.module_create, name='module_create'),
+    path('modules/<uuid:pk>/', views.module_detail, name='module_detail'),
+    path('modules/<uuid:pk>/update/', views.module_update, name='module_update'),
+    path('modules/<uuid:pk>/delete/', views.module_delete, name='module_delete'),
     
-    # Grade endpoints (T178-T179)
-    path('grades/', grades.list_grades, name='list_grades'),
-    path('grades/create/', grades.create_grade, name='create_grade'),
-    path('grades/<uuid:grade_id>/', grades.get_grade, name='get_grade'),
-    path('grades/<uuid:grade_id>/update/', grades.update_grade, name='update_grade'),
-    path('grades/<uuid:grade_id>/finalize/', grades.finalize_grade, name='finalize_grade'),
+    # Assignment Management
+    path('<uuid:course_pk>/assignments/', views.assignment_list, name='assignment_list'),
+    path('<uuid:course_pk>/assignments/create/', views.assignment_create, name='assignment_create'),
+    path('assignments/<uuid:pk>/', views.assignment_detail, name='assignment_detail'),
+    path('assignments/<uuid:pk>/update/', views.assignment_update, name='assignment_update'),
+    path('assignments/<uuid:pk>/delete/', views.assignment_delete, name='assignment_delete'),
+    
+    # Bulk Operations
+    path('bulk-delete/', views.bulk_delete, name='bulk_delete'),
+    path('bulk-update-status/', views.bulk_update_status, name='bulk_update_status'),
+    
+    # Export Operations
+    path('export/csv/', views.export_csv, name='export_csv'),
+    path('export/pdf/', views.export_pdf, name='export_pdf'),
+    
+    # AJAX/API Operations
+    path('<uuid:pk>/data/', views.get_item_data, name='get_data'),
+    path('<uuid:pk>/toggle-status/', views.toggle_status, name='toggle_status'),
+    
+    # Statistics and Reports
+    path('statistics/', views.statistics, name='statistics'),
+    path('search/', views.search, name='search'),
+    
+    # Additional Pages
+    path('programs/', views.programs, name='programs'),
+    path('syllabus/', views.syllabus_view, name='syllabus'),
+    path('enrollments/', views.enrollments, name='enrollments'),
+    path('materials/', views.course_materials, name='materials'),
+    path('prerequisites/', views.prerequisites, name='prerequisites'),
+    path('curriculum/', views.curriculum, name='curriculum'),
 ]
