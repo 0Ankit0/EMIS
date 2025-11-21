@@ -1,0 +1,33 @@
+<div class="sidebar" id="sidebar">
+    <div class="p-3 border-bottom">
+        <h5 class="mb-0 fw-bold text-success">
+            <i class="fas fa-tachometer-alt me-2"></i>Faculty Module
+        </h5>
+    </div>
+    <div class="list-group list-group-flush">
+        <a href="{% url 'core:dashboard' %}" class="list-group-item list-group-item-action">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <a href="{% url 'faculty:dashboard' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <a href="{% url 'faculty:faculty_list' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'faculty_list' %}active{% endif %}">
+            <i class="fas fa-users"></i> Faculty List
+        </a>
+        <a href="{% url 'faculty:faculty_detail' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'faculty_detail' %}active{% endif %}">
+            <i class="fas fa-user"></i> Faculty Detail
+        </a>
+        <a href="{% url 'faculty:add_faculty' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'add_faculty' %}active{% endif %}">
+            <i class="fas fa-user-plus"></i> Add Faculty
+        </a>
+        <a href="{% url 'faculty:schedule' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'schedule' %}active{% endif %}">
+            <i class="fas fa-calendar-alt"></i> Work Schedule
+        </a>
+        <a href="{% url 'faculty:assignments' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'assignments' %}active{% endif %}">
+            <i class="fas fa-tasks"></i> Assignments
+        </a>
+        <a href="{% url 'faculty:performance' %}" class="list-group-item list-group-item-action {% if request.resolver_match.url_name == 'performance' %}active{% endif %}">
+            <i class="fas fa-chart-bar"></i> Performance
+        </a>
+    </div>
+</div>
