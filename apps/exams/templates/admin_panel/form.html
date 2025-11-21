@@ -1,0 +1,71 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}{% if edit %}Edit{% else %}Schedule{% endif %} Exam{% endblock %}
+
+{% block page_title %}{% if edit %}Edit{% else %}Schedule New{% endif %} Exam{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'exams:list' %}">Exams</a></li>
+<li class="breadcrumb-item active">{% if edit %}Edit{% else %}Schedule{% endif %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-alt me-2"></i>
+                    {% if edit %}Edit Exam{% else %}Schedule New Exam{% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Exam Name *</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Course *</label>
+                            <select class="form-select" name="course" required>
+                                <option value="">Select Course</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Exam Date *</label>
+                            <input type="date" class="form-control" name="exam_date" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Start Time *</label>
+                            <input type="time" class="form-control" name="start_time" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Duration (minutes) *</label>
+                            <input type="number" class="form-control" name="duration" value="120" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Total Marks *</label>
+                            <input type="number" class="form-control" name="total_marks" value="100" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Instructions</label>
+                            <textarea class="form-control" name="instructions" rows="4"></textarea>
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>{% if edit %}Update{% else %}Schedule{% endif %} Exam
+                            </button>
+                            <a href="{% url 'exams:list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
