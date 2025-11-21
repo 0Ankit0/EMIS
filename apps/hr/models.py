@@ -1,0 +1,695 @@
+"""HR Models - Comprehensive Human Resource Management"""
+from django.db import models
+from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator, EmailValidator
+from django.utils import timezone
+from apps.core.models import TimeStampedModel
+from decimal import Decimal
+from datetime import date
+
+User = get_user_model()
+
+
+class Department(TimeStampedModel):
+    """HR Department/Division"""
+    name = models.CharField(max_length=200, unique=True)
+    code = models.CharField(max_length=50, unique=True, db_index=True)
+    description = models.TextField(blank=True)
+    
+    head = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='headed_departments'
+    )
+    
+    parent_department = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='sub_departments'
+    )
+    
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        db_table = 'hr_departments'
+        ordering = ['name']
+        verbose_name = 'Department'
+        verbose_name_plural = 'Departments'
+    
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+
+class Designation(TimeStampedModel):
+    """Job Designation/Position"""
+    
+    LEVEL_CHOICES = [
+        ('entry', 'Entry Level'),
+        ('junior', 'Junior'),
+        ('mid', 'Mid Level'),
+        ('senior', 'Senior'),
+        ('lead', 'Lead'),
+        ('manager', 'Manager'),
+        ('director', 'Director'),
+        ('executive', 'Executive'),
+    ]
+    
+    title = models.CharField(max_length=200, unique=True)
+    code = models.CharField(max_length=50, unique=True, db_index=True)
+    description = models.TextField(blank=True)
+    
+    level = models.CharField(max_length=20, choices=LEVEL_CHOICES)
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='designations')
+    
+    min_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    max_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    
+    required_qualifications = models.TextField(blank=True)
+    responsibilities = models.TextField(blank=True)
+    
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        db_table = 'hr_designations'
+        ordering = ['title']
+        verbose_name = 'Designation'
+        verbose_name_plural = 'Designations'
+    
+    def __str__(self):
+        return self.title
+
+
+class Employee(TimeStampedModel):
+    """Employee/Staff Member"""
+    
+    EMPLOYMENT_TYPE_CHOICES = [
+        ('full_time', 'Full Time'),
+        ('part_time', 'Part Time'),
+        ('contract', 'Contract'),
+        ('intern', 'Intern'),
+        ('consultant', 'Consultant'),
+    ]
+    
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('other', 'Other'),
+    ]
+    
+    MARITAL_STATUS_CHOICES = [
+        ('single', 'Single'),
+        ('married', 'Married'),
+        ('divorced', 'Divorced'),
+        ('widowed', 'Widowed'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('on_leave', 'On Leave'),
+        ('suspended', 'Suspended'),
+        ('terminated', 'Terminated'),
+        ('resigned', 'Resigned'),
+        ('retired', 'Retired'),
+    ]
+    
+    # Link to User
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee_profile')
+    
+    # Employee Information
+    employee_id = models.CharField(max_length=50, unique=True, db_index=True)
+    
+    # Personal Information
+    first_name = models.CharField(max_length=100)
+    middle_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100)
+    
+    date_of_birth = models.DateField()
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES)
+    blood_group = models.CharField(max_length=10, blank=True)
+    
+    # Contact Information
+    phone = models.CharField(max_length=20)
+    alternate_phone = models.CharField(max_length=20, blank=True)
+    email = models.EmailField(validators=[EmailValidator()])
+    personal_email = models.EmailField(blank=True)
+    
+    # Address
+    current_address = models.TextField()
+    permanent_address = models.TextField(blank=True)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=10)
+    country = models.CharField(max_length=100, default='India')
+    
+    # Government IDs
+    aadhar_number = models.CharField(max_length=12, blank=True)
+    pan_number = models.CharField(max_length=10, blank=True)
+    passport_number = models.CharField(max_length=20, blank=True)
+    
+    # Employment Details
+    department = models.ForeignKey(Department, on_delete=models.PROTECT, related_name='employees')
+    designation = models.ForeignKey(Designation, on_delete=models.PROTECT, related_name='employees')
+    employment_type = models.CharField(max_length=20, choices=EMPLOYMENT_TYPE_CHOICES)
+    
+    date_of_joining = models.DateField()
+    date_of_leaving = models.DateField(null=True, blank=True)
+    
+    probation_period_months = models.IntegerField(default=6, validators=[MinValueValidator(0)])
+    is_probation_completed = models.BooleanField(default=False)
+    confirmation_date = models.DateField(null=True, blank=True)
+    
+    reporting_manager = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='reportees'
+    )
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active', db_index=True)
+    
+    # Salary Information
+    basic_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    hra = models.DecimalField(max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0)])
+    da = models.DecimalField(max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0)])
+    other_allowances = models.DecimalField(max_digits=12, decimal_places=2, default=0, validators=[MinValueValidator(0)])
+    
+    # Bank Details
+    bank_name = models.CharField(max_length=200, blank=True)
+    bank_account_number = models.CharField(max_length=50, blank=True)
+    ifsc_code = models.CharField(max_length=20, blank=True)
+    
+    # Documents
+    photo = models.ImageField(upload_to='hr/employees/photos/%Y/', blank=True, null=True)
+    resume = models.FileField(upload_to='hr/employees/resumes/%Y/', blank=True, null=True)
+    id_proof = models.FileField(upload_to='hr/employees/id_proofs/%Y/', blank=True, null=True)
+    
+    # Emergency Contact
+    emergency_contact_name = models.CharField(max_length=200, blank=True)
+    emergency_contact_phone = models.CharField(max_length=20, blank=True)
+    emergency_contact_relation = models.CharField(max_length=100, blank=True)
+    
+    # Additional
+    notes = models.TextField(blank=True)
+    
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_employees')
+    
+    class Meta:
+        db_table = 'hr_employees'
+        ordering = ['employee_id']
+        verbose_name = 'Employee'
+        verbose_name_plural = 'Employees'
+        indexes = [
+            models.Index(fields=['employee_id']),
+            models.Index(fields=['department', 'status']),
+            models.Index(fields=['designation']),
+        ]
+    
+    def __str__(self):
+        return f"{self.employee_id} - {self.get_full_name()}"
+    
+    def get_full_name(self):
+        """Get employee full name"""
+        parts = [self.first_name]
+        if self.middle_name:
+            parts.append(self.middle_name)
+        parts.append(self.last_name)
+        return ' '.join(parts)
+    
+    def get_age(self):
+        """Calculate employee age"""
+        today = date.today()
+        return today.year - self.date_of_birth.year - (
+            (today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day)
+        )
+    
+    @property
+    def gross_salary(self):
+        """Calculate gross salary"""
+        return self.basic_salary + self.hra + self.da + self.other_allowances
+    
+    @property
+    def experience_years(self):
+        """Calculate years of experience"""
+        end_date = self.date_of_leaving if self.date_of_leaving else date.today()
+        delta = end_date - self.date_of_joining
+        return round(delta.days / 365.25, 2)
+
+
+class Attendance(TimeStampedModel):
+    """Employee Attendance"""
+    
+    STATUS_CHOICES = [
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+        ('half_day', 'Half Day'),
+        ('late', 'Late'),
+        ('on_leave', 'On Leave'),
+        ('work_from_home', 'Work From Home'),
+        ('holiday', 'Holiday'),
+    ]
+    
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='attendance_records')
+    date = models.DateField(db_index=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    
+    check_in_time = models.TimeField(null=True, blank=True)
+    check_out_time = models.TimeField(null=True, blank=True)
+    working_hours = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    
+    marked_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='marked_hr_attendance')
+    remarks = models.TextField(blank=True)
+    
+    class Meta:
+        db_table = 'hr_attendance'
+        unique_together = ['employee', 'date']
+        ordering = ['-date']
+        verbose_name = 'Attendance'
+        verbose_name_plural = 'Attendance Records'
+        indexes = [
+            models.Index(fields=['employee', 'date']),
+            models.Index(fields=['date', 'status']),
+        ]
+    
+    def __str__(self):
+        return f"{self.employee.employee_id} - {self.date} - {self.status}"
+
+
+class Leave(TimeStampedModel):
+    """Employee Leave Management"""
+    
+    LEAVE_TYPE_CHOICES = [
+        ('casual', 'Casual Leave'),
+        ('sick', 'Sick Leave'),
+        ('earned', 'Earned Leave'),
+        ('maternity', 'Maternity Leave'),
+        ('paternity', 'Paternity Leave'),
+        ('unpaid', 'Unpaid Leave'),
+        ('compensatory', 'Compensatory Off'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='leave_applications')
+    
+    leave_type = models.CharField(max_length=20, choices=LEAVE_TYPE_CHOICES)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    number_of_days = models.IntegerField(validators=[MinValueValidator(1)])
+    
+    reason = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', db_index=True)
+    
+    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_hr_leaves')
+    approval_date = models.DateTimeField(null=True, blank=True)
+    rejection_reason = models.TextField(blank=True)
+    
+    supporting_document = models.FileField(upload_to='hr/leaves/%Y/%m/', blank=True, null=True)
+    
+    class Meta:
+        db_table = 'hr_leaves'
+        ordering = ['-start_date']
+        verbose_name = 'Leave'
+        verbose_name_plural = 'Leaves'
+        indexes = [
+            models.Index(fields=['employee', 'status']),
+            models.Index(fields=['start_date', 'end_date']),
+        ]
+    
+    def __str__(self):
+        return f"{self.employee.employee_id} - {self.leave_type} ({self.start_date})"
+    
+    def save(self, *args, **kwargs):
+        """Calculate number of days"""
+        if self.start_date and self.end_date:
+            delta = self.end_date - self.start_date
+            self.number_of_days = delta.days + 1
+        super().save(*args, **kwargs)
+
+
+class Payroll(TimeStampedModel):
+    """Monthly Payroll"""
+    
+    STATUS_CHOICES = [
+        ('draft', 'Draft'),
+        ('processed', 'Processed'),
+        ('paid', 'Paid'),
+        ('on_hold', 'On Hold'),
+    ]
+    
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='payrolls')
+    
+    month = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)])
+    year = models.IntegerField(validators=[MinValueValidator(2000)])
+    
+    # Earnings
+    basic_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    hra = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    da = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    other_allowances = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    overtime_pay = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    bonus = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    
+    gross_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    
+    # Deductions
+    pf = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    esi = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    professional_tax = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    tds = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    loan_deduction = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    other_deductions = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    
+    total_deductions = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    
+    net_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    
+    # Attendance details
+    working_days = models.IntegerField(validators=[MinValueValidator(0)])
+    present_days = models.IntegerField(validators=[MinValueValidator(0)])
+    leave_days = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft', db_index=True)
+    
+    payment_date = models.DateField(null=True, blank=True)
+    payment_method = models.CharField(max_length=50, blank=True)
+    transaction_reference = models.CharField(max_length=100, blank=True)
+    
+    remarks = models.TextField(blank=True)
+    
+    processed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='processed_payrolls')
+    
+    class Meta:
+        db_table = 'hr_payrolls'
+        unique_together = ['employee', 'month', 'year']
+        ordering = ['-year', '-month']
+        verbose_name = 'Payroll'
+        verbose_name_plural = 'Payrolls'
+        indexes = [
+            models.Index(fields=['employee', 'year', 'month']),
+            models.Index(fields=['status']),
+        ]
+    
+    def __str__(self):
+        return f"{self.employee.employee_id} - {self.month}/{self.year}"
+    
+    def save(self, *args, **kwargs):
+        """Calculate gross, deductions and net salary"""
+        self.gross_salary = (
+            self.basic_salary + self.hra + self.da + 
+            self.other_allowances + self.overtime_pay + self.bonus
+        )
+        
+        self.total_deductions = (
+            self.pf + self.esi + self.professional_tax + 
+            self.tds + self.loan_deduction + self.other_deductions
+        )
+        
+        self.net_salary = self.gross_salary - self.total_deductions
+        
+        super().save(*args, **kwargs)
+
+
+class JobPosting(TimeStampedModel):
+    """Job Opening/Vacancy Posting"""
+    
+    STATUS_CHOICES = [
+        ('draft', 'Draft'),
+        ('open', 'Open'),
+        ('closed', 'Closed'),
+        ('on_hold', 'On Hold'),
+    ]
+    
+    EMPLOYMENT_TYPE_CHOICES = Employee.EMPLOYMENT_TYPE_CHOICES
+    
+    title = models.CharField(max_length=200)
+    job_code = models.CharField(max_length=50, unique=True, db_index=True)
+    
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='job_postings')
+    designation = models.ForeignKey(Designation, on_delete=models.CASCADE, related_name='job_postings')
+    
+    employment_type = models.CharField(max_length=20, choices=EMPLOYMENT_TYPE_CHOICES)
+    
+    vacancies = models.IntegerField(validators=[MinValueValidator(1)])
+    
+    description = models.TextField()
+    requirements = models.TextField()
+    responsibilities = models.TextField()
+    
+    min_experience_years = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    max_experience_years = models.IntegerField(null=True, blank=True, validators=[MinValueValidator(0)])
+    
+    min_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    max_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
+    
+    location = models.CharField(max_length=200)
+    
+    posted_date = models.DateField(default=timezone.now)
+    closing_date = models.DateField(null=True, blank=True)
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft', db_index=True)
+    
+    posted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='posted_jobs')
+    
+    class Meta:
+        db_table = 'hr_job_postings'
+        ordering = ['-posted_date']
+        verbose_name = 'Job Posting'
+        verbose_name_plural = 'Job Postings'
+        indexes = [
+            models.Index(fields=['job_code']),
+            models.Index(fields=['status', 'posted_date']),
+        ]
+    
+    def __str__(self):
+        return f"{self.job_code} - {self.title}"
+
+
+class JobApplication(TimeStampedModel):
+    """Job Application from Candidates"""
+    
+    STATUS_CHOICES = [
+        ('submitted', 'Submitted'),
+        ('screening', 'Under Screening'),
+        ('shortlisted', 'Shortlisted'),
+        ('interview_scheduled', 'Interview Scheduled'),
+        ('selected', 'Selected'),
+        ('rejected', 'Rejected'),
+        ('offer_sent', 'Offer Sent'),
+        ('offer_accepted', 'Offer Accepted'),
+        ('offer_declined', 'Offer Declined'),
+        ('joined', 'Joined'),
+    ]
+    
+    job_posting = models.ForeignKey(JobPosting, on_delete=models.CASCADE, related_name='applications')
+    
+    # Candidate Information
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    
+    current_location = models.CharField(max_length=200)
+    
+    total_experience_years = models.DecimalField(max_digits=4, decimal_places=1, validators=[MinValueValidator(0)])
+    current_company = models.CharField(max_length=200, blank=True)
+    current_designation = models.CharField(max_length=200, blank=True)
+    current_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    expected_salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    
+    notice_period_days = models.IntegerField(null=True, blank=True)
+    
+    resume = models.FileField(upload_to='hr/applications/resumes/%Y/%m/')
+    cover_letter = models.TextField(blank=True)
+    
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='submitted', db_index=True)
+    
+    application_date = models.DateTimeField(default=timezone.now)
+    
+    reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviewed_applications')
+    review_notes = models.TextField(blank=True)
+    
+    class Meta:
+        db_table = 'hr_job_applications'
+        ordering = ['-application_date']
+        verbose_name = 'Job Application'
+        verbose_name_plural = 'Job Applications'
+        indexes = [
+            models.Index(fields=['job_posting', 'status']),
+            models.Index(fields=['email']),
+        ]
+    
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.job_posting.title}"
+
+
+class PerformanceReview(TimeStampedModel):
+    """Employee Performance Review/Appraisal"""
+    
+    REVIEW_TYPE_CHOICES = [
+        ('probation', 'Probation Review'),
+        ('quarterly', 'Quarterly Review'),
+        ('half_yearly', 'Half-Yearly Review'),
+        ('annual', 'Annual Review'),
+        ('special', 'Special Review'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed'),
+    ]
+    
+    RATING_CHOICES = [
+        (1, 'Poor'),
+        (2, 'Below Average'),
+        (3, 'Average'),
+        (4, 'Good'),
+        (5, 'Excellent'),
+    ]
+    
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='performance_reviews')
+    
+    review_type = models.CharField(max_length=20, choices=REVIEW_TYPE_CHOICES)
+    review_period_start = models.DateField()
+    review_period_end = models.DateField()
+    
+    reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='conducted_reviews')
+    
+    # Ratings
+    technical_skills = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
+    communication = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
+    teamwork = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
+    leadership = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
+    punctuality = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
+    quality_of_work = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
+    
+    overall_rating = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
+    
+    strengths = models.TextField(blank=True)
+    areas_of_improvement = models.TextField(blank=True)
+    achievements = models.TextField(blank=True)
+    goals_for_next_period = models.TextField(blank=True)
+    
+    comments = models.TextField(blank=True)
+    employee_comments = models.TextField(blank=True)
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    review_date = models.DateField(null=True, blank=True)
+    
+    class Meta:
+        db_table = 'hr_performance_reviews'
+        ordering = ['-review_period_end']
+        verbose_name = 'Performance Review'
+        verbose_name_plural = 'Performance Reviews'
+    
+    def __str__(self):
+        return f"{self.employee.employee_id} - {self.review_type} ({self.review_period_end})"
+    
+    def calculate_overall_rating(self):
+        """Calculate overall rating from individual ratings"""
+        ratings = [
+            self.technical_skills, self.communication, self.teamwork,
+            self.leadership, self.punctuality, self.quality_of_work
+        ]
+        valid_ratings = [r for r in ratings if r is not None]
+        
+        if valid_ratings:
+            return round(sum(valid_ratings) / len(valid_ratings), 2)
+        return None
+
+
+class Training(TimeStampedModel):
+    """Training Programs"""
+    
+    STATUS_CHOICES = [
+        ('planned', 'Planned'),
+        ('ongoing', 'Ongoing'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    title = models.CharField(max_length=200)
+    code = models.CharField(max_length=50, unique=True, db_index=True)
+    description = models.TextField()
+    
+    trainer_name = models.CharField(max_length=200)
+    trainer_organization = models.CharField(max_length=200, blank=True)
+    
+    start_date = models.DateField()
+    end_date = models.DateField()
+    duration_hours = models.IntegerField(validators=[MinValueValidator(1)])
+    
+    location = models.CharField(max_length=200)
+    capacity = models.IntegerField(validators=[MinValueValidator(1)])
+    
+    cost_per_participant = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='planned')
+    
+    organized_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='organized_trainings')
+    
+    class Meta:
+        db_table = 'hr_trainings'
+        ordering = ['-start_date']
+        verbose_name = 'Training'
+        verbose_name_plural = 'Trainings'
+    
+    def __str__(self):
+        return f"{self.code} - {self.title}"
+
+
+class TrainingParticipant(TimeStampedModel):
+    """Training Participants"""
+    
+    STATUS_CHOICES = [
+        ('enrolled', 'Enrolled'),
+        ('attended', 'Attended'),
+        ('completed', 'Completed'),
+        ('dropped', 'Dropped'),
+    ]
+    
+    training = models.ForeignKey(Training, on_delete=models.CASCADE, related_name='participants')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='training_participations')
+    
+    enrollment_date = models.DateField(default=timezone.now)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='enrolled')
+    
+    attendance_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    assessment_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    
+    certificate_issued = models.BooleanField(default=False)
+    certificate = models.FileField(upload_to='hr/training_certificates/%Y/', blank=True, null=True)
+    
+    feedback = models.TextField(blank=True)
+    
+    class Meta:
+        db_table = 'hr_training_participants'
+        unique_together = ['training', 'employee']
+        ordering = ['-enrollment_date']
+    
+    def __str__(self):
+        return f"{self.employee.employee_id} - {self.training.title}"
+
+# Import and add managers
+from .managers import (
+    EmployeeManager, LeaveManager, PayrollManager,
+    JobPostingManager, JobApplicationManager
+)
+
+Employee.add_to_class('objects', EmployeeManager())
+Leave.add_to_class('objects', LeaveManager())
+Payroll.add_to_class('objects', PayrollManager())
+JobPosting.add_to_class('objects', JobPostingManager())
+JobApplication.add_to_class('objects', JobApplicationManager())
