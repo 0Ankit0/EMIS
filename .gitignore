@@ -103,3 +103,10 @@ celerybeat.pid
 
 # Coverage
 .coverage.*
+
+# Node modules
+node_modules/
+package-lock.json
+
+# Tailwind output
+static/css/output.css
