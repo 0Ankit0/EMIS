@@ -156,7 +156,7 @@ class GeneratedReport(TimeStampedModel):
         User,
         on_delete=models.SET_NULL,
         null=True,
-        related_name='generated_reports'
+        related_name='reports_generated_reports'
     )
     generated_at = models.DateTimeField(auto_now_add=True)
     

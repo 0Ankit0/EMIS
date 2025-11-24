@@ -11,4 +11,5 @@ urlpatterns = [
     path('login/', api_views.login, name='login'),
     path('logout/', api_views.logout, name='logout'),
     path('me/', api_views.me, name='me'),
+    path('refresh/', api_views.refresh_token, name='refresh'),
 ]

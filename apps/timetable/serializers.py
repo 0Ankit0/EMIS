@@ -1,36 +1,45 @@
-"""
-Timetable Serializers
-"""
+"""Timetable Serializers"""
 from rest_framework import serializers
-from .models import TimetableItem
+from .models import AcademicYear, Semester, TimeSlot, Room, TimetableEntry, TimetableException
 
 
-class TimetableItemSerializer(serializers.ModelSerializer):
-    """
-    Serializer for TimetableItem
-    """
-    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
-    
+class AcademicYearSerializer(serializers.ModelSerializer):
+    """Serializer for AcademicYear"""
     class Meta:
-        model = TimetableItem
-        fields = [
-            'id', 'name', 'description', 'status',
-            'created_by', 'created_by_name',
-            'created_at', 'updated_at'
-        ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
-    
-    def validate_name(self, value):
-        """Validate name field"""
-        if len(value) < 3:
-            raise serializers.ValidationError("Name must be at least 3 characters long")
-        return value
+        model = AcademicYear
+        fields = '__all__'
 
 
-class TimetableItemListSerializer(serializers.ModelSerializer):
-    """
-    Lightweight serializer for listing timetable items
-    """
+class SemesterSerializer(serializers.ModelSerializer):
+    """Serializer for Semester"""
     class Meta:
-        model = TimetableItem
-        fields = ['id', 'name', 'status', 'created_at']
+        model = Semester
+        fields = '__all__'
+
+
+class TimeSlotSerializer(serializers.ModelSerializer):
+    """Serializer for TimeSlot"""
+    class Meta:
+        model = TimeSlot
+        fields = '__all__'
+
+
+class RoomSerializer(serializers.ModelSerializer):
+    """Serializer for Room"""
+    class Meta:
+        model = Room
+        fields = '__all__'
+
+
+class TimetableEntrySerializer(serializers.ModelSerializer):
+    """Serializer for TimetableEntry"""
+    class Meta:
+        model = TimetableEntry
+        fields = '__all__'
+
+
+class TimetableExceptionSerializer(serializers.ModelSerializer):
+    """Serializer for TimetableException"""
+    class Meta:
+        model = TimetableException
+        fields = '__all__'

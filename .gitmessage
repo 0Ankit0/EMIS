@@ -1,0 +1,6 @@
+# Commit Message Template
+# Format: <type>(<scope>): <subject>
+#
+# Types: feat, fix, refactor, chore, docs, style, test
+# Scope: module/component name
+# Subject: brief description (imperative mood)

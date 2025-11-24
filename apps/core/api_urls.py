@@ -13,12 +13,24 @@ urlpatterns = [
     # Authentication URLs
     path('auth/', include('apps.authentication.api_urls')),
     
-    # Admissions URLs
+    # Module APIs
     path('admissions/', include('apps.admissions.api_urls')),
-    
-    # Students URLs
     path('students/', include('apps.students.api_urls')),
-    
-    # Courses URLs
-    path('courses/', include('apps.courses.urls')),
+    path('courses/', include('apps.courses.api_urls')),
+    path('faculty/', include('apps.faculty.api_urls')),
+    path('finance/', include('apps.finance.api_urls')),
+    path('exams/', include('apps.exams.api_urls')),
+    path('library/', include('apps.library.api_urls')),
+    path('hr/', include('apps.hr.api_urls')),
+    path('hostel/', include('apps.hostel.api_urls')),
+    path('transport/', include('apps.transport.api_urls')),
+    path('inventory/', include('apps.inventory.api_urls')),
+    path('timetable/', include('apps.timetable.api_urls')),
+    path('attendance/', include('apps.attendance.api_urls')),
+    path('lms/', include('apps.lms.api_urls')),
+    path('analytics/', include('apps.analytics.api_urls')),
+    path('reports/', include('apps.reports.api_urls')),
+    path('notifications/', include('apps.notifications.api_urls')),
+    # path('portal/', include('apps.portal.api_urls')),  # TODO: Fix Enrollment import
+    path('cms/', include('apps.cms.api_urls')),
 ]

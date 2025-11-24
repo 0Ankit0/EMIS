@@ -151,7 +151,7 @@ class BulkNotificationSerializer(serializers.Serializer):
         help_text="List of user IDs"
     )
     title = serializers.CharField(max_length=255)
-    message = serializers.TextField()
+    message = serializers.CharField(style={'base_template': 'textarea.html'})
     notification_type = serializers.ChoiceField(
         choices=['info', 'success', 'warning', 'error', 'announcement', 'reminder'],
         default='info'
