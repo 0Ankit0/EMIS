@@ -3,6 +3,8 @@ from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 
 class TimeStampedModel(models.Model):
+    """Abstract base class that provides self-updating
+    ``created_at`` and ``updated_at`` fields."""
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -11,6 +13,7 @@ class TimeStampedModel(models.Model):
 
 
 class Calendar(TimeStampedModel):
+    """Model representing a calendar."""
     title = models.CharField(max_length=200)
 
     def __str__(self) -> str: # what to return when we print an object of this class
@@ -25,7 +28,8 @@ class Category(TimeStampedModel):
         return self.name
     
 class Event(TimeStampedModel):
-
+    """Model representing an event in a calendar."""
+    # Event types
     SINGLE_DAY = 'single'
     MULTI_DAY = 'multi'
 
@@ -34,6 +38,7 @@ class Event(TimeStampedModel):
         (MULTI_DAY, 'Multi-day Event'),
     ]
 
+    # Event status
     EVENT_STATUS_DRAFT = 'draft'
     EVENT_STATUS_PUBLISHED = 'published'
     EVENT_STATUS = [

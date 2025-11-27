@@ -1,3 +1,16 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .models import Event, Category, Calendar
+from .serializers import EventSerializer, CategorySerializer, CalendarSerializer
 
-# Create your views here.
+# syntax is <ModelName>ViewSet(viewsets.ModelViewSet)
+class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+class CalendarViewSet(viewsets.ModelViewSet):
+    queryset = Calendar.objects.all()
+    serializer_class = CalendarSerializer
