@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 const sidebarNavItems = [
@@ -27,11 +26,11 @@ interface SettingsLayoutProps {
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
     return (
-        <div className="hidden space-y-6 p-10 pb-16 md:block">
+        <div className="container mx-auto space-y-6 px-4 py-10 pb-16">
             <div className="space-y-0.5">
-                <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-                <p className="text-muted-foreground">
-                    Manage your account settings and set e-mail preferences.
+                <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
+                <p className="text-base text-muted-foreground">
+                    Manage your account settings and preferences.
                 </p>
             </div>
             <Separator className="my-6" />
@@ -56,12 +55,11 @@ function SidebarNavItem({ item }: { item: { title: string; href: string } }) {
         <Link
             href={item.href}
             className={cn(
-                "justify-start text-left",
                 "inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
-                "h-9 px-4 py-2 hover:bg-muted hover:text-accent-foreground",
+                "h-10 px-4 py-2",
                 pathname === item.href
-                    ? "bg-muted hover:bg-muted"
-                    : "hover:bg-transparent hover:underline",
+                    ? "bg-primary/10 text-primary hover:bg-primary/15"
+                    : "hover:bg-accent hover:text-accent-foreground text-muted-foreground",
                 "justify-start"
             )}
         >

@@ -1,65 +1,141 @@
-import Image from "next/image";
+"use client";
 
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, Shield, Settings, BookOpen, Users, BarChart3 } from "lucide-react";
+import { getAuthToken } from "@/lib/auth-utils";
+import { useRouter } from "next/navigation";
+
+// Module configuration - in a real app, this would come from the backend based on user permissions
+const modules = [
+  {
+    id: "calendar",
+    name: "Calendar",
+    description: "Manage events, schedules, and academic calendar",
+    icon: Calendar,
+    href: "/calendar",
+    gradient: "bg-gradient-primary",
+  },
+  {
+    id: "admin",
+    name: "Administration",
+    description: "Administrative tools and user management",
+    icon: Shield,
+    href: "/admin",
+    gradient: "bg-gradient-primary",
+  },
+  {
+    id: "students",
+    name: "Students",
+    description: "Student information and records management",
+    icon: Users,
+    href: "/students",
+    gradient: "bg-gradient-primary",
+  },
+  {
+    id: "courses",
+    name: "Courses",
+    description: "Course catalog and curriculum management",
+    icon: BookOpen,
+    href: "/courses",
+    gradient: "bg-gradient-primary",
+  },
+  {
+    id: "reports",
+    name: "Reports",
+    description: "Analytics and reporting dashboard",
+    icon: BarChart3,
+    href: "/reports",
+    gradient: "bg-gradient-primary",
+  },
+  {
+    id: "settings",
+    name: "Settings",
+    description: "System configuration and preferences",
+    icon: Settings,
+    href: "/settings/theme",
+    gradient: "bg-gradient-primary",
+  },
+];
+
+// Force re-compile
 export default function Home() {
+  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = getAuthToken();
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    // In a real app, fetch user and their accessible modules from the backend
+    setUser({ username: "User" });
+    setLoading(false);
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="container mx-auto px-4 py-12">
+      {/* Header */}
+      <div className="mb-12 space-y-4">
+        <h1 className="text-4xl font-bold tracking-tight">
+          Welcome to EMIS
+        </h1>
+        <p className="text-xl text-muted-foreground">
+          Select a module to get started
+        </p>
+      </div>
+
+      {/* Module Grid */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {modules.map((module) => {
+          const Icon = module.icon;
+          return (
+            <Link key={module.id} href={module.href}>
+              <Card className="group h-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1">
+                <CardHeader>
+                  <div className={`mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl ${module.gradient} p-3 shadow-lg transition-transform group-hover:scale-110`}>
+                    <Icon className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl">{module.name}</CardTitle>
+                  <CardDescription className="text-base">
+                    {module.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center text-sm font-medium text-primary">
+                    Open module
+                    <svg
+                      className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }
