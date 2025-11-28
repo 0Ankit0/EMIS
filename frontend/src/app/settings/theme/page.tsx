@@ -1,13 +1,82 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+    colorPresets,
+    applyColorPreset,
+    getStoredColorPreset,
+    setStoredColorPreset,
+    type ColorPreset
+} from "@/lib/theme-colors";
+import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function ThemeSettingsPage() {
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme, resolvedTheme } = useTheme();
+    const [selectedColor, setSelectedColor] = useState<ColorPreset>("blue");
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+        const storedColor = getStoredColorPreset();
+        setSelectedColor(storedColor);
+        // Apply the stored color on mount
+        applyColorPreset(storedColor, resolvedTheme === "dark");
+    }, []);
+
+    useEffect(() => {
+        if (mounted && resolvedTheme) {
+            applyColorPreset(selectedColor, resolvedTheme === "dark");
+        }
+    }, [resolvedTheme, selectedColor, mounted]);
+
+    const handleColorChange = (color: ColorPreset) => {
+        setSelectedColor(color);
+        setStoredColorPreset(color);
+        applyColorPreset(color, resolvedTheme === "dark");
+    };
+
+    if (!mounted) {
+        return (
+            <div className="space-y-6">
+                <div>
+                    <h3 className="text-lg font-medium">Appearance</h3>
+                    <p className="text-sm text-muted-foreground">
+                        Customize the appearance of the app. Automatically switch between day
+                        and night themes.
+                    </p>
+                </div>
+                <Separator />
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <div className="h-5 w-24 animate-pulse rounded bg-muted" />
+                        <div className="h-4 w-64 animate-pulse rounded bg-muted" />
+                    </div>
+                    <div className="grid max-w-md grid-cols-2 gap-8 pt-2">
+                        <div className="h-40 animate-pulse rounded-md bg-muted" />
+                        <div className="h-40 animate-pulse rounded-md bg-muted" />
+                    </div>
+                </div>
+                <Separator />
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <div className="h-5 w-24 animate-pulse rounded bg-muted" />
+                        <div className="h-4 w-full max-w-md animate-pulse rounded bg-muted" />
+                    </div>
+                    <div className="grid grid-cols-4 gap-3 sm:grid-cols-7">
+                        {Array.from({ length: 7 }).map((_, i) => (
+                            <div key={i} className="h-24 animate-pulse rounded-lg bg-muted" />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -19,11 +88,13 @@ export default function ThemeSettingsPage() {
                 </p>
             </div>
             <Separator />
-            <div className="space-y-8">
+
+            {/* Theme Mode Selection */}
+            <div className="space-y-4">
                 <div className="space-y-2">
-                    <Label>Theme</Label>
+                    <Label>Theme Mode</Label>
                     <p className="text-[0.8rem] text-muted-foreground">
-                        Select the theme for the dashboard.
+                        Select light or dark mode for the dashboard.
                     </p>
                     <RadioGroup
                         defaultValue={theme}
@@ -79,6 +150,59 @@ export default function ThemeSettingsPage() {
                             </Label>
                         </div>
                     </RadioGroup>
+                </div>
+            </div>
+
+            <Separator />
+
+            {/* Color Customization */}
+            <div className="space-y-4">
+                <div className="space-y-2">
+                    <Label>Theme Color</Label>
+                    <p className="text-[0.8rem] text-muted-foreground">
+                        Select your preferred primary color. This will update buttons, links, and other accent elements.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-4 gap-3 sm:grid-cols-7">
+                    {Object.entries(colorPresets).map(([key, preset]) => {
+                        const isSelected = selectedColor === key;
+                        return (
+                            <button
+                                key={key}
+                                onClick={() => handleColorChange(key as ColorPreset)}
+                                className={cn(
+                                    "group relative flex flex-col items-center gap-2 rounded-lg border-2 p-3 transition-all hover:border-primary/50",
+                                    isSelected ? "border-primary" : "border-muted"
+                                )}
+                                style={{
+                                    backgroundColor: `hsl(${preset.light.primary} / 0.1)`,
+                                }}
+                            >
+                                <div
+                                    className="h-10 w-10 rounded-full shadow-md transition-transform group-hover:scale-110"
+                                    style={{
+                                        backgroundColor: `hsl(${preset.light.primary})`,
+                                    }}
+                                >
+                                    {isSelected && (
+                                        <div className="flex h-full items-center justify-center">
+                                            <Check className="h-5 w-5 text-white" />
+                                        </div>
+                                    )}
+                                </div>
+                                <span className="text-xs font-medium">
+                                    {preset.name}
+                                </span>
+                            </button>
+                        );
+                    })}
+                </div>
+
+                <div className="rounded-lg border bg-muted/50 p-4">
+                    <p className="text-sm text-muted-foreground">
+                        <strong className="text-foreground">Preview:</strong> The selected color will be applied to buttons, links, active navigation items, and other accent elements throughout the application. Changes are saved automatically.
+                    </p>
                 </div>
             </div>
         </div>
