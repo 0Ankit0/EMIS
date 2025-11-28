@@ -16,12 +16,13 @@ import {
 } from "@/components/ui/card";
 import { AUTH_ENDPOINTS } from "@/lib/api-constants";
 import { setAuthToken } from "@/lib/auth-utils";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 export default function LoginPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -37,13 +38,6 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            // Support both username and email login if backend supports it, 
-            // usually dj-rest-auth uses 'username' or 'email' field depending on config.
-            // We'll send both or just the one filled. 
-            // Assuming standard dj-rest-auth which often expects 'username' or 'email'.
-            // Let's try to send 'username' as the primary field, but if it looks like an email, maybe backend handles it.
-            // Or we can just send the payload as is.
-
             const payload: any = {
                 password: formData.password,
             };
@@ -54,12 +48,6 @@ export default function LoginPage() {
             if (formData.email) {
                 payload.email = formData.email;
             }
-
-            // If user only filled one input (e.g. a single "Username or Email" field), we might need to adapt.
-            // For now, let's assume the UI has separate fields or we use one as username.
-            // Let's simplify to just "username" for now as per standard Django User model, 
-            // but often people want email. I'll add a toggle or just use "username" field for both if backend allows.
-            // Let's stick to a single "username" field in the UI for simplicity unless requested otherwise.
 
             const res = await fetch(AUTH_ENDPOINTS.LOGIN, {
                 method: "POST",
@@ -90,14 +78,17 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-muted/50 px-4 py-12 sm:px-6 lg:px-8">
-            <Card className="w-full max-w-md">
-                <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold tracking-tight">
-                        Sign in to your account
+        <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+            <Card className="w-full max-w-md shadow-xl">
+                <CardHeader className="space-y-2 text-center">
+                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
+                        <span className="text-3xl font-bold text-white">E</span>
+                    </div>
+                    <CardTitle className="text-3xl font-bold tracking-tight">
+                        Welcome back
                     </CardTitle>
-                    <CardDescription>
-                        Enter your username and password below to login
+                    <CardDescription className="text-base">
+                        Sign in to your EMIS account
                     </CardDescription>
                 </CardHeader>
                 <form onSubmit={handleSubmit}>
@@ -106,11 +97,12 @@ export default function LoginPage() {
                             <Label htmlFor="username">Username</Label>
                             <Input
                                 id="username"
-                                placeholder="johndoe"
+                                placeholder="Enter your username"
                                 required
                                 value={formData.username}
                                 onChange={handleChange}
                                 disabled={loading}
+                                className="h-11"
                             />
                         </div>
                         <div className="space-y-2">
@@ -123,21 +115,45 @@ export default function LoginPage() {
                                     Forgot password?
                                 </Link>
                             </div>
-                            <Input
-                                id="password"
-                                type="password"
-                                required
-                                value={formData.password}
-                                onChange={handleChange}
-                                disabled={loading}
-                            />
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Enter your password"
+                                    required
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    disabled={loading}
+                                    className="h-11 pr-10"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute right-0 top-0 h-11 w-10 hover:bg-transparent"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    disabled={loading}
+                                >
+                                    {showPassword ? (
+                                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                                    ) : (
+                                        <Eye className="h-4 w-4 text-muted-foreground" />
+                                    )}
+                                    <span className="sr-only">
+                                        {showPassword ? "Hide password" : "Show password"}
+                                    </span>
+                                </Button>
+                            </div>
                         </div>
                     </CardContent>
-                    <CardFooter>
-                        <Button className="w-full" type="submit" disabled={loading}>
+                    <CardFooter className="flex flex-col gap-4">
+                        <Button className="w-full h-11 text-base" type="submit" disabled={loading}>
                             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Sign In
                         </Button>
+                        <p className="text-center text-sm text-muted-foreground">
+                            Need help? Contact your administrator
+                        </p>
                     </CardFooter>
                 </form>
             </Card>
