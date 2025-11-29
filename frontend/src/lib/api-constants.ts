@@ -8,3 +8,9 @@ export const AUTH_ENDPOINTS = {
     PASSWORD_RESET_CONFIRM: `${API_BASE_URL}/auth/password/reset/confirm/`,
     USER: `${API_BASE_URL}/auth/user/`,
 };
+
+export const CALENDAR_ENDPOINTS = {
+    CALENDARS: `${API_BASE_URL}/calendar/calendars/`,
+    EVENTS: `${API_BASE_URL}/calendar/events/`,
+    CATEGORIES: `${API_BASE_URL}/calendar/categories/`,
+};
