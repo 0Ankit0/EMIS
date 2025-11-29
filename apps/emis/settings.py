@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'dj_rest_auth', 
     'drf_spectacular',
     'apps.calendar',
+    'apps.exam',
 ]
 
 MIDDLEWARE = [
