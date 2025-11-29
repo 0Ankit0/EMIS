@@ -14,3 +14,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class CalendarViewSet(viewsets.ModelViewSet):
     queryset = Calendar.objects.all()
     serializer_class = CalendarSerializer
+
+    #TODO: Add calendar layout for managing how the calendar view shows the calendar and the events.
+    
