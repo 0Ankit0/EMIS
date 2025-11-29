@@ -8,6 +8,9 @@ django = "*"
 djangorestframework = "*"
 dj-rest-auth = "*"
 drf-spectacular = "*"
+playwright = "*"
+pandas = "*"
+openpyxl = "*"
 
 [dev-packages]
 
