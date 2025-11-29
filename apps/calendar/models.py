@@ -15,6 +15,8 @@ class TimeStampedModel(models.Model):
 class Calendar(TimeStampedModel):
     """Model representing a calendar."""
     title = models.CharField(max_length=200)
+    start_date = models.DateField()
+    end_date = models.DateField()
 
     def __str__(self) -> str: # what to return when we print an object of this class
         return self.title
@@ -47,7 +49,7 @@ class Event(TimeStampedModel):
     ]
 
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='events')
-    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE, related_name='events')
+    calendar = models.ForeignKey(Calendar, on_delete=models.SET_NULL, related_name='events', null=True, blank=True)
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     organizer = models.CharField(max_length=100, blank=True)
@@ -59,6 +61,7 @@ class Event(TimeStampedModel):
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     start_time = models.TimeField(null=False, blank=False)
+    event_duration = models.DurationField(null=True, blank=True) # duration of the event each day.
     end_time = models.TimeField(null=False, blank=False)
     entry_form_required = models.BooleanField(default=False)
     reminder_enabled = models.BooleanField(default=False)
@@ -78,8 +81,10 @@ class Event(TimeStampedModel):
             if self.start_date >= self.end_date:
                 raise ValidationError("End date must be after start date.")
         elif self.type == self.SINGLE_DAY:
-            if self.start_date or self.end_date:
-                raise ValidationError("Start date and end date should be empty for single day events.")
+            if not self.start_date or not self.end_date:
+                 raise ValidationError("Start date and end date are required for single day events.")
+            if self.start_date != self.end_date:
+                raise ValidationError("Start date and end date must be the same for single day events.")
 
     def save(self, *args, **kwargs):
         if not self.slug and self.title:
