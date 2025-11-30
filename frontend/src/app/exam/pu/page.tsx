@@ -129,9 +129,20 @@ export default function PUExamPage() {
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Year</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Enter Year (e.g. 2025)" {...field} />
-                                        </FormControl>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select Year" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="2025">2025</SelectItem>
+                                                <SelectItem value="2024">2024</SelectItem>
+                                                <SelectItem value="2023">2023</SelectItem>
+                                                <SelectItem value="2022">2022</SelectItem>
+                                                <SelectItem value="2021">2021</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -174,16 +185,16 @@ export default function PUExamPage() {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="1st">First</SelectItem>
-                                                <SelectItem value="2nd">Second</SelectItem>
-                                                <SelectItem value="3rd">Third</SelectItem>
-                                                <SelectItem value="4th">Fourth</SelectItem>
-                                                <SelectItem value="5th">Fifth</SelectItem>
-                                                <SelectItem value="6th">Sixth</SelectItem>
-                                                <SelectItem value="7th">Seventh</SelectItem>
-                                                <SelectItem value="8th">Eighth</SelectItem>
-                                                <SelectItem value="9th">Ninth</SelectItem>
-                                                <SelectItem value="10th">Tenth</SelectItem>
+                                                <SelectItem value="1">First</SelectItem>
+                                                <SelectItem value="2">Second</SelectItem>
+                                                <SelectItem value="3">Third</SelectItem>
+                                                <SelectItem value="4">Fourth</SelectItem>
+                                                <SelectItem value="5">Fifth</SelectItem>
+                                                <SelectItem value="6">Sixth</SelectItem>
+                                                <SelectItem value="7">Seventh</SelectItem>
+                                                <SelectItem value="8">Eighth</SelectItem>
+                                                <SelectItem value="9">Ninth</SelectItem>
+                                                <SelectItem value="10">Tenth</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -254,7 +265,7 @@ export default function PUExamPage() {
                                         />
                                     </FormControl>
                                     <FormDescription>
-                                        Upload an Excel file with 'Exam Roll Number' and 'Date of Birth' columns.
+                                        Upload an Excel file with headers in row 4. Required columns: 'Exam Roll No.' and either 'Date of Birth' or 'DD', 'MM', 'YYYY' columns.
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>
