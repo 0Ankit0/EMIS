@@ -78,15 +78,20 @@ export default function CategoryListPage() {
                                             <Button variant="ghost" size="icon" title="View">
                                                 <Eye className="h-4 w-4" />
                                             </Button>
-                                            <Button variant="ghost" size="icon" title="Edit">
-                                                <Edit className="h-4 w-4" />
+                                            <Button variant="ghost" size="icon" title="Edit" asChild>
+                                                <Link href={`/calendar/category/add?id=${category.id}`}>
+                                                    <Edit className="h-4 w-4" />
+                                                </Link>
                                             </Button>
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
                                                 title="Delete"
                                                 className="text-destructive hover:text-destructive"
-                                                onClick={() => handleDelete(category.id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDelete(category.id);
+                                                }}
                                                 disabled={deleteCategory.isPending}
                                             >
                                                 <Trash2 className="h-4 w-4" />
