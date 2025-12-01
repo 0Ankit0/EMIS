@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -123,7 +125,7 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>
                         {mode === "create" ? `Add Event - ${format(selectedDate, "PPP")}` : "Link Existing Event"}
@@ -153,16 +155,23 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
                             <Label htmlFor="existing-event" className="text-right">
                                 Select Event
                             </Label>
-                            <Select value={existingEventId} onValueChange={setExistingEventId}>
-                                <SelectTrigger className="col-span-3">
-                                    <SelectValue placeholder="Select an unlinked event" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {existingEvents.map((e: any) => (
-                                        <SelectItem key={e.id} value={e.id.toString()}>{e.title}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <div className="col-span-3 flex gap-2">
+                                <Select value={existingEventId} onValueChange={setExistingEventId}>
+                                    <SelectTrigger className="flex-1">
+                                        <SelectValue placeholder="Select an unlinked event" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {existingEvents.map((e: any) => (
+                                            <SelectItem key={e.id} value={e.id.toString()}>{e.title}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <Button size="icon" variant="outline" asChild title="Add New Event">
+                                    <Link href="/calendar/event/add">
+                                        <Plus className="h-4 w-4" />
+                                    </Link>
+                                </Button>
+                            </div>
                         </div>
                         <DialogFooter>
                             <Button variant="outline" onClick={onClose}>Cancel</Button>
@@ -189,23 +198,30 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
                                     Category
                                 </Label>
                                 <div className="col-span-3">
-                                    <Controller
-                                        name="category"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select category" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {categories.map((cat: any) => (
-                                                        <SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        )}
-                                    />
-                                    {errors.category && <p className="text-sm text-red-500">{errors.category.message}</p>}
+                                    <div className="flex gap-2">
+                                        <Controller
+                                            name="category"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <SelectTrigger className="flex-1">
+                                                        <SelectValue placeholder="Select category" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {categories.map((cat: any) => (
+                                                            <SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
+                                        />
+                                        <Button size="icon" variant="outline" asChild title="Add New Category">
+                                            <Link href="/calendar/category/add">
+                                                <Plus className="h-4 w-4" />
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                    {errors.category && <p className="text-sm text-red-500 mt-1">{errors.category.message}</p>}
                                 </div>
                             </div>
                             <div className="grid grid-cols-4 items-center gap-4">
