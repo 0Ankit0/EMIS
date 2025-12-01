@@ -1,4 +1,4 @@
-import { CalendarSidebar } from "@/components/calendar-sidebar";
+import { CalendarSidebar } from "@/components/calendar/calendar-sidebar";
 
 export default function CalendarLayout({
     children,
