@@ -34,6 +34,7 @@ const formSchema = z.object({
     semester: z.string().min(1, "Semester is required"),
     program: z.string().min(1, "Program is required"),
     delay: z.number().min(0).default(1),
+    autofill: z.boolean().default(true),
     file: z.any(),
 });
 
@@ -51,6 +52,7 @@ export default function PUExamPage() {
             semester: "",
             program: "",
             delay: 1,
+            autofill: true,
         },
     });
 
@@ -64,22 +66,28 @@ export default function PUExamPage() {
             formData.append("semester", values.semester);
             formData.append("program", values.program);
             formData.append("delay", String(values.delay));
+            formData.append("autofill", String(values.autofill));
             formData.append("file", values.file[0]);
 
             const response = await processExamResults(formData);
 
-            // Handle file download
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `processed_${values.file[0].name}`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
+            // Only download file if autofill is true
+            if (values.autofill) {
+                // Handle file download
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `processed_${values.file[0].name}`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
 
-            toast.success("Exam results processed successfully!");
+                toast.success("Exam results processed successfully!");
+            } else {
+                toast.success("Automation completed. Browser closed.");
+            }
         } catch (error: any) {
             console.error(error);
             toast.error(error.message || "Something went wrong");
@@ -185,16 +193,16 @@ export default function PUExamPage() {
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="1">First</SelectItem>
-                                                <SelectItem value="2">Second</SelectItem>
-                                                <SelectItem value="3">Third</SelectItem>
-                                                <SelectItem value="4">Fourth</SelectItem>
-                                                <SelectItem value="5">Fifth</SelectItem>
-                                                <SelectItem value="6">Sixth</SelectItem>
-                                                <SelectItem value="7">Seventh</SelectItem>
-                                                <SelectItem value="8">Eighth</SelectItem>
-                                                <SelectItem value="9">Ninth</SelectItem>
-                                                <SelectItem value="10">Tenth</SelectItem>
+                                                <SelectItem value="1st">First</SelectItem>
+                                                <SelectItem value="2nd">Second</SelectItem>
+                                                <SelectItem value="3rd">Third</SelectItem>
+                                                <SelectItem value="4th">Fourth</SelectItem>
+                                                <SelectItem value="5th">Fifth</SelectItem>
+                                                <SelectItem value="6th">Sixth</SelectItem>
+                                                <SelectItem value="7th">Seventh</SelectItem>
+                                                <SelectItem value="8th">Eighth</SelectItem>
+                                                <SelectItem value="9th">Ninth</SelectItem>
+                                                <SelectItem value="10th">Tenth</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
