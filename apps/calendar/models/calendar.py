@@ -1,0 +1,11 @@
+from django.db import models
+from .base import TimeStampedModel
+
+class Calendar(TimeStampedModel):
+    """Model representing a calendar."""
+    title = models.CharField(max_length=200)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    def __str__(self) -> str: # what to return when we print an object of this class
+        return self.title

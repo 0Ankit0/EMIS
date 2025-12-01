@@ -1,34 +1,10 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
+from .base import TimeStampedModel
+from .category import Category
+from .calendar import Calendar
 
-class TimeStampedModel(models.Model):
-    """Abstract base class that provides self-updating
-    ``created_at`` and ``updated_at`` fields."""
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-
-
-class Calendar(TimeStampedModel):
-    """Model representing a calendar."""
-    title = models.CharField(max_length=200)
-    start_date = models.DateField()
-    end_date = models.DateField()
-
-    def __str__(self) -> str: # what to return when we print an object of this class
-        return self.title
-    
-class Category(TimeStampedModel):
-    name = models.CharField(max_length=100)
-    color = models.CharField(max_length=7, blank=True, help_text="Hex color code")
-    description = models.TextField(blank=True)
-
-    def __str__(self) -> str:
-        return self.name
-    
 class Event(TimeStampedModel):
     """Model representing an event in a calendar."""
     # Event types
@@ -82,7 +58,7 @@ class Event(TimeStampedModel):
                 raise ValidationError("End date must be after start date.")
         elif self.type == self.SINGLE_DAY:
             if not self.start_date or not self.end_date:
-                 raise ValidationError("Start date and end date are required for single day events.")
+                raise ValidationError("Start date and end date are required for single day events.")
             if self.start_date != self.end_date:
                 raise ValidationError("Start date and end date must be the same for single day events.")
 

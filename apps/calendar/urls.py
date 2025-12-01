@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CalendarViewSet, EventViewSet, CategoryViewSet
+from .api import CalendarViewSet, EventViewSet, CategoryViewSet
 
 router = DefaultRouter()
 router.register(r'calendars', CalendarViewSet)
