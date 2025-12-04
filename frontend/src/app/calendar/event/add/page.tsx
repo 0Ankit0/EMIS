@@ -10,38 +10,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useCreateEvent } from "@/hooks/use-event-queries";
 import { useCategories } from "@/hooks/use-category-queries";
-
-interface Category {
-    id: number;
-    name: string;
-    color?: string;
-    description?: string;
-}
-
-const eventSchema = z.object({
-    title: z.string().min(1, "Title is required"),
-    category: z.string().min(1, "Category is required"),
-    eventType: z.enum(["single", "multi"]),
-    startDate: z.string().min(1, "Start date is required"),
-    endDate: z.string().optional(),
-    startTime: z.string().min(1, "Start time is required"),
-    endTime: z.string().min(1, "End time is required"),
-    duration: z.string().optional(),
-    description: z.string().optional(),
-}).refine(data => {
-    if (data.eventType === "multi" && !data.endDate) {
-        return false;
-    }
-    return true;
-}, {
-    message: "End date is required for multi-day events",
-    path: ["endDate"],
-});
-
-type EventFormValues = z.infer<typeof eventSchema>;
+import { eventFormSchema, type EventFormValues, type Category } from "@/types/calendar";
 
 export default function AddEventPage() {
     const router = useRouter();
@@ -49,7 +20,7 @@ export default function AddEventPage() {
     const createEvent = useCreateEvent();
 
     const { register, control, handleSubmit, watch, setValue, formState: { errors } } = useForm<EventFormValues>({
-        resolver: zodResolver(eventSchema),
+        resolver: zodResolver(eventFormSchema) as any,
         defaultValues: {
             title: "",
             category: "",
