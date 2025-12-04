@@ -28,3 +28,9 @@ class Student(models.Model):
     class Meta:
         db_table = 'students'
         ordering = [ 'first_name', 'last_name' ]
+        indexes = [
+            models.Index(fields=['email']),
+            models.Index(fields=['registration_number']),
+            models.Index(fields=['is_active', 'enrollment_date']),
+            models.Index(fields=['is_deleted']),
+        ]
