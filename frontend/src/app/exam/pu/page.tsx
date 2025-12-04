@@ -44,7 +44,7 @@ export default function PUExamPage() {
     const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<FormValues>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(formSchema) as any,
         defaultValues: {
             result_type: "",
             year: "",
