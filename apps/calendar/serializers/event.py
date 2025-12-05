@@ -5,3 +5,5 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = '__all__'
+        exclude = ['id']
+        lookup_field = 'ukid'

@@ -1,11 +1,11 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
-from .base import TimeStampedModel
+from .base import BaseModel
 from .category import Category
 from .calendar import Calendar
 
-class Event(TimeStampedModel):
+class Event(BaseModel):
     """Model representing an event in a calendar."""
     # Event types
     SINGLE_DAY = 'single'
@@ -78,3 +78,8 @@ class Event(TimeStampedModel):
            return f"{self.title} from {self.start_time} to {self.end_time}"
        else:
            return f"{self.title} from {self.start_date} to {self.end_date} and {self.start_time} to {self.end_time}"
+
+    class Meta: # type: ignore
+        verbose_name = "Event"
+        verbose_name_plural = "Events"
+        ordering = ['start_date', 'start_time']

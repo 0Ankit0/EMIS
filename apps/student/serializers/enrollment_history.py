@@ -5,3 +5,5 @@ class EnrollmentHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = EnrollmentHistory
         fields = '__all__'
+        exclude = ['id']
+        lookup_field = 'ukid'

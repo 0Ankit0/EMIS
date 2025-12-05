@@ -1,8 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from . import Student
-
-class SubjectResult(models.Model):
+from . import BaseModel
+class SubjectResult(BaseModel):
     GRADE_CHOICES = [
         ('A+', 'A+'),
         ('A', 'A'),
@@ -29,9 +29,7 @@ class SubjectResult(models.Model):
     credit_hours = models.IntegerField(default=3)
     semester = models.CharField(max_length=20)
     attempt_type = models.CharField(max_length=10, choices=ATTEMPT_CHOICES, default='regular')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
+     
     def clean(self):
         if self.marks_obtained is not None and self.marks_obtained < 0:
             raise ValidationError('Marks obtained cannot be negative.')
@@ -49,6 +47,6 @@ class SubjectResult(models.Model):
     def __str__(self):
         return f"{self.subject_name} Result for {self.student.first_name} {self.student.last_name}"
 
-    class Meta:
+    class Meta: # type: ignore
         db_table = 'subject_results'
         ordering = ['-semester', 'subject_name']

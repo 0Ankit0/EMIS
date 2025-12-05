@@ -5,7 +5,9 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = '__all__'
+        exclude = ['id']
         read_only_fields = ('id','registration_number','updated_at','created_at','is_active')
+        lookup_field = 'ukid'
 
     def delete(self,instance):
         instance.is_active = False

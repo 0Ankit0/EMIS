@@ -5,3 +5,5 @@ class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = '__all__'
+        exclude = ['id']
+        lookup_field = 'ukid'

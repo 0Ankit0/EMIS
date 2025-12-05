@@ -5,3 +5,5 @@ class CalendarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Calendar
         fields = '__all__'
+        exclude = ['id']
+        lookup_field = 'ukid'

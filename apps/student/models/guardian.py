@@ -1,7 +1,7 @@
 from django.db import models
 from . import Student
-
-class Guardian(models.Model):
+from . import BaseModel
+class Guardian(BaseModel):
     student = models.ManyToManyField(Student, related_name='guardians')
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -15,7 +15,7 @@ class Guardian(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name} is the {self.relationship} of {', '.join([student.first_name + ' ' + student.last_name for student in self.student.all()])}"
 
-    class Meta:
+    class Meta: # type: ignore
         db_table = 'guardians'
         ordering = ['first_name', 'last_name']
         indexes = [
