@@ -1,4 +1,4 @@
-from . import Enrollment
+from . import EnrollmentStatus, Enrollment
 from django.db import models
 from . import Student
 from . import BaseModel
@@ -10,11 +10,11 @@ class EnrollmentHistory(BaseModel):
     semester = models.CharField(max_length=20)
     previous_status = models.CharField(
         max_length=20,
-        choices=Enrollment.ENROLLMENT_STATUS_CHOICES
+        choices=EnrollmentStatus.choices
     )
     new_status = models.CharField(
         max_length=20,
-        choices=Enrollment.ENROLLMENT_STATUS_CHOICES
+        choices=EnrollmentStatus.choices
     )
     def __str__(self):
         return f"Enrollment status changed from {self.previous_status} to {self.new_status} on {self.created_at} for {self.student.first_name} {self.student.last_name}"

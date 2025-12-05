@@ -5,25 +5,22 @@ from .base import BaseModel
 from .category import Category
 from .calendar import Calendar
 
+class EventType(models.TextChoices):
+    """
+    Event type choices.
+    """
+    SINGLE_DAY = 'single', 'Single Day Event'
+    MULTI_DAY = 'multi', 'Multi-day Event'
+
+class EventStatus(models.TextChoices):
+    """
+    Event status choices.
+    """
+    DRAFT = 'draft', 'Draft'
+    PUBLISHED = 'published', 'Published'
+
 class Event(BaseModel):
     """Model representing an event in a calendar."""
-    # Event types
-    SINGLE_DAY = 'single'
-    MULTI_DAY = 'multi'
-
-    EVENT_TYPES = [
-        (SINGLE_DAY, 'Single Day Event'),
-        (MULTI_DAY, 'Multi-day Event'),
-    ]
-
-    # Event status
-    EVENT_STATUS_DRAFT = 'draft'
-    EVENT_STATUS_PUBLISHED = 'published'
-    EVENT_STATUS = [
-        (EVENT_STATUS_DRAFT, 'Draft'),
-        (EVENT_STATUS_PUBLISHED, 'Published'),
-    ]
-
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='events')
     calendar = models.ForeignKey(Calendar, on_delete=models.SET_NULL, related_name='events', null=True, blank=True)
     title = models.CharField(max_length=200)
@@ -32,8 +29,8 @@ class Event(BaseModel):
     location = models.CharField(max_length=255, blank=True)
     slug = models.SlugField(unique=True, blank=True)
     type = models.CharField(max_length=10,
-                            choices=EVENT_TYPES,
-                            default=SINGLE_DAY)
+                            choices=EventType.choices,
+                            default=EventType.SINGLE_DAY)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
     start_time = models.TimeField(null=False, blank=False)
@@ -42,8 +39,8 @@ class Event(BaseModel):
     entry_form_required = models.BooleanField(default=False)
     reminder_enabled = models.BooleanField(default=False)
     status = models.CharField(max_length=20, 
-                              choices=EVENT_STATUS, 
-                              default=EVENT_STATUS_DRAFT)
+                              choices=EventStatus.choices, 
+                              default=EventStatus.DRAFT)
     
     def clean(self):
         if self.start_time and self.end_time and self.end_time <= self.start_time:
@@ -51,12 +48,12 @@ class Event(BaseModel):
         elif not self.start_time or not self.end_time:
             raise ValidationError("Start time and end time are required.")
         
-        if self.type == self.MULTI_DAY:
+        if self.type == EventType.MULTI_DAY:
             if not self.start_date or not self.end_date:
                 raise ValidationError("Start date and end date are required for multi-day events.")
             if self.start_date >= self.end_date:
                 raise ValidationError("End date must be after start date.")
-        elif self.type == self.SINGLE_DAY:
+        elif self.type == EventType.SINGLE_DAY:
             if not self.start_date or not self.end_date:
                 raise ValidationError("Start date and end date are required for single day events.")
             if self.start_date != self.end_date:
@@ -74,7 +71,7 @@ class Event(BaseModel):
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-       if self.type == 'single':
+       if self.type == EventType.SINGLE_DAY:
            return f"{self.title} from {self.start_time} to {self.end_time}"
        else:
            return f"{self.title} from {self.start_date} to {self.end_date} and {self.start_time} to {self.end_time}"
