@@ -32,7 +32,7 @@ import { subjectResultFormSchema, GRADE_OPTIONS, ATTEMPT_TYPE_OPTIONS, type Subj
 export default function NewSubjectResultPage() {
     const router = useRouter();
     const params = useParams();
-    const studentId = Number(params.id);
+    const studentId = params.id as string;
     const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<SubjectResultFormValues>({

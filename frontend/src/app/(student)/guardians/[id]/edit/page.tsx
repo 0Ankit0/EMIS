@@ -35,7 +35,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function EditGuardianPage() {
     const router = useRouter();
     const params = useParams();
-    const guardianId = Number(params.id);
+    const guardianId = params.id as string;
     const [isLoading, setIsLoading] = useState(false);
     const [loadingData, setLoadingData] = useState(true);
 

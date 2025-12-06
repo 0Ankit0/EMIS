@@ -34,7 +34,7 @@ import { DOCUMENT_TYPE_OPTIONS } from "@/types/student";
 export default function DocumentsPage() {
     const router = useRouter();
     const params = useParams();
-    const studentId = Number(params.id);
+    const studentId = params.id as string;
 
     const [student, setStudent] = useState<Student | null>(null);
     const [documents, setDocuments] = useState<StudentDocument[]>([]);

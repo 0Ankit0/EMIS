@@ -42,8 +42,8 @@ type FormValues = z.infer<typeof formSchema>;
 export default function EditEnrollmentPage() {
     const router = useRouter();
     const params = useParams();
-    const studentId = Number(params.id);
-    const enrollmentId = Number(params.enrollmentId);
+    const studentId = params.id as string;
+    const enrollmentId = params.enrollmentId as string;
     const [isLoading, setIsLoading] = useState(false);
     const [loadingData, setLoadingData] = useState(true);
 

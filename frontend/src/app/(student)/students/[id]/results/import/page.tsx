@@ -31,7 +31,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function ImportResultsPage() {
     const router = useRouter();
     const params = useParams();
-    const studentId = Number(params.id);
+    const studentId = params.id as string;
     const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<FormValues>({

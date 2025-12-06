@@ -66,7 +66,7 @@ export default function StudentsPage() {
         if (!studentToDelete) return;
 
         try {
-            await deleteStudent(studentToDelete.id);
+            await deleteStudent(studentToDelete.ukid);
             toast.success("Student deleted successfully");
             loadStudents();
         } catch (error: any) {
@@ -175,7 +175,7 @@ export default function StudentsPage() {
                             </TableHeader>
                             <TableBody>
                                 {filteredStudents.map((student) => (
-                                    <TableRow key={student.id}>
+                                    <TableRow key={student.ukid}>
                                         <TableCell className="font-mono">{student.registration_number}</TableCell>
                                         <TableCell className="font-mono">{student.roll_number}</TableCell>
                                         <TableCell className="font-medium">
@@ -201,14 +201,14 @@ export default function StudentsPage() {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => router.push(`/students/${student.id}`)}
+                                                    onClick={() => router.push(`/students/${student.ukid}`)}
                                                 >
                                                     <Eye className="h-4 w-4" />
                                                 </Button>
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => router.push(`/students/${student.id}/edit`)}
+                                                    onClick={() => router.push(`/students/${student.ukid}/edit`)}
                                                 >
                                                     <Pencil className="h-4 w-4" />
                                                 </Button>

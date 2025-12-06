@@ -32,7 +32,7 @@ import { enrollmentFormSchema, ENROLLMENT_STATUS_OPTIONS, type EnrollmentFormVal
 export default function NewEnrollmentPage() {
     const router = useRouter();
     const params = useParams();
-    const studentId = Number(params.id);
+    const studentId = params.id as string;
     const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm<EnrollmentFormValues>({

@@ -41,7 +41,7 @@ import {
 export default function SubjectResultsPage() {
     const router = useRouter();
     const params = useParams();
-    const studentId = Number(params.id);
+    const studentId = params.id as string;
 
     const [student, setStudent] = useState<Student | null>(null);
     const [results, setResults] = useState<SubjectResult[]>([]);

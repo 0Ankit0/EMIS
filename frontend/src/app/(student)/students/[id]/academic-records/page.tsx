@@ -32,7 +32,7 @@ import {
 export default function AcademicRecordsPage() {
     const router = useRouter();
     const params = useParams();
-    const studentId = Number(params.id);
+    const studentId = params.id as string;
 
     const [student, setStudent] = useState<Student | null>(null);
     const [records, setRecords] = useState<AcademicRecord[]>([]);
