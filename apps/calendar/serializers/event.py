@@ -1,10 +1,15 @@
 from rest_framework import serializers
 from django.utils import timezone
 from ..models.event import Event, EventType, EventStatus
+from ..models.category import Category
+from ..models.calendar import Calendar
 from .calendar import CalendarResponseSerializer
 from .category import CategoryResponseSerializer
 
 class EventCreateSerializer(serializers.ModelSerializer):
+    category = serializers.SlugRelatedField(slug_field='ukid', queryset=Category.objects.all())
+    calendar = serializers.SlugRelatedField(slug_field='ukid', queryset=Calendar.objects.all(), required=False, allow_null=True)
+
     class Meta:
         model = Event
         fields = [
@@ -55,6 +60,9 @@ class EventCreateSerializer(serializers.ModelSerializer):
         return attrs
 
 class EventUpdateSerializer(serializers.ModelSerializer):
+    category = serializers.SlugRelatedField(slug_field='ukid', queryset=Category.objects.all(), required=False)
+    calendar = serializers.SlugRelatedField(slug_field='ukid', queryset=Calendar.objects.all(), required=False, allow_null=True)
+
     class Meta:
         model = Event
         fields = [

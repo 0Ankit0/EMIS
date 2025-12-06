@@ -17,7 +17,7 @@ class CalendarViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if  user.is_staff or user.is_superuser:
             return Calendar.objects.all()
-        return Calendar.objects.filter(end_date__lte=timezone.now().date())
+        return Calendar.objects.filter(end_date__gte=timezone.now().date())
     
     def get_serializer_class(self): # type: ignore
         if self.action == 'create':
