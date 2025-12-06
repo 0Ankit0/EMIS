@@ -1,8 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-
-from apps.calendar.models.base import BaseModel
-from . import Student
+from .base import BaseModel
+from .student import Student
 import uuid
 
 class AcademicRecord(BaseModel):

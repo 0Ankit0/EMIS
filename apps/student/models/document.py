@@ -1,7 +1,7 @@
 from django.db import models
-from . import Student
+from .student import Student
+from .base import BaseModel
 import uuid
-from . import BaseModel
 
 class DocumentType(models.TextChoices):
     """Document type choices."""
@@ -27,4 +27,4 @@ class Document(BaseModel):
     
     class Meta: # type: ignore
         db_table = 'student_documents'
-        ordering = ['-uploaded_at']
+        ordering = ['-created_at']

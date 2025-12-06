@@ -1,7 +1,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from datetime import date, timedelta
-from . import BaseModel
+from .base import BaseModel
+
 class Student(BaseModel):
     registration_number = models.BigIntegerField(unique=True)
     roll_number = models.CharField(max_length=20, unique=True)
@@ -43,5 +44,4 @@ class Student(BaseModel):
             models.Index(fields=['email']),
             models.Index(fields=['registration_number']),
             models.Index(fields=['is_active', 'enrollment_date']),
-            models.Index(fields=['is_deleted']),
         ]

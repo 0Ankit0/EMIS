@@ -1,7 +1,7 @@
-from . import EnrollmentStatus, Enrollment
 from django.db import models
-from . import Student
-from . import BaseModel
+from .enrollment import EnrollmentStatus, Enrollment
+from .student import Student
+from .base import BaseModel
 
 
 class EnrollmentHistory(BaseModel):

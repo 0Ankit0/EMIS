@@ -1,6 +1,7 @@
 from django.db import models
-from . import Student
-from . import BaseModel
+from .student import Student
+from .base import BaseModel
+
 class Guardian(BaseModel):
     student = models.ManyToManyField(Student, related_name='guardians')
     first_name = models.CharField(max_length=50)

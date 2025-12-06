@@ -1,6 +1,6 @@
 from django.db import models
-from . import Student
-from . import BaseModel
+from .student import Student
+from .base import BaseModel
 
 class EnrollmentStatus(models.TextChoices):
     """Enrollment status choices."""
