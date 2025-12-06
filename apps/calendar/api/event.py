@@ -4,12 +4,31 @@ from rest_framework.response import Response
 from django.db.models import Count
 from django.utils import timezone
 from datetime import timedelta
-from ..models.event import Event
-from ..serializers.event import EventSerializer
+from ..models.event import Event, EventStatus
+from ..serializers.event import (
+    EventCreateSerializer,
+    EventUpdateSerializer,
+    EventResponseSerializer
+)
+from rest_framework.permissions import IsAuthenticated
 
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
-    serializer_class = EventSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'ukid'
+    
+    def get_serializer_class(self): # type: ignore
+        if self.action == 'create':
+            return EventCreateSerializer
+        elif self.action in ['update', 'partial_update']:
+            return EventUpdateSerializer
+        return EventResponseSerializer
+    
+    def get_queryset(self): # type: ignore
+        user = self.request.user
+        if not user.is_staff or user.is_superuser:
+            return Event.objects.all()
+        return Event.objects.filter(status=EventStatus.PUBLISHED)
 
     @action(detail=False, methods=['get'])
     def analytics(self, request):
