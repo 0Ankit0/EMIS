@@ -36,7 +36,7 @@ export const getStudents = async (filters?: StudentFilters): Promise<Student[]> 
     return response.json();
 };
 
-export const getStudent = async (id: number): Promise<Student> => {
+export const getStudent = async (id: string): Promise<Student> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -73,7 +73,7 @@ export const createStudent = async (data: StudentCreateInput): Promise<Student> 
     return response.json();
 };
 
-export const updateStudent = async (id: number, data: StudentUpdateInput): Promise<Student> => {
+export const updateStudent = async (id: string, data: StudentUpdateInput): Promise<Student> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -93,7 +93,7 @@ export const updateStudent = async (id: number, data: StudentUpdateInput): Promi
     return response.json();
 };
 
-export const deleteStudent = async (id: number): Promise<void> => {
+export const deleteStudent = async (id: string): Promise<void> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -109,7 +109,7 @@ export const deleteStudent = async (id: number): Promise<void> => {
     }
 };
 
-export const activateStudent = async (id: number): Promise<Student> => {
+export const activateStudent = async (id: string): Promise<Student> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/activate/`, {

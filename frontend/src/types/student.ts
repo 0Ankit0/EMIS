@@ -26,6 +26,9 @@ export type StudentFormValues = z.infer<typeof studentFormSchema>;
 
 export type Student = StudentFormValues & {
     id: number;
+    ukid: string;
+    full_name: string;
+    enrollment_count: number;
     is_active: boolean;
     is_deleted: boolean;
     deleted_at?: string;
@@ -49,14 +52,14 @@ export const enrollmentFormSchema = z.object({
 export type EnrollmentFormValues = z.infer<typeof enrollmentFormSchema>;
 
 export type Enrollment = EnrollmentFormValues & {
-    id: number;
-    student: number;
+    id: string;
+    student: string;
     student_name?: string;
     created_at: string;
     updated_at: string;
 };
 
-export type EnrollmentCreateInput = EnrollmentFormValues & { student: number };
+export type EnrollmentCreateInput = EnrollmentFormValues & { student: string };
 export type EnrollmentUpdateInput = Partial<EnrollmentFormValues>;
 
 // ============================================
@@ -72,8 +75,8 @@ export const academicRecordFormSchema = z.object({
 export type AcademicRecordFormValues = z.infer<typeof academicRecordFormSchema>;
 
 export type AcademicRecord = {
-    id: number;
-    student: number;
+    id: string;
+    student: string;
     student_name?: string;
     semester: string;
     gpa: string; // API returns as string
@@ -84,7 +87,7 @@ export type AcademicRecord = {
 };
 
 export type AcademicRecordCreateInput = {
-    student: number;
+    student: string;
     semester: string;
     gpa: string;
     total_credits: number;
@@ -109,14 +112,14 @@ export const subjectResultFormSchema = z.object({
 export type SubjectResultFormValues = z.infer<typeof subjectResultFormSchema>;
 
 export type SubjectResult = SubjectResultFormValues & {
-    id: number;
-    student: number;
+    id: string;
+    student: string;
     student_name?: string;
     created_at: string;
     updated_at: string;
 };
 
-export type SubjectResultCreateInput = SubjectResultFormValues & { student: number };
+export type SubjectResultCreateInput = SubjectResultFormValues & { student: string };
 export type SubjectResultUpdateInput = Partial<SubjectResultFormValues>;
 
 export const resultsImportFormSchema = z.object({
@@ -140,15 +143,15 @@ export const guardianFormSchema = z.object({
 export type GuardianFormValues = z.infer<typeof guardianFormSchema>;
 
 export type Guardian = GuardianFormValues & {
-    id: number;
-    student: number[];
+    id: string;
+    student: string[];
     student_names?: string[];
     created_at: string;
     updated_at: string;
 };
 
-export type GuardianCreateInput = GuardianFormValues & { student: number[] };
-export type GuardianUpdateInput = Partial<GuardianFormValues> & { student?: number[] };
+export type GuardianCreateInput = GuardianFormValues & { student: string[] };
+export type GuardianUpdateInput = Partial<GuardianFormValues> & { student?: string[] };
 
 // ============================================
 // DOCUMENT
@@ -165,8 +168,8 @@ export const documentUploadFormSchema = z.object({
 export type DocumentUploadFormValues = z.infer<typeof documentUploadFormSchema>;
 
 export type Document = {
-    id: number;
-    student: number;
+    id: string;
+    student: string;
     student_name?: string;
     document_type: z.infer<typeof documentTypeEnum>;
     file: string;
@@ -177,7 +180,7 @@ export type Document = {
 };
 
 export type DocumentUploadInput = {
-    student: number;
+    student: string;
     document_type: z.infer<typeof documentTypeEnum>;
     file: File;
 };
@@ -195,19 +198,19 @@ export interface StudentFilters {
 }
 
 export interface EnrollmentFilters {
-    student?: number;
+    student?: string;
     program?: string;
     semester?: string;
     status?: string;
 }
 
 export interface AcademicRecordFilters {
-    student?: number;
+    student?: string;
     semester?: string;
 }
 
 export interface SubjectResultFilters {
-    student?: number;
+    student?: string;
     semester?: string;
     subject_name?: string;
     attempt_type?: string;

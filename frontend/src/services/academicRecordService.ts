@@ -32,7 +32,7 @@ export const getAcademicRecords = async (filters?: AcademicRecordFilters): Promi
     return response.json();
 };
 
-export const getAcademicRecord = async (id: number): Promise<AcademicRecord> => {
+export const getAcademicRecord = async (id: string): Promise<AcademicRecord> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -69,7 +69,7 @@ export const createAcademicRecord = async (data: AcademicRecordCreateInput): Pro
     return response.json();
 };
 
-export const updateAcademicRecord = async (id: number, data: AcademicRecordUpdateInput): Promise<AcademicRecord> => {
+export const updateAcademicRecord = async (id: string, data: AcademicRecordUpdateInput): Promise<AcademicRecord> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -89,7 +89,7 @@ export const updateAcademicRecord = async (id: number, data: AcademicRecordUpdat
     return response.json();
 };
 
-export const deleteAcademicRecord = async (id: number): Promise<void> => {
+export const deleteAcademicRecord = async (id: string): Promise<void> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {

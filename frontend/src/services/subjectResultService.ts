@@ -34,7 +34,7 @@ export const getSubjectResults = async (filters?: SubjectResultFilters): Promise
     return response.json();
 };
 
-export const getSubjectResult = async (id: number): Promise<SubjectResult> => {
+export const getSubjectResult = async (id: string): Promise<SubjectResult> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -71,7 +71,7 @@ export const createSubjectResult = async (data: SubjectResultCreateInput): Promi
     return response.json();
 };
 
-export const updateSubjectResult = async (id: number, data: SubjectResultUpdateInput): Promise<SubjectResult> => {
+export const updateSubjectResult = async (id: string, data: SubjectResultUpdateInput): Promise<SubjectResult> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -91,7 +91,7 @@ export const updateSubjectResult = async (id: number, data: SubjectResultUpdateI
     return response.json();
 };
 
-export const deleteSubjectResult = async (id: number): Promise<void> => {
+export const deleteSubjectResult = async (id: string): Promise<void> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {

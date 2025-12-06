@@ -7,7 +7,7 @@ import type {
 
 const API_BASE = "/api/guardians";
 
-export const getGuardians = async (studentId?: number): Promise<Guardian[]> => {
+export const getGuardians = async (studentId?: string): Promise<Guardian[]> => {
     const token = getAuthToken();
 
     const params = new URLSearchParams();
@@ -30,7 +30,7 @@ export const getGuardians = async (studentId?: number): Promise<Guardian[]> => {
     return response.json();
 };
 
-export const getGuardian = async (id: number): Promise<Guardian> => {
+export const getGuardian = async (id: string): Promise<Guardian> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -67,7 +67,7 @@ export const createGuardian = async (data: GuardianCreateInput): Promise<Guardia
     return response.json();
 };
 
-export const updateGuardian = async (id: number, data: GuardianUpdateInput): Promise<Guardian> => {
+export const updateGuardian = async (id: string, data: GuardianUpdateInput): Promise<Guardian> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -87,7 +87,7 @@ export const updateGuardian = async (id: number, data: GuardianUpdateInput): Pro
     return response.json();
 };
 
-export const deleteGuardian = async (id: number): Promise<void> => {
+export const deleteGuardian = async (id: string): Promise<void> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -103,7 +103,7 @@ export const deleteGuardian = async (id: number): Promise<void> => {
     }
 };
 
-export const linkStudent = async (guardianId: number, studentId: number): Promise<Guardian> => {
+export const linkStudent = async (guardianId: string, studentId: string): Promise<Guardian> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${guardianId}/link-student/`, {
@@ -123,7 +123,7 @@ export const linkStudent = async (guardianId: number, studentId: number): Promis
     return response.json();
 };
 
-export const unlinkStudent = async (guardianId: number, studentId: number): Promise<Guardian> => {
+export const unlinkStudent = async (guardianId: string, studentId: string): Promise<Guardian> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${guardianId}/unlink-student/`, {

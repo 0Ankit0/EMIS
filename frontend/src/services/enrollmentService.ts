@@ -34,7 +34,7 @@ export const getEnrollments = async (filters?: EnrollmentFilters): Promise<Enrol
     return response.json();
 };
 
-export const getEnrollment = async (id: number): Promise<Enrollment> => {
+export const getEnrollment = async (id: string): Promise<Enrollment> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -71,7 +71,7 @@ export const createEnrollment = async (data: EnrollmentCreateInput): Promise<Enr
     return response.json();
 };
 
-export const updateEnrollment = async (id: number, data: EnrollmentUpdateInput): Promise<Enrollment> => {
+export const updateEnrollment = async (id: string, data: EnrollmentUpdateInput): Promise<Enrollment> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -91,7 +91,7 @@ export const updateEnrollment = async (id: number, data: EnrollmentUpdateInput):
     return response.json();
 };
 
-export const deleteEnrollment = async (id: number): Promise<void> => {
+export const deleteEnrollment = async (id: string): Promise<void> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {

@@ -3,7 +3,7 @@ import type { Document, DocumentUploadInput } from "@/types/student";
 
 const API_BASE = "/api/documents";
 
-export const getDocuments = async (studentId: number): Promise<Document[]> => {
+export const getDocuments = async (studentId: string): Promise<Document[]> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/?student=${studentId}`, {
@@ -20,7 +20,7 @@ export const getDocuments = async (studentId: number): Promise<Document[]> => {
     return response.json();
 };
 
-export const getDocument = async (id: number): Promise<Document> => {
+export const getDocument = async (id: string): Promise<Document> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -61,7 +61,7 @@ export const uploadDocument = async (data: DocumentUploadInput): Promise<Documen
     return response.json();
 };
 
-export const deleteDocument = async (id: number): Promise<void> => {
+export const deleteDocument = async (id: string): Promise<void> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/`, {
@@ -77,7 +77,7 @@ export const deleteDocument = async (id: number): Promise<void> => {
     }
 };
 
-export const verifyDocument = async (id: number, verifiedBy: string): Promise<Document> => {
+export const verifyDocument = async (id: string, verifiedBy: string): Promise<Document> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/verify/`, {
@@ -97,7 +97,7 @@ export const verifyDocument = async (id: number, verifiedBy: string): Promise<Do
     return response.json();
 };
 
-export const downloadDocument = async (id: number): Promise<Blob> => {
+export const downloadDocument = async (id: string): Promise<Blob> => {
     const token = getAuthToken();
 
     const response = await fetch(`${API_BASE}/${id}/download/`, {
