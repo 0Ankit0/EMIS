@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'apps.calendar',
     'apps.exam',
+    'apps.student',
 ]
 
 MIDDLEWARE = [

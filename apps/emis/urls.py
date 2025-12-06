@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/auth/', include('dj_rest_auth.urls')),
     path('api/exam/', include('apps.exam.urls')),
     path('api/calendar/', include('apps.calendar.urls')),
+    path('api/student/', include('apps.student.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
