@@ -16,6 +16,7 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     permission_classes = [IsAuthenticated]
     lookup_field = 'ukid'
+    filterset_fields = ['category', 'type', 'calendar', 'start_date', 'end_date']
     
     def get_serializer_class(self): # type: ignore
         if self.action == 'create':
