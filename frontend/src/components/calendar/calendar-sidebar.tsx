@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, CalendarPlus, List, Plus, Tag, ChevronDown } from "lucide-react";
+import { CalendarDays, CalendarPlus, List, Plus, Tag, ChevronDown, Layout, Settings } from "lucide-react";
 import {
     Accordion,
     AccordionContent,
@@ -44,6 +44,15 @@ export function CalendarSidebar({ className }: SidebarProps) {
             items: [
                 { title: "Add Category", href: "/calendar/category/add", icon: Plus },
                 { title: "List Categories", href: "/calendar/category/list", icon: List },
+            ]
+        },
+        {
+            title: "Layout",
+            icon: Layout,
+            value: "layout",
+            items: [
+                { title: "All Layouts", href: "/calendar/layout/list", icon: List },
+                { title: "Add Layout", href: "/calendar/layout/add", icon: Plus },
             ]
         }
     ];
