@@ -1,7 +1,9 @@
 from rest_framework import serializers
-from ..models import Guardian
+from ..models import Guardian, Student
 
 class GuardianCreateSerializer(serializers.ModelSerializer):
+    student = serializers.SlugRelatedField(slug_field='ukid', queryset=Student.objects.all(), many=True)
+
     class Meta:
         model = Guardian
         fields = [

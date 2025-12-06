@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from ..models import AcademicRecord
+from ..models import AcademicRecord, Student
 from .student import StudentResponseSerializer
 
 class AcademicRecordCreateSerializer(serializers.ModelSerializer):
+    student = serializers.SlugRelatedField(slug_field='ukid', queryset=Student.objects.all())
+
     class Meta:
         model = AcademicRecord
         fields = ['student', 'semester', 'gpa', 'total_credits', 'remarks']

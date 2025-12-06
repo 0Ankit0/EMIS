@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from ..models import Enrollment, EnrollmentStatus
+from ..models import Enrollment, EnrollmentStatus, Student
 from .student import StudentResponseSerializer
 
 class EnrollmentCreateSerializer(serializers.ModelSerializer):
+    student = serializers.SlugRelatedField(slug_field='ukid', queryset=Student.objects.all())
+
     class Meta:
         model = Enrollment
         fields = [

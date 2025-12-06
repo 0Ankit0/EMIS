@@ -1,8 +1,10 @@
 from rest_framework import serializers
-from ..models import Document, DocumentType
+from ..models import Document, DocumentType, Student
 from .student import StudentResponseSerializer
 
 class DocumentCreateSerializer(serializers.ModelSerializer):
+    student = serializers.SlugRelatedField(slug_field='ukid', queryset=Student.objects.all())
+
     class Meta:
         model = Document
         fields = ['student', 'document_type', 'file']
