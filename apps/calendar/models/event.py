@@ -18,6 +18,8 @@ class EventStatus(models.TextChoices):
     """
     DRAFT = 'draft', 'Draft'
     PUBLISHED = 'published', 'Published'
+    POSTPONED = 'postponed', 'Postponed'
+    CANCELLED = 'cancelled', 'Cancelled'
 
 class Event(BaseModel):
     """Model representing an event in a calendar."""
@@ -37,11 +39,19 @@ class Event(BaseModel):
     event_duration = models.DurationField(null=True, blank=True) # duration of the event each day.
     end_time = models.TimeField(null=False, blank=False)
     entry_form_required = models.BooleanField(default=False)
+    registration_url = models.URLField(blank=True)
+    registration_limit = models.PositiveIntegerField(null=True, blank=True)
     reminder_enabled = models.BooleanField(default=False)
+    remainder_time_before_event = models.DurationField(null=True, blank=True)
     status = models.CharField(max_length=20, 
                               choices=EventStatus.choices, 
                               default=EventStatus.DRAFT)
-    
+    published_at = models.DateTimeField(null=True, blank=True)
+    published_by = models.IntegerField(null=True, blank=True)  # Assuming user ID is an integer
+    postponed_to = models.DateField(null=True, blank=True)
+    cancelled_at = models.DateTimeField(null=True, blank=True)
+    cancelled_by = models.IntegerField(null=True, blank=True)  # Assuming user ID is an integer
+
     def clean(self):
         if self.start_time and self.end_time and self.end_time <= self.start_time:
             raise ValidationError("End time must be after start time.")
@@ -80,3 +90,7 @@ class Event(BaseModel):
         verbose_name = "Event"
         verbose_name_plural = "Events"
         ordering = ['start_date', 'start_time']
+        indexes = [
+            models.Index(fields=['category', 'status']),
+            models.Index(fields=['calendar', 'start_date']),
+        ]
