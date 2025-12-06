@@ -99,6 +99,7 @@ export type Event = {
     end_time: string;
     event_duration?: string;
     description?: string;
+    location?: string;
     calendar?: Calendar | null;
     entry_form_required: boolean;
     registration_url?: string;
@@ -162,3 +163,24 @@ export const EVENT_TYPE_OPTIONS = [
     { value: "single", label: "Single Day" },
     { value: "multi", label: "Multi Day" },
 ] as const;
+
+// ============================================
+// LAYOUT
+// ============================================
+export const calendarLayoutFormSchema = z.object({
+    name: z.string().min(1, "Name is required"),
+    active: z.boolean().default(false),
+    configuration: z.object({
+        left_sidebar_categories: z.array(z.number()).default([]),
+        right_content_mode: z.enum(['monthly', 'category']).default('monthly'),
+        right_content_categories: z.array(z.number()).default([]),
+    }),
+});
+
+export type CalendarLayoutFormValues = z.infer<typeof calendarLayoutFormSchema>;
+
+export type CalendarLayout = CalendarLayoutFormValues & {
+    id: number;
+    created_at: string;
+    updated_at: string;
+};

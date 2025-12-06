@@ -13,4 +13,5 @@ export const CALENDAR_ENDPOINTS = {
     CALENDARS: `${API_BASE_URL}/calendar/calendars/`,
     EVENTS: `${API_BASE_URL}/calendar/events/`,
     CATEGORIES: `${API_BASE_URL}/calendar/categories/`,
+    LAYOUTS: `${API_BASE_URL}/calendar/layouts/`,
 };
