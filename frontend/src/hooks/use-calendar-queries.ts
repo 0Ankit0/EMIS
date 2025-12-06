@@ -8,7 +8,7 @@ export const calendarKeys = {
     lists: () => [...calendarKeys.all, 'list'] as const,
     list: (filters?: any) => [...calendarKeys.lists(), { filters }] as const,
     details: () => [...calendarKeys.all, 'detail'] as const,
-    detail: (id: number) => [...calendarKeys.details(), id] as const,
+    detail: (id: string) => [...calendarKeys.details(), id] as const,
 };
 
 // Queries
@@ -19,7 +19,7 @@ export function useCalendars() {
     });
 }
 
-export function useCalendar(id: number) {
+export function useCalendar(id: string) {
     return useQuery({
         queryKey: calendarKeys.detail(id),
         queryFn: () => calendarApi.getById(id),
@@ -47,7 +47,7 @@ export function useUpdateCalendar() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ id, data }: { id: number; data: any }) =>
+        mutationFn: ({ id, data }: { id: string; data: any }) =>
             calendarApi.update(id, data),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: calendarKeys.detail(variables.id) });
@@ -65,7 +65,7 @@ export function useDeleteCalendar() {
 
     return useMutation({
         mutationFn: calendarApi.delete,
-        onMutate: async (id) => {
+        onMutate: async (id: string) => {
             // Cancel outgoing refetches
             await queryClient.cancelQueries({ queryKey: calendarKeys.lists() });
 
@@ -74,7 +74,7 @@ export function useDeleteCalendar() {
 
             // Optimistically update
             queryClient.setQueryData(calendarKeys.lists(), (old: any[] = []) =>
-                old.filter((calendar) => calendar.id !== id)
+                old.filter((calendar) => calendar.ukid !== id)
             );
 
             return { previousCalendars };

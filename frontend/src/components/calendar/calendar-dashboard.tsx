@@ -5,6 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarDays, Clock } from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell, PieChart, Pie, Legend } from "recharts";
 
+import { getAuthToken } from "@/lib/auth-utils";
+import { CALENDAR_ENDPOINTS } from "@/lib/api-constants";
+
 interface AnalyticsData {
     total_events: number;
     upcoming_events: number;
@@ -13,7 +16,12 @@ interface AnalyticsData {
 }
 
 async function getAnalytics(): Promise<AnalyticsData> {
-    const res = await fetch("http://localhost:8000/api/calendar/events/analytics/");
+    const token = getAuthToken();
+    const res = await fetch(`${CALENDAR_ENDPOINTS.EVENTS}analytics/`, {
+        headers: {
+            Authorization: `Token ${token}`,
+        },
+    });
     if (!res.ok) {
         throw new Error("Failed to fetch analytics");
     }

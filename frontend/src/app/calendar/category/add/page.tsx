@@ -28,7 +28,7 @@ function AddCategoryForm() {
 
     const createCategory = useCreateCategory();
     const updateCategory = useUpdateCategory();
-    const { data: categoryData, isLoading: isLoadingCategory } = useCategory(id ? parseInt(id) : 0);
+    const { data: categoryData, isLoading: isLoadingCategory } = useCategory(id || "");
 
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<CategoryFormValues>({
         resolver: zodResolver(categorySchema),
@@ -51,7 +51,7 @@ function AddCategoryForm() {
 
     const onSubmit = (data: CategoryFormValues) => {
         if (isEditMode && id) {
-            updateCategory.mutate({ id: parseInt(id), data }, {
+            updateCategory.mutate({ id, data }, {
                 onSuccess: () => {
                     router.push("/calendar/category/list");
                 }
@@ -93,12 +93,15 @@ function AddCategoryForm() {
                                 id="color"
                                 type="color"
                                 {...register("color")}
-                                className="w-12 h-10 p-1"
+                                className="w-12 h-10 p-1 cursor-pointer"
                             />
                             <Input
                                 {...register("color")}
                                 placeholder="#000000"
                                 className="flex-1"
+                                onChange={(e) => {
+                                    setValue("color", e.target.value);
+                                }}
                             />
                         </div>
                         {errors.color && <p className="text-sm text-red-500">{errors.color.message}</p>}

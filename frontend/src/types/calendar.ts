@@ -14,6 +14,7 @@ export type CategoryFormValues = z.infer<typeof categoryFormSchema>;
 
 export type Category = CategoryFormValues & {
     id: number;
+    ukid: string;
     created_at?: string;
     updated_at?: string;
 };
@@ -34,6 +35,7 @@ export type CalendarFormValues = z.infer<typeof calendarFormSchema>;
 
 export type Calendar = CalendarFormValues & {
     id: number;
+    ukid: string;
     events?: Event[];
     created_at: string;
     updated_at: string;
@@ -57,6 +59,12 @@ export const eventFormSchema = z.object({
     endTime: z.string().min(1, "End time is required"),
     duration: z.string().optional(),
     description: z.string().optional(),
+    entry_form_required: z.boolean().default(false),
+    registration_url: z.string().optional(),
+    registration_limit: z.coerce.number().optional(),
+    reminder_enabled: z.boolean().default(false),
+    remainder_time_before_event: z.string().optional(),
+    status: z.enum(['draft', 'published', 'postponed', 'cancelled']).default('draft'),
 }).refine(data => {
     if (data.eventType === "multi" && !data.endDate) {
         return false;
@@ -65,14 +73,23 @@ export const eventFormSchema = z.object({
 }, {
     message: "End date is required for multi-day events",
     path: ["endDate"],
+}).refine(data => {
+    if (data.entry_form_required && !data.registration_url) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Registration URL is required when entry form is required",
+    path: ["registration_url"],
 });
 
 export type EventFormValues = z.infer<typeof eventFormSchema>;
 
 export type Event = {
     id: number;
+    ukid: string;
     title: string;
-    category: number;
+    category: Category;
     category_name?: string;
     category_color?: string;
     type: z.infer<typeof eventTypeEnum>;
@@ -82,7 +99,18 @@ export type Event = {
     end_time: string;
     event_duration?: string;
     description?: string;
-    calendar?: number;
+    calendar?: Calendar | null;
+    entry_form_required: boolean;
+    registration_url?: string;
+    registration_limit?: number;
+    reminder_enabled: boolean;
+    remainder_time_before_event?: string;
+    status: 'draft' | 'published' | 'postponed' | 'cancelled';
+    published_at?: string;
+    published_by?: number;
+    postponed_to?: string;
+    cancelled_at?: string;
+    cancelled_by?: number;
     created_at: string;
     updated_at: string;
 };
@@ -98,9 +126,17 @@ export type EventCreateInput = {
     event_duration?: string;
     description?: string;
     calendar?: number;
+    entry_form_required?: boolean;
+    registration_url?: string;
+    registration_limit?: number;
+    reminder_enabled?: boolean;
+    remainder_time_before_event?: string;
 };
 
-export type EventUpdateInput = Partial<EventCreateInput>;
+export type EventUpdateInput = Partial<EventCreateInput> & {
+    status?: 'draft' | 'published' | 'postponed' | 'cancelled';
+    postponed_to?: string;
+};
 
 // ============================================
 // FILTERS

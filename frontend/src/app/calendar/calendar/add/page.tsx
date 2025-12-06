@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,12 +8,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarInteraction } from "@/components/calendar/calendar-interaction";
 import { addYears, format, isBefore, parseISO } from "date-fns";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CALENDAR_ENDPOINTS } from "@/lib/api-constants";
 import { getAuthToken } from "@/lib/auth-utils";
+import { useCalendar } from "@/hooks/use-calendar-queries";
 
-export default function AddCalendarPage() {
+function AddCalendarForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+    const isEditMode = !!id;
+
+    const { data: calendarData, isLoading: calendarLoading } = useCalendar(id || "");
+
     const [formData, setFormData] = useState({
         startDate: "",
         endDate: "",
@@ -22,6 +29,17 @@ export default function AddCalendarPage() {
     const [showCalendar, setShowCalendar] = useState(false);
     const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (isEditMode && calendarData) {
+            setFormData({
+                startDate: calendarData.start_date,
+                endDate: calendarData.end_date,
+                title: calendarData.title
+            });
+            setShowCalendar(true);
+        }
+    }, [isEditMode, calendarData]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -66,55 +84,79 @@ export default function AddCalendarPage() {
         setLoading(true);
         try {
             const token = getAuthToken();
+            let calendarId = id;
 
-            // 1. Create Calendar
-            const calRes = await fetch(CALENDAR_ENDPOINTS.CALENDARS, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Token ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    title,
-                    start_date: startDate,
-                    end_date: endDate
-                })
-            });
+            if (isEditMode && id) {
+                // Update Calendar
+                const calRes = await fetch(`${CALENDAR_ENDPOINTS.CALENDARS}${id}/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title,
+                        start_date: startDate,
+                        end_date: endDate
+                    })
+                });
 
-            if (!calRes.ok) {
-                const data = await calRes.json();
-                throw new Error(data.detail || "Failed to create calendar");
+                if (!calRes.ok) {
+                    const data = await calRes.json();
+                    throw new Error(data.detail || "Failed to update calendar");
+                }
+            } else {
+                // Create Calendar
+                const calRes = await fetch(CALENDAR_ENDPOINTS.CALENDARS, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title,
+                        start_date: startDate,
+                        end_date: endDate
+                    })
+                });
+
+                if (!calRes.ok) {
+                    const data = await calRes.json();
+                    throw new Error(data.detail || "Failed to create calendar");
+                }
+
+                const calendarData = await calRes.json();
+                calendarId = calendarData.ukid;
             }
 
-            const calendarData = await calRes.json();
-            const calendarId = calendarData.id;
-
-            // 2. Create/Link Events
-            for (const event of events) {
-                if (event.existingEventId) {
-                    // Link existing event
-                    await fetch(`${CALENDAR_ENDPOINTS.EVENTS}${event.existingEventId}/`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Authorization': `Token ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ calendar: calendarId })
-                    });
-                } else {
-                    // Create new event linked to calendar
-                    await fetch(CALENDAR_ENDPOINTS.EVENTS, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Token ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ ...event, calendar: calendarId })
-                    });
+            // 2. Create/Link Events (Only new ones added in this session)
+            if (calendarId) {
+                for (const event of events) {
+                    if (event.existingEventId) {
+                        // Link existing event
+                        await fetch(`${CALENDAR_ENDPOINTS.EVENTS}${event.existingEventId}/`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Authorization': `Token ${token}`,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ calendar: calendarId })
+                        });
+                    } else {
+                        // Create new event linked to calendar
+                        await fetch(CALENDAR_ENDPOINTS.EVENTS, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Token ${token}`,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ ...event, calendar: calendarId })
+                        });
+                    }
                 }
             }
 
-            toast.success("Calendar and events saved successfully");
+            toast.success(`Calendar ${isEditMode ? 'updated' : 'created'} successfully`);
             router.push("/calendar/calendar/list");
 
         } catch (error: any) {
@@ -125,11 +167,15 @@ export default function AddCalendarPage() {
         }
     };
 
+    if (isEditMode && calendarLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className="space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>Add New Calendar</CardTitle>
+                    <CardTitle>{isEditMode ? "Edit Calendar" : "Add New Calendar"}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
@@ -182,7 +228,7 @@ export default function AddCalendarPage() {
 
                             <div className="flex justify-end mt-8">
                                 <Button size="lg" onClick={handleSaveCalendar} disabled={loading}>
-                                    {loading ? "Saving..." : "Save Calendar"}
+                                    {loading ? "Saving..." : (isEditMode ? "Update Calendar" : "Save Calendar")}
                                 </Button>
                             </div>
                         </CardContent>
@@ -190,5 +236,13 @@ export default function AddCalendarPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function AddCalendarPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <AddCalendarForm />
+        </Suspense>
     );
 }

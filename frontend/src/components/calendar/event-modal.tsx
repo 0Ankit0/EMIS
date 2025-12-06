@@ -34,6 +34,12 @@ const eventSchema = z.object({
     endTime: z.string().min(1, "End time is required"),
     duration: z.string().optional(),
     description: z.string().optional(),
+    entry_form_required: z.boolean(),
+    registration_url: z.string().optional(),
+    registration_limit: z.coerce.number().optional(),
+    reminder_enabled: z.boolean(),
+    remainder_time_before_event: z.string().optional(),
+    status: z.enum(['draft', 'published', 'postponed', 'cancelled']),
 }).refine(data => {
     if (data.eventType === "multi" && !data.endDate) {
         return false;
@@ -42,9 +48,33 @@ const eventSchema = z.object({
 }, {
     message: "End date is required for multi-day events",
     path: ["endDate"],
+}).refine(data => {
+    if (data.entry_form_required && !data.registration_url) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Registration URL is required when entry form is required",
+    path: ["registration_url"],
 });
 
-type EventFormValues = z.infer<typeof eventSchema>;
+type EventFormValues = {
+    title: string;
+    category: string;
+    eventType: "single" | "multi";
+    startDate: string;
+    endDate?: string;
+    startTime: string;
+    endTime: string;
+    duration?: string;
+    description?: string;
+    entry_form_required: boolean;
+    registration_url?: string;
+    registration_limit?: number;
+    reminder_enabled: boolean;
+    remainder_time_before_event?: string;
+    status: "draft" | "published" | "postponed" | "cancelled";
+};
 
 export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModalProps) {
     const [mode, setMode] = useState<"create" | "link">("create");
@@ -57,7 +87,7 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
     const existingEvents = allEvents.filter((e: any) => e.calendar === null);
 
     const { register, control, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<EventFormValues>({
-        resolver: zodResolver(eventSchema),
+        resolver: zodResolver(eventSchema) as any,
         defaultValues: {
             title: "",
             category: "",
@@ -68,11 +98,19 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
             endTime: "",
             duration: "",
             description: "",
+            entry_form_required: false,
+            registration_url: "",
+            registration_limit: undefined,
+            reminder_enabled: false,
+            remainder_time_before_event: "",
+            status: "draft",
         }
     });
 
     const eventType = watch("eventType");
     const startDate = watch("startDate");
+    const entryFormRequired = watch("entry_form_required");
+    const reminderEnabled = watch("reminder_enabled");
 
     useEffect(() => {
         if (isOpen) {
@@ -87,6 +125,12 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
                 endTime: "",
                 duration: "",
                 description: "",
+                entry_form_required: false,
+                registration_url: "",
+                registration_limit: undefined,
+                reminder_enabled: false,
+                remainder_time_before_event: "",
+                status: "draft",
             });
         }
     }, [isOpen, selectedDate, reset]);
@@ -101,7 +145,7 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
     const onSubmit = (data: EventFormValues) => {
         const payload = {
             title: data.title,
-            category: parseInt(data.category),
+            category: data.category,
             type: data.eventType,
             start_date: data.startDate,
             end_date: data.eventType === "single" ? data.startDate : data.endDate,
@@ -109,6 +153,12 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
             end_time: data.endTime,
             event_duration: data.duration || null,
             description: data.description,
+            entry_form_required: data.entry_form_required,
+            registration_url: data.registration_url,
+            registration_limit: data.registration_limit,
+            reminder_enabled: data.reminder_enabled,
+            remainder_time_before_event: data.remainder_time_before_event || null,
+            status: data.status,
         };
         onSave(payload);
         onClose();
@@ -125,7 +175,7 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>
                         {mode === "create" ? `Add Event - ${format(selectedDate, "PPP")}` : "Link Existing Event"}
@@ -162,7 +212,7 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
                                     </SelectTrigger>
                                     <SelectContent>
                                         {existingEvents.map((e: any) => (
-                                            <SelectItem key={e.id} value={e.id.toString()}>{e.title}</SelectItem>
+                                            <SelectItem key={e.ukid} value={e.ukid}>{e.title}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -209,7 +259,7 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         {categories.map((cat: any) => (
-                                                            <SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
+                                                            <SelectItem key={cat.ukid} value={cat.ukid}>{cat.name}</SelectItem>
                                                         ))}
                                                     </SelectContent>
                                                 </Select>
@@ -349,6 +399,108 @@ export function EventModal({ isOpen, onClose, selectedDate, onSave }: EventModal
                                     </div>
                                 </>
                             )}
+
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="status" className="text-right">
+                                    Status
+                                </Label>
+                                <div className="col-span-3">
+                                    <Controller
+                                        name="status"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select status" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="draft">Draft</SelectItem>
+                                                    <SelectItem value="published">Published</SelectItem>
+                                                    <SelectItem value="postponed">Postponed</SelectItem>
+                                                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        )}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="entry_form_required" className="text-right">
+                                    Entry Form
+                                </Label>
+                                <div className="col-span-3 flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        id="entry_form_required"
+                                        className="h-4 w-4"
+                                        {...register("entry_form_required")}
+                                    />
+                                    <Label htmlFor="entry_form_required" className="font-normal">Required</Label>
+                                </div>
+                            </div>
+
+                            {entryFormRequired && (
+                                <>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="registration_url" className="text-right">
+                                            Reg. URL
+                                        </Label>
+                                        <div className="col-span-3">
+                                            <Input
+                                                id="registration_url"
+                                                {...register("registration_url")}
+                                                placeholder="https://..."
+                                            />
+                                            {errors.registration_url && <p className="text-sm text-red-500">{errors.registration_url.message}</p>}
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="registration_limit" className="text-right">
+                                            Limit
+                                        </Label>
+                                        <div className="col-span-3">
+                                            <Input
+                                                id="registration_limit"
+                                                type="number"
+                                                {...register("registration_limit")}
+                                                placeholder="Max participants"
+                                            />
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="reminder_enabled" className="text-right">
+                                    Reminder
+                                </Label>
+                                <div className="col-span-3 flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        id="reminder_enabled"
+                                        className="h-4 w-4"
+                                        {...register("reminder_enabled")}
+                                    />
+                                    <Label htmlFor="reminder_enabled" className="font-normal">Enabled</Label>
+                                </div>
+                            </div>
+
+                            {reminderEnabled && (
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label htmlFor="remainder_time_before_event" className="text-right">
+                                        Time Before
+                                    </Label>
+                                    <div className="col-span-3">
+                                        <Input
+                                            id="remainder_time_before_event"
+                                            {...register("remainder_time_before_event")}
+                                            placeholder="e.g. 00:30:00"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <Label htmlFor="description" className="text-right">
                                     Description

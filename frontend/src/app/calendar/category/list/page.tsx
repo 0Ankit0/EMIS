@@ -12,19 +12,15 @@ import {
 import { Edit, Eye, Trash2, Plus } from "lucide-react";
 import Link from "next/link";
 import { useCategories, useDeleteCategory } from "@/hooks/use-category-queries";
+import type { Category } from "@/types/calendar";
 
-interface Category {
-    id: number;
-    name: string;
-    color: string;
-    description: string;
-}
+
 
 export default function CategoryListPage() {
     const { data: categories = [], isLoading } = useCategories();
     const deleteCategory = useDeleteCategory();
 
-    const handleDelete = (id: number) => {
+    const handleDelete = (id: string) => {
         if (!confirm("Are you sure you want to delete this category?")) return;
         deleteCategory.mutate(id);
     };
@@ -61,7 +57,7 @@ export default function CategoryListPage() {
                             </TableRow>
                         ) : (
                             categories.map((category: Category) => (
-                                <TableRow key={category.id}>
+                                <TableRow key={category.ukid}>
                                     <TableCell className="font-medium">{category.name}</TableCell>
                                     <TableCell>
                                         <div className="flex items-center gap-2">
@@ -75,11 +71,13 @@ export default function CategoryListPage() {
                                     <TableCell>{category.description || "—"}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" title="View">
-                                                <Eye className="h-4 w-4" />
+                                            <Button variant="ghost" size="icon" title="View" asChild>
+                                                <Link href={`/calendar/category/add?id=${category.ukid}`}>
+                                                    <Eye className="h-4 w-4" />
+                                                </Link>
                                             </Button>
                                             <Button variant="ghost" size="icon" title="Edit" asChild>
-                                                <Link href={`/calendar/category/add?id=${category.id}`}>
+                                                <Link href={`/calendar/category/add?id=${category.ukid}`}>
                                                     <Edit className="h-4 w-4" />
                                                 </Link>
                                             </Button>
@@ -90,7 +88,7 @@ export default function CategoryListPage() {
                                                 className="text-destructive hover:text-destructive"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleDelete(category.id);
+                                                    handleDelete(category.ukid);
                                                 }}
                                                 disabled={deleteCategory.isPending}
                                             >

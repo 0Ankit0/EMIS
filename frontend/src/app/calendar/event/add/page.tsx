@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,16 +10,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateEvent } from "@/hooks/use-event-queries";
+import { useCreateEvent, useUpdateEvent, useEvent } from "@/hooks/use-event-queries";
 import { useCategories } from "@/hooks/use-category-queries";
 import { eventFormSchema, type EventFormValues, type Category } from "@/types/calendar";
 
-export default function AddEventPage() {
+function AddEventForm() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+    const isEditMode = !!id;
+
     const { data: categories = [], isLoading: categoriesLoading } = useCategories();
     const createEvent = useCreateEvent();
+    const updateEvent = useUpdateEvent();
+    const { data: eventData, isLoading: eventLoading } = useEvent(id || "");
 
-    const { register, control, handleSubmit, watch, setValue, formState: { errors } } = useForm<EventFormValues>({
+    const { register, control, handleSubmit, watch, setValue, reset, formState: { errors } } = useForm<EventFormValues>({
         resolver: zodResolver(eventFormSchema) as any,
         defaultValues: {
             title: "",
@@ -34,6 +40,22 @@ export default function AddEventPage() {
         }
     });
 
+    useEffect(() => {
+        if (isEditMode && eventData) {
+            reset({
+                title: eventData.title,
+                category: eventData.category?.ukid || eventData.category, // Handle object or ID
+                eventType: eventData.type,
+                startDate: eventData.start_date,
+                endDate: eventData.end_date,
+                startTime: eventData.start_time,
+                endTime: eventData.end_time,
+                duration: eventData.event_duration || "",
+                description: eventData.description || "",
+            });
+        }
+    }, [isEditMode, eventData, reset]);
+
     const eventType = watch("eventType");
     const startDate = watch("startDate");
 
@@ -47,7 +69,7 @@ export default function AddEventPage() {
     const onSubmit = (data: EventFormValues) => {
         const payload = {
             title: data.title,
-            category: parseInt(data.category),
+            category: data.category,
             type: data.eventType,
             start_date: data.startDate,
             end_date: data.eventType === "single" ? data.startDate : data.endDate,
@@ -55,21 +77,33 @@ export default function AddEventPage() {
             end_time: data.endTime,
             event_duration: data.duration || null,
             description: data.description,
-            calendar: null // Independent event
+            calendar: eventData?.calendar?.ukid || null // Preserve calendar link if editing
         };
 
-        createEvent.mutate(payload, {
-            onSuccess: () => {
-                router.push("/calendar/event/list");
-            }
-        });
+        if (isEditMode && id) {
+            updateEvent.mutate({ id, data: payload }, {
+                onSuccess: () => {
+                    router.push("/calendar/event/list");
+                }
+            });
+        } else {
+            createEvent.mutate(payload, {
+                onSuccess: () => {
+                    router.push("/calendar/event/list");
+                }
+            });
+        }
     };
+
+    if (isEditMode && eventLoading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="max-w-2xl mx-auto">
             <Card>
                 <CardHeader>
-                    <CardTitle>Add New Event</CardTitle>
+                    <CardTitle>{isEditMode ? "Edit Event" : "Add New Event"}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -90,13 +124,13 @@ export default function AddEventPage() {
                                     name="category"
                                     control={control}
                                     render={({ field }) => (
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select category" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {categories.map((cat: Category) => (
-                                                    <SelectItem key={cat.id} value={cat.id.toString()}>{cat.name}</SelectItem>
+                                                    <SelectItem key={cat.ukid} value={cat.ukid}>{cat.name}</SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
@@ -111,7 +145,7 @@ export default function AddEventPage() {
                                     name="eventType"
                                     control={control}
                                     render={({ field }) => (
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select type" />
                                             </SelectTrigger>
@@ -188,12 +222,20 @@ export default function AddEventPage() {
                             />
                         </div>
 
-                        <Button type="submit" className="w-full" disabled={createEvent.isPending || categoriesLoading}>
-                            {createEvent.isPending ? "Creating..." : "Create Event"}
+                        <Button type="submit" className="w-full" disabled={createEvent.isPending || updateEvent.isPending || categoriesLoading}>
+                            {createEvent.isPending || updateEvent.isPending ? "Saving..." : (isEditMode ? "Update Event" : "Create Event")}
                         </Button>
                     </form>
                 </CardContent>
             </Card>
         </div>
     )
+}
+
+export default function AddEventPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <AddEventForm />
+        </Suspense>
+    );
 }

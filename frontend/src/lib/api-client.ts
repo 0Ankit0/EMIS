@@ -42,26 +42,26 @@ async function apiRequest<T>(endpoint: string, options: ApiRequestOptions = {}):
 // Calendar API
 export const calendarApi = {
     getAll: () => apiRequest<any[]>(CALENDAR_ENDPOINTS.CALENDARS),
-    getById: (id: number) => apiRequest<any>(`${CALENDAR_ENDPOINTS.CALENDARS}${id}/`),
+    getById: (id: string) => apiRequest<any>(`${CALENDAR_ENDPOINTS.CALENDARS}${id}/`),
     create: (data: any) => apiRequest<any>(CALENDAR_ENDPOINTS.CALENDARS, { method: 'POST', body: data }),
-    update: (id: number, data: any) => apiRequest<any>(`${CALENDAR_ENDPOINTS.CALENDARS}${id}/`, { method: 'PATCH', body: data }),
-    delete: (id: number) => apiRequest<void>(`${CALENDAR_ENDPOINTS.CALENDARS}${id}/`, { method: 'DELETE' }),
+    update: (id: string, data: any) => apiRequest<any>(`${CALENDAR_ENDPOINTS.CALENDARS}${id}/`, { method: 'PATCH', body: data }),
+    delete: (id: string) => apiRequest<void>(`${CALENDAR_ENDPOINTS.CALENDARS}${id}/`, { method: 'DELETE' }),
 };
 
 // Event API
 export const eventApi = {
     getAll: (params?: Record<string, string>) => apiRequest<any[]>(CALENDAR_ENDPOINTS.EVENTS, { params }),
-    getById: (id: number) => apiRequest<any>(`${CALENDAR_ENDPOINTS.EVENTS}${id}/`),
+    getById: (id: string) => apiRequest<any>(`${CALENDAR_ENDPOINTS.EVENTS}${id}/`),
     create: (data: any) => apiRequest<any>(CALENDAR_ENDPOINTS.EVENTS, { method: 'POST', body: data }),
-    update: (id: number, data: any) => apiRequest<any>(`${CALENDAR_ENDPOINTS.EVENTS}${id}/`, { method: 'PATCH', body: data }),
-    delete: (id: number) => apiRequest<void>(`${CALENDAR_ENDPOINTS.EVENTS}${id}/`, { method: 'DELETE' }),
+    update: (id: string, data: any) => apiRequest<any>(`${CALENDAR_ENDPOINTS.EVENTS}${id}/`, { method: 'PATCH', body: data }),
+    delete: (id: string) => apiRequest<void>(`${CALENDAR_ENDPOINTS.EVENTS}${id}/`, { method: 'DELETE' }),
 };
 
 // Category API
 export const categoryApi = {
     getAll: () => apiRequest<any[]>(CALENDAR_ENDPOINTS.CATEGORIES),
-    getById: (id: number) => apiRequest<any>(`${CALENDAR_ENDPOINTS.CATEGORIES}${id}/`),
+    getById: (id: string) => apiRequest<any>(`${CALENDAR_ENDPOINTS.CATEGORIES}${id}/`),
     create: (data: any) => apiRequest<any>(CALENDAR_ENDPOINTS.CATEGORIES, { method: 'POST', body: data }),
-    update: (id: number, data: any) => apiRequest<any>(`${CALENDAR_ENDPOINTS.CATEGORIES}${id}/`, { method: 'PATCH', body: data }),
-    delete: (id: number) => apiRequest<void>(`${CALENDAR_ENDPOINTS.CATEGORIES}${id}/`, { method: 'DELETE' }),
+    update: (id: string, data: any) => apiRequest<any>(`${CALENDAR_ENDPOINTS.CATEGORIES}${id}/`, { method: 'PATCH', body: data }),
+    delete: (id: string) => apiRequest<void>(`${CALENDAR_ENDPOINTS.CATEGORIES}${id}/`, { method: 'DELETE' }),
 };

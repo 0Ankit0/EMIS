@@ -12,19 +12,15 @@ import {
 import { Edit, Eye, Trash2, Plus } from "lucide-react";
 import Link from "next/link";
 import { useCalendars, useDeleteCalendar } from "@/hooks/use-calendar-queries";
+import type { Calendar } from "@/types/calendar";
 
-interface Calendar {
-    id: number;
-    title: string;
-    start_date: string;
-    end_date: string;
-}
+
 
 export default function CalendarListPage() {
     const { data: calendars = [], isLoading } = useCalendars();
     const deleteCalendar = useDeleteCalendar();
 
-    const handleDelete = (id: number) => {
+    const handleDelete = (id: string) => {
         if (!confirm("Are you sure you want to delete this calendar?")) return;
         deleteCalendar.mutate(id);
     };
@@ -61,24 +57,28 @@ export default function CalendarListPage() {
                             </TableRow>
                         ) : (
                             calendars.map((calendar: Calendar) => (
-                                <TableRow key={calendar.id}>
+                                <TableRow key={calendar.ukid}>
                                     <TableCell className="font-medium">{calendar.title}</TableCell>
                                     <TableCell>{calendar.start_date}</TableCell>
                                     <TableCell>{calendar.end_date}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" title="View">
-                                                <Eye className="h-4 w-4" />
+                                            <Button variant="ghost" size="icon" title="View" asChild>
+                                                <Link href={`/calendar/calendar/add?id=${calendar.ukid}`}>
+                                                    <Eye className="h-4 w-4" />
+                                                </Link>
                                             </Button>
-                                            <Button variant="ghost" size="icon" title="Edit">
-                                                <Edit className="h-4 w-4" />
+                                            <Button variant="ghost" size="icon" title="Edit" asChild>
+                                                <Link href={`/calendar/calendar/add?id=${calendar.ukid}`}>
+                                                    <Edit className="h-4 w-4" />
+                                                </Link>
                                             </Button>
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
                                                 title="Delete"
                                                 className="text-destructive hover:text-destructive"
-                                                onClick={() => handleDelete(calendar.id)}
+                                                onClick={() => handleDelete(calendar.ukid)}
                                                 disabled={deleteCalendar.isPending}
                                             >
                                                 <Trash2 className="h-4 w-4" />

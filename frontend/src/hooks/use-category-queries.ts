@@ -8,7 +8,7 @@ export const categoryKeys = {
     lists: () => [...categoryKeys.all, 'list'] as const,
     list: (filters?: any) => [...categoryKeys.lists(), { filters }] as const,
     details: () => [...categoryKeys.all, 'detail'] as const,
-    detail: (id: number) => [...categoryKeys.details(), id] as const,
+    detail: (id: string) => [...categoryKeys.details(), id] as const,
 };
 
 // Queries
@@ -19,7 +19,7 @@ export function useCategories() {
     });
 }
 
-export function useCategory(id: number) {
+export function useCategory(id: string) {
     return useQuery({
         queryKey: categoryKeys.detail(id),
         queryFn: () => categoryApi.getById(id),
@@ -47,7 +47,7 @@ export function useUpdateCategory() {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: ({ id, data }: { id: number; data: any }) =>
+        mutationFn: ({ id, data }: { id: string; data: any }) =>
             categoryApi.update(id, data),
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: categoryKeys.detail(variables.id) });
@@ -70,7 +70,7 @@ export function useDeleteCategory() {
             const previousCategories = queryClient.getQueryData(categoryKeys.lists());
 
             queryClient.setQueryData(categoryKeys.lists(), (old: any[] = []) =>
-                old.filter((category) => category.id !== id)
+                old.filter((category) => category.ukid !== id)
             );
 
             return { previousCategories };
