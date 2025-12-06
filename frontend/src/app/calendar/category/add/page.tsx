@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useCreateCategory, useUpdateCategory, useCategory } from "@/hooks/use-category-queries";
@@ -30,7 +30,7 @@ function AddCategoryForm() {
     const updateCategory = useUpdateCategory();
     const { data: categoryData, isLoading: isLoadingCategory } = useCategory(id || "");
 
-    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<CategoryFormValues>({
+    const { register, handleSubmit, control, formState: { errors }, reset, setValue } = useForm<CategoryFormValues>({
         resolver: zodResolver(categorySchema),
         defaultValues: {
             name: "",
@@ -88,22 +88,26 @@ function AddCategoryForm() {
 
                     <div className="space-y-2">
                         <Label htmlFor="color">Color Code</Label>
-                        <div className="flex gap-2">
-                            <Input
-                                id="color"
-                                type="color"
-                                {...register("color")}
-                                className="w-12 h-10 p-1 cursor-pointer"
-                            />
-                            <Input
-                                {...register("color")}
-                                placeholder="#000000"
-                                className="flex-1"
-                                onChange={(e) => {
-                                    setValue("color", e.target.value);
-                                }}
-                            />
-                        </div>
+                        <Controller
+                            name="color"
+                            control={control}
+                            render={({ field }) => (
+                                <div className="flex gap-2">
+                                    <Input
+                                        type="color"
+                                        className="w-12 h-10 p-1 cursor-pointer"
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                    <Input
+                                        placeholder="#000000"
+                                        className="flex-1"
+                                        value={field.value}
+                                        onChange={field.onChange}
+                                    />
+                                </div>
+                            )}
+                        />
                         {errors.color && <p className="text-sm text-red-500">{errors.color.message}</p>}
                     </div>
 

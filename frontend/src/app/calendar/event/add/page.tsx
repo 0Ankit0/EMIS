@@ -44,8 +44,8 @@ function AddEventForm() {
         if (isEditMode && eventData) {
             reset({
                 title: eventData.title,
-                category: eventData.category?.ukid || eventData.category, // Handle object or ID
-                eventType: eventData.type,
+                category: (eventData.category?.ukid || eventData.category || "").toString(),
+                eventType: eventData.type as "single" | "multi",
                 startDate: eventData.start_date,
                 endDate: eventData.end_date,
                 startTime: eventData.start_time,

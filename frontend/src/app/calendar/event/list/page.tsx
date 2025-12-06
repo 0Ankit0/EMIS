@@ -16,6 +16,9 @@ import { useEvents, useDeleteEvent, useUpdateEvent } from "@/hooks/use-event-que
 import type { Event } from "@/types/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
 import {
     Select,
     SelectContent,
@@ -120,11 +123,59 @@ export default function EventListPage() {
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" title="View" asChild>
-                                                <Link href={`/calendar/event/add?id=${event.ukid}`}>
-                                                    <Eye className="h-4 w-4" />
-                                                </Link>
-                                            </Button>
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon" title="View">
+                                                        <Eye className="h-4 w-4" />
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent>
+                                                    <DialogHeader>
+                                                        <DialogTitle>{event.title}</DialogTitle>
+                                                        <DialogDescription>
+                                                            {event.type === 'single'
+                                                                ? format(new Date(event.start_date), 'EEEE, MMMM d, yyyy')
+                                                                : `${format(new Date(event.start_date), 'MMM d')} - ${format(new Date(event.end_date), 'MMM d, yyyy')}`
+                                                            }
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    <div className="space-y-4 pt-4">
+                                                        <div className="flex items-center gap-2">
+                                                            <Badge variant="outline" style={{
+                                                                borderColor: event.category_color,
+                                                                color: event.category_color
+                                                            }}>
+                                                                {event.category?.name}
+                                                            </Badge>
+                                                            <span className="text-sm text-muted-foreground">
+                                                                {event.start_time.substring(0, 5)} - {event.end_time.substring(0, 5)}
+                                                            </span>
+                                                        </div>
+                                                        {event.description && (
+                                                            <div className="space-y-1">
+                                                                <h4 className="text-sm font-medium">Description</h4>
+                                                                <p className="text-sm text-muted-foreground">{event.description}</p>
+                                                            </div>
+                                                        )}
+                                                        {event.location && (
+                                                            <div className="space-y-1">
+                                                                <h4 className="text-sm font-medium">Location</h4>
+                                                                <p className="text-sm text-muted-foreground">📍 {event.location}</p>
+                                                            </div>
+                                                        )}
+                                                        <div className="grid grid-cols-2 gap-4 text-sm">
+                                                            <div>
+                                                                <span className="font-medium">Status: </span>
+                                                                <span className="capitalize">{event.status}</span>
+                                                            </div>
+                                                            <div>
+                                                                <span className="font-medium">Calendar: </span>
+                                                                <span>{event.calendar?.title || "Unlinked"}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
                                             <Button variant="ghost" size="icon" title="Edit" asChild>
                                                 <Link href={`/calendar/event/add?id=${event.ukid}`}>
                                                     <Edit className="h-4 w-4" />

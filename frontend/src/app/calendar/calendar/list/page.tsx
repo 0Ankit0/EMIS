@@ -16,6 +16,9 @@ import type { Calendar } from "@/types/calendar";
 
 
 
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { LayoutView } from "@/components/calendar/layout/layout-view";
+
 export default function CalendarListPage() {
     const { data: calendars = [], isLoading } = useCalendars();
     const deleteCalendar = useDeleteCalendar();
@@ -63,11 +66,21 @@ export default function CalendarListPage() {
                                     <TableCell>{calendar.end_date}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" title="View" asChild>
-                                                <Link href={`/calendar/calendar/add?id=${calendar.ukid}`}>
-                                                    <Eye className="h-4 w-4" />
-                                                </Link>
-                                            </Button>
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon" title="View">
+                                                        <Eye className="h-4 w-4" />
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent maxWidth="max-w-[98vw]" height="h-[95vh]" className="flex flex-col p-0">
+                                                    <DialogHeader className="px-6 py-4 border-b">
+                                                        <DialogTitle>{calendar.title}</DialogTitle>
+                                                    </DialogHeader>
+                                                    <div className="flex-1 overflow-hidden p-6">
+                                                        <LayoutView calendarId={calendar.ukid} />
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
                                             <Button variant="ghost" size="icon" title="Edit" asChild>
                                                 <Link href={`/calendar/calendar/add?id=${calendar.ukid}`}>
                                                     <Edit className="h-4 w-4" />

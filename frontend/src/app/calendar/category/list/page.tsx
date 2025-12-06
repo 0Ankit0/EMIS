@@ -13,6 +13,7 @@ import { Edit, Eye, Trash2, Plus } from "lucide-react";
 import Link from "next/link";
 import { useCategories, useDeleteCategory } from "@/hooks/use-category-queries";
 import type { Category } from "@/types/calendar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 
 
 
@@ -71,11 +72,34 @@ export default function CategoryListPage() {
                                     <TableCell>{category.description || "—"}</TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
-                                            <Button variant="ghost" size="icon" title="View" asChild>
-                                                <Link href={`/calendar/category/add?id=${category.ukid}`}>
-                                                    <Eye className="h-4 w-4" />
-                                                </Link>
-                                            </Button>
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Button variant="ghost" size="icon" title="View">
+                                                        <Eye className="h-4 w-4" />
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent>
+                                                    <DialogHeader>
+                                                        <DialogTitle>{category.name}</DialogTitle>
+                                                        <DialogDescription>Category Details</DialogDescription>
+                                                    </DialogHeader>
+                                                    <div className="space-y-4 pt-4">
+                                                        <div className="flex items-center gap-2">
+                                                            <div
+                                                                className="w-8 h-8 rounded border"
+                                                                style={{ backgroundColor: category.color }}
+                                                            />
+                                                            <span className="font-mono">{category.color}</span>
+                                                        </div>
+                                                        {category.description && (
+                                                            <div className="space-y-1">
+                                                                <h4 className="text-sm font-medium">Description</h4>
+                                                                <p className="text-sm text-muted-foreground">{category.description}</p>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
                                             <Button variant="ghost" size="icon" title="Edit" asChild>
                                                 <Link href={`/calendar/category/add?id=${category.ukid}`}>
                                                     <Edit className="h-4 w-4" />
