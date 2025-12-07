@@ -25,7 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { getStudents, deleteStudent } from "@/services/studentService";
 import type { Student } from "@/types/student";
-import { Search, Plus, Eye, Pencil, Trash2, Loader2, UserX, UserCheck } from "lucide-react";
+import { Search, Plus, Eye, Pencil, Trash2, Loader2, UserX, UserCheck, FileUp } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -36,6 +36,17 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { uploadDocument } from "@/services/documentService";
+import { DOCUMENT_TYPE_OPTIONS } from "@/types/student";
 
 export default function StudentsPage() {
     const router = useRouter();
@@ -45,6 +56,11 @@ export default function StudentsPage() {
     const [statusFilter, setStatusFilter] = useState<string>("all");
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+    const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+    const [studentForUpload, setStudentForUpload] = useState<Student | null>(null);
+    const [uploadFile, setUploadFile] = useState<File | null>(null);
+    const [documentType, setDocumentType] = useState<string>("");
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         loadStudents();
@@ -77,14 +93,36 @@ export default function StudentsPage() {
         }
     };
 
+    const handleUploadDocument = async () => {
+        if (!studentForUpload || !uploadFile || !documentType) return;
+
+        try {
+            setUploading(true);
+            await uploadDocument({
+                student: studentForUpload.ukid,
+                document_type: documentType as any,
+                file: uploadFile,
+            });
+            toast.success("Document uploaded successfully");
+            setUploadDialogOpen(false);
+            setStudentForUpload(null);
+            setUploadFile(null);
+            setDocumentType("");
+        } catch (error: any) {
+            toast.error(error.message || "Failed to upload document");
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const filteredStudents = students.filter((student) => {
         const matchesSearch =
             searchQuery === "" ||
             student.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             student.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             student.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            student.registration_number.toString().includes(searchQuery) ||
-            student.roll_number.toLowerCase().includes(searchQuery.toLowerCase());
+            (student.registration_number?.toString() || "").includes(searchQuery) ||
+            (student.roll_number?.toLowerCase() || "").includes(searchQuery.toLowerCase());
 
         const matchesStatus =
             statusFilter === "all" ||
@@ -176,8 +214,8 @@ export default function StudentsPage() {
                             <TableBody>
                                 {filteredStudents.map((student) => (
                                     <TableRow key={student.ukid}>
-                                        <TableCell className="font-mono">{student.registration_number}</TableCell>
-                                        <TableCell className="font-mono">{student.roll_number}</TableCell>
+                                        <TableCell className="font-mono">{student.registration_number ?? "-"}</TableCell>
+                                        <TableCell className="font-mono">{student.roll_number ?? "-"}</TableCell>
                                         <TableCell className="font-medium">
                                             {student.first_name} {student.middle_name} {student.last_name}
                                         </TableCell>
@@ -211,6 +249,17 @@ export default function StudentsPage() {
                                                     onClick={() => router.push(`/students/${student.ukid}/edit`)}
                                                 >
                                                     <Pencil className="h-4 w-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        setStudentForUpload(student);
+                                                        setUploadDialogOpen(true);
+                                                    }}
+                                                    title="Upload Document"
+                                                >
+                                                    <FileUp className="h-4 w-4" />
                                                 </Button>
                                                 <Button
                                                     variant="ghost"
@@ -253,6 +302,66 @@ export default function StudentsPage() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            {/* Document Upload Dialog */}
+            <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Upload Document</DialogTitle>
+                        <DialogDescription>
+                            Upload a document for{" "}
+                            <strong>
+                                {studentForUpload?.first_name} {studentForUpload?.last_name}
+                            </strong>
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="document_type">Document Type</Label>
+                            <Select value={documentType} onValueChange={setDocumentType}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select document type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {DOCUMENT_TYPE_OPTIONS.map((option) => (
+                                        <SelectItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="file">File</Label>
+                            <Input
+                                id="file"
+                                type="file"
+                                onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setUploadDialogOpen(false);
+                                setStudentForUpload(null);
+                                setUploadFile(null);
+                                setDocumentType("");
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleUploadDocument}
+                            disabled={uploading || !uploadFile || !documentType}
+                        >
+                            {uploading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {uploading ? "Uploading..." : "Upload"}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -5,8 +5,8 @@ import * as z from "zod";
 // STUDENT
 // ============================================
 export const studentFormSchema = z.object({
-    registration_number: z.coerce.number().min(1, "Registration number is required"),
-    roll_number: z.string().min(1, "Roll number is required"),
+    registration_number: z.coerce.number().optional().nullable(),
+    roll_number: z.string().optional().nullable(),
     first_name: z.string().min(1, "First name is required"),
     middle_name: z.string().optional(),
     last_name: z.string().min(1, "Last name is required"),

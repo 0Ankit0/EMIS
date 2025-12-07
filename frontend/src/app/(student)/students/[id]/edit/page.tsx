@@ -32,8 +32,8 @@ import Link from "next/link";
 import { GENDER_OPTIONS } from "@/types/student";
 
 const formSchema = z.object({
-    registration_number: z.coerce.number().positive("Registration number must be positive"),
-    roll_number: z.string().min(1, "Roll number is required"),
+    registration_number: z.coerce.number().optional().nullable(),
+    roll_number: z.string().optional().nullable(),
     first_name: z.string().min(1, "First name is required").max(50),
     middle_name: z.string().max(50).optional(),
     last_name: z.string().min(1, "Last name is required").max(50),
@@ -151,11 +151,11 @@ export default function EditStudentPage() {
                                 <FormField
                                     control={form.control}
                                     name="registration_number"
-                                    render={({ field }) => (
+                                    render={({ field: { value, ...rest } }) => (
                                         <FormItem>
-                                            <FormLabel>Registration Number</FormLabel>
+                                            <FormLabel>Registration Number (Optional)</FormLabel>
                                             <FormControl>
-                                                <Input type="number" {...field} />
+                                                <Input type="number" {...rest} value={value ?? ""} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -164,11 +164,11 @@ export default function EditStudentPage() {
                                 <FormField
                                     control={form.control}
                                     name="roll_number"
-                                    render={({ field }) => (
+                                    render={({ field: { value, ...rest } }) => (
                                         <FormItem>
-                                            <FormLabel>Roll Number</FormLabel>
+                                            <FormLabel>Roll Number (Optional)</FormLabel>
                                             <FormControl>
-                                                <Input {...field} />
+                                                <Input {...rest} value={value ?? ""} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

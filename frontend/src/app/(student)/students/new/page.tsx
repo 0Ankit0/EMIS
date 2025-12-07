@@ -36,7 +36,7 @@ export default function NewStudentPage() {
     const form = useForm<StudentFormValues>({
         resolver: zodResolver(studentFormSchema) as any,
         defaultValues: {
-            registration_number: 0,
+            registration_number: undefined,
             roll_number: "",
             first_name: "",
             middle_name: "",
@@ -100,11 +100,11 @@ export default function NewStudentPage() {
                                 <FormField
                                     control={form.control}
                                     name="registration_number"
-                                    render={({ field }) => (
+                                    render={({ field: { value, ...rest } }) => (
                                         <FormItem>
-                                            <FormLabel>Registration Number</FormLabel>
+                                            <FormLabel>Registration Number (Optional)</FormLabel>
                                             <FormControl>
-                                                <Input type="number" {...field} />
+                                                <Input type="number" {...rest} value={value ?? ""} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -113,11 +113,11 @@ export default function NewStudentPage() {
                                 <FormField
                                     control={form.control}
                                     name="roll_number"
-                                    render={({ field }) => (
+                                    render={({ field: { value, ...rest } }) => (
                                         <FormItem>
-                                            <FormLabel>Roll Number</FormLabel>
+                                            <FormLabel>Roll Number (Optional)</FormLabel>
                                             <FormControl>
-                                                <Input {...field} />
+                                                <Input {...rest} value={value ?? ""} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

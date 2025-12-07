@@ -6,7 +6,7 @@ import type {
     StudentFilters
 } from "@/types/student";
 
-const API_BASE = "/api/students";
+const API_BASE = "/api/student/students";
 
 export const getStudents = async (filters?: StudentFilters): Promise<Student[]> => {
     const token = getAuthToken();

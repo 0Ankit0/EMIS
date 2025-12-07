@@ -1,7 +1,7 @@
 import { getAuthToken } from "@/lib/auth-utils";
 import type { Document, DocumentUploadInput } from "@/types/student";
 
-const API_BASE = "/api/documents";
+const API_BASE = "/api/student/documents";
 
 export const getDocuments = async (studentId: string): Promise<Document[]> => {
     const token = getAuthToken();

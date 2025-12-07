@@ -87,7 +87,7 @@ export function Sidebar({ categories, selectedCategories, onCategoryChange, cale
 
     // Create a map of date -> color
     const dateColors: { [key: string]: string } = {};
-    events.forEach(event => {
+    events.forEach((event: Event) => {
         const dateStr = event.start_date; // YYYY-MM-DD
         // Only color if category is selected? Or always?
         // User requirement: "color-code calendar dates in the sidebar based on event category colors"
