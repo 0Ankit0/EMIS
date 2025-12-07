@@ -4,8 +4,8 @@ from datetime import date, timedelta
 from .base import BaseModel
 
 class Student(BaseModel):
-    registration_number = models.BigIntegerField(unique=True)
-    roll_number = models.CharField(max_length=20, unique=True)
+    registration_number = models.BigIntegerField(unique=True, blank=True, null=True)
+    roll_number = models.CharField(max_length=20, unique=True, blank=True, null=True)
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50)
