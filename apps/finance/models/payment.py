@@ -10,14 +10,13 @@ class Payment(TimeStampedModel):
     Payment model for recording student fee payments with method, timestamp, and late fee tracking
     """
     
-    METHOD_CHOICES = [
-        ('cash', 'Cash'),
-        ('cheque', 'Cheque'),
-        ('card', 'Debit/Credit Card'),
-        ('online', 'Online Payment'),
-        ('upi', 'UPI'),
-        ('bank_transfer', 'Bank Transfer'),
-    ]
+    class Method(models.TextChoices):
+        CASH = 'cash', 'Cash'
+        CHEQUE = 'cheque', 'Cheque'
+        CARD = 'card', 'Debit/Credit Card'
+        ONLINE = 'online', 'Online Payment'
+        UPI = 'upi', 'UPI'
+        BANK_TRANSFER = 'bank_transfer', 'Bank Transfer'
     
     # Payment identification
     receipt_number = models.CharField(max_length=50, unique=True)
@@ -51,7 +50,7 @@ class Payment(TimeStampedModel):
     )
     
     # Payment method
-    method = models.CharField(max_length=20, choices=METHOD_CHOICES)
+    method = models.CharField(max_length=20, choices=Method.choices)
     
     # Payment timestamp
     payment_date = models.DateTimeField(default=timezone.now)

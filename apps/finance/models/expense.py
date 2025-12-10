@@ -31,20 +31,18 @@ class ExpenseCategory(TimeStampedModel):
 class Expense(TimeStampedModel):
     """Expense/Expenditure tracking"""
     
-    STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('pending', 'Pending Approval'),
-        ('approved', 'Approved'),
-        ('paid', 'Paid'),
-        ('rejected', 'Rejected'),
-    ]
+    class Status(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        PENDING = 'pending', 'Pending Approval'
+        APPROVED = 'approved', 'Approved'
+        PAID = 'paid', 'Paid'
+        REJECTED = 'rejected', 'Rejected'
     
-    PRIORITY_CHOICES = [
-        ('low', 'Low'),
-        ('medium', 'Medium'),
-        ('high', 'High'),
-        ('urgent', 'Urgent'),
-    ]
+    class Priority(models.TextChoices):
+        LOW = 'low', 'Low'
+        MEDIUM = 'medium', 'Medium'
+        HIGH = 'high', 'High'
+        URGENT = 'urgent', 'Urgent'
     
     expense_number = models.CharField(max_length=50, unique=True, db_index=True)
     category = models.ForeignKey(ExpenseCategory, on_delete=models.PROTECT, related_name='expenses')
@@ -59,8 +57,8 @@ class Expense(TimeStampedModel):
     expense_date = models.DateField(default=timezone.now)
     payment_date = models.DateField(null=True, blank=True)
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft', db_index=True)
-    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT, db_index=True)
+    priority = models.CharField(max_length=20, choices=Priority.choices, default=Priority.MEDIUM)
     
     vendor_name = models.CharField(max_length=200, blank=True)
     vendor_contact = models.CharField(max_length=100, blank=True)

@@ -8,25 +8,23 @@ from apps.core.models import TimeStampedModel
 class Budget(TimeStampedModel):
     """Annual/Periodic budget planning"""
     
-    PERIOD_CHOICES = [
-        ('monthly', 'Monthly'),
-        ('quarterly', 'Quarterly'),
-        ('half_yearly', 'Half Yearly'),
-        ('annual', 'Annual'),
-    ]
+    class PeriodType(models.TextChoices):
+        MONTHLY = 'monthly', 'Monthly'
+        QUARTERLY = 'quarterly', 'Quarterly'
+        HALF_YEARLY = 'half_yearly', 'Half Yearly'
+        ANNUAL = 'annual', 'Annual'
     
-    STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('active', 'Active'),
-        ('closed', 'Closed'),
-        ('archived', 'Archived'),
-    ]
+    class Status(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        ACTIVE = 'active', 'Active'
+        CLOSED = 'closed', 'Closed'
+        ARCHIVED = 'archived', 'Archived'
     
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True)
     
-    period_type = models.CharField(max_length=20, choices=PERIOD_CHOICES, default='annual')
+    period_type = models.CharField(max_length=20, choices=PeriodType.choices, default=PeriodType.ANNUAL)
     fiscal_year = models.CharField(max_length=20)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -34,7 +32,7 @@ class Budget(TimeStampedModel):
     total_allocated = models.DecimalField(max_digits=15, decimal_places=2, validators=[MinValueValidator(0)])
     total_spent = models.DecimalField(max_digits=15, decimal_places=2, default=0, validators=[MinValueValidator(0)])
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft', db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT, db_index=True)
     
     department = models.ForeignKey('faculty.Department', on_delete=models.SET_NULL, null=True, blank=True, related_name='budgets')
     
@@ -64,6 +62,7 @@ class Budget(TimeStampedModel):
         if self.total_allocated > 0:
             return (self.total_spent / self.total_allocated) * 100
         return 0
+
 
 
 class BudgetAllocation(TimeStampedModel):

@@ -8,27 +8,25 @@ from apps.core.models import TimeStampedModel
 class Scholarship(TimeStampedModel):
     """Scholarship programs"""
     
-    TYPE_CHOICES = [
-        ('merit', 'Merit Based'),
-        ('need', 'Need Based'),
-        ('sports', 'Sports'),
-        ('minority', 'Minority'),
-        ('government', 'Government'),
-        ('institutional', 'Institutional'),
-        ('other', 'Other'),
-    ]
+    class Type(models.TextChoices):
+        MERIT = 'merit', 'Merit Based'
+        NEED = 'need', 'Need Based'
+        SPORTS = 'sports', 'Sports'
+        MINORITY = 'minority', 'Minority'
+        GOVERNMENT = 'government', 'Government'
+        INSTITUTIONAL = 'institutional', 'Institutional'
+        OTHER = 'other', 'Other'
     
-    STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('inactive', 'Inactive'),
-        ('closed', 'Closed'),
-    ]
+    class Status(models.TextChoices):
+        ACTIVE = 'active', 'Active'
+        INACTIVE = 'inactive', 'Inactive'
+        CLOSED = 'closed', 'Closed'
     
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=50, unique=True)
     description = models.TextField()
     
-    scholarship_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    scholarship_type = models.CharField(max_length=20, choices=Type.choices)
     
     amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
@@ -41,7 +39,7 @@ class Scholarship(TimeStampedModel):
     valid_from = models.DateField()
     valid_to = models.DateField()
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active', db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE, db_index=True)
     
     application_start_date = models.DateField(null=True, blank=True)
     application_end_date = models.DateField(null=True, blank=True)
@@ -74,13 +72,12 @@ class Scholarship(TimeStampedModel):
 class ScholarshipApplication(TimeStampedModel):
     """Student scholarship applications"""
     
-    STATUS_CHOICES = [
-        ('submitted', 'Submitted'),
-        ('under_review', 'Under Review'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
-        ('awarded', 'Awarded'),
-    ]
+    class Status(models.TextChoices):
+        SUBMITTED = 'submitted', 'Submitted'
+        UNDER_REVIEW = 'under_review', 'Under Review'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+        AWARDED = 'awarded', 'Awarded'
     
     scholarship = models.ForeignKey(Scholarship, on_delete=models.CASCADE, related_name='applications')
     student = models.ForeignKey('students.Student', on_delete=models.CASCADE, related_name='scholarship_applications')
@@ -90,7 +87,7 @@ class ScholarshipApplication(TimeStampedModel):
     justification = models.TextField(help_text="Why student deserves this scholarship")
     documents = models.FileField(upload_to='finance/scholarship_applications/%Y/%m/', blank=True, null=True)
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='submitted', db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.SUBMITTED, db_index=True)
     
     reviewed_by = models.ForeignKey('authentication.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='reviewed_scholarship_applications')
     review_date = models.DateTimeField(null=True, blank=True)

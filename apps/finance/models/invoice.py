@@ -10,13 +10,12 @@ class Invoice(TimeStampedModel):
     Invoice model for student fee invoices with components, amount due, and status tracking
     """
     
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('partial', 'Partially Paid'),
-        ('paid', 'Paid'),
-        ('overdue', 'Overdue'),
-        ('cancelled', 'Cancelled'),
-    ]
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        PARTIAL = 'partial', 'Partially Paid'
+        PAID = 'paid', 'Paid'
+        OVERDUE = 'overdue', 'Overdue'
+        CANCELLED = 'cancelled', 'Cancelled'
     
     # Invoice identification
     invoice_number = models.CharField(max_length=50, unique=True)
@@ -67,7 +66,7 @@ class Invoice(TimeStampedModel):
     due_date = models.DateField()
     
     # Status
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     
     # Additional details
     description = models.TextField(blank=True)

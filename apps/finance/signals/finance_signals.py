@@ -3,7 +3,7 @@ from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 from django.utils import timezone
 from .models import Payment, Invoice, Expense, ScholarshipApplication, BudgetAllocation
-
+from django.db import models
 
 @receiver(post_save, sender=Payment)
 def update_invoice_on_payment(sender, instance, created, **kwargs):
@@ -23,14 +23,12 @@ def update_invoice_on_payment(sender, instance, created, **kwargs):
         instance.invoice.refresh_from_db()
         instance.invoice.save()
 
-
 @receiver(pre_save, sender=Invoice)
 def calculate_invoice_status(sender, instance, **kwargs):
     """Calculate and update invoice status before saving"""
     if instance.pk:  # Only for existing invoices
         # Status is calculated in the model's save method
         pass
-
 
 @receiver(post_save, sender=Expense)
 def update_budget_allocation_on_expense(sender, instance, created, **kwargs):
@@ -56,7 +54,6 @@ def update_budget_allocation_on_expense(sender, instance, created, **kwargs):
             allocation.spent_amount = total_spent
             allocation.save()
 
-
 @receiver(post_save, sender=BudgetAllocation)
 def update_budget_total_spent(sender, instance, **kwargs):
     """Update budget's total spent amount"""
@@ -68,7 +65,6 @@ def update_budget_total_spent(sender, instance, **kwargs):
         instance.budget.total_spent = total_spent
         instance.budget.save(update_fields=['total_spent'])
 
-
 @receiver(post_save, sender=ScholarshipApplication)
 def update_scholarship_slots(sender, instance, created, **kwargs):
     """Update scholarship filled slots when application is awarded"""
@@ -78,16 +74,12 @@ def update_scholarship_slots(sender, instance, created, **kwargs):
         scholarship.filled_slots = awarded_count
         scholarship.save(update_fields=['filled_slots'])
 
-
 @receiver(post_save, sender=Invoice)
 def check_overdue_invoices(sender, instance, **kwargs):
     """Check and update overdue invoices"""
     if instance.is_overdue and instance.status not in ['paid', 'overdue']:
         instance.status = 'overdue'
         instance.save(update_fields=['status'])
-
-
-from django.db import models
 
 @receiver(post_save, sender=Payment)
 def send_payment_receipt(sender, instance, created, **kwargs):
@@ -96,7 +88,6 @@ def send_payment_receipt(sender, instance, created, **kwargs):
         # TODO: Send email/SMS with payment receipt
         pass
 
-
 @receiver(post_save, sender=Invoice)
 def send_invoice_notification(sender, instance, created, **kwargs):
     """Send invoice notification to student"""
@@ -104,14 +95,12 @@ def send_invoice_notification(sender, instance, created, **kwargs):
         # TODO: Send email/SMS notification
         pass
 
-
 @receiver(post_save, sender=Expense)
 def send_expense_approval_notification(sender, instance, **kwargs):
     """Send notification when expense is approved"""
     if instance.status == 'approved' and instance.requested_by:
         # TODO: Send notification to requester
         pass
-
 
 @receiver(post_save, sender=ScholarshipApplication)
 def send_scholarship_status_notification(sender, instance, **kwargs):
