@@ -3,7 +3,6 @@ from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from .models import RoomAllocation, Complaint
 
-
 @receiver(post_save, sender=RoomAllocation)
 def update_room_on_allocation(sender, instance, created, **kwargs):
     """Update room occupancy when allocation is created/updated"""
@@ -11,7 +10,6 @@ def update_room_on_allocation(sender, instance, created, **kwargs):
         room = instance.room
         # Occupancy is updated in the API view
         pass
-
 
 @receiver(pre_delete, sender=RoomAllocation)
 def update_room_on_allocation_delete(sender, instance, **kwargs):
@@ -28,14 +26,12 @@ def update_room_on_allocation_delete(sender, instance, **kwargs):
         hostel.occupied_capacity = max(0, hostel.occupied_capacity - 1)
         hostel.save()
 
-
 @receiver(post_save, sender=Complaint)
 def notify_on_complaint_status_change(sender, instance, created, **kwargs):
     """Send notification when complaint status changes"""
     if not created:
         # TODO: Send email/SMS notification to student
         pass
-
 
 @receiver(post_save, sender=Complaint)
 def auto_assign_urgent_complaints(sender, instance, created, **kwargs):
