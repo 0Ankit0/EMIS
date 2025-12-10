@@ -7,7 +7,6 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import Exam, ExamResult, ExamSchedule
 
-
 @receiver(post_save, sender=Exam)
 def exam_post_save(sender, instance, created, **kwargs):
     """
@@ -21,7 +20,6 @@ def exam_post_save(sender, instance, created, **kwargs):
         # Log exam update
         print(f"Exam updated: {instance.exam_code}")
 
-
 @receiver(post_save, sender=ExamResult)
 def exam_result_post_save(sender, instance, created, **kwargs):
     """
@@ -34,7 +32,6 @@ def exam_result_post_save(sender, instance, created, **kwargs):
         # Log result update
         print(f"Result updated for {instance.student} in {instance.exam}")
 
-
 @receiver(pre_delete, sender=Exam)
 def exam_pre_delete(sender, instance, **kwargs):
     """
@@ -42,7 +39,6 @@ def exam_pre_delete(sender, instance, **kwargs):
     """
     # Log before deleting exam
     print(f"Deleting exam: {instance.exam_code}")
-
 
 @receiver(post_save, sender=ExamSchedule)
 def exam_schedule_post_save(sender, instance, created, **kwargs):
