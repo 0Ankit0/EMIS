@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'dj_rest_auth', 
     'drf_spectacular',
+    'apps.core',
+    'apps.admin',
     'apps.calendar',
     'apps.exam',
     'apps.student',
