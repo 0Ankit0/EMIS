@@ -78,7 +78,7 @@ class Report(TimeStampedModel):
     error_message = models.TextField(blank=True)
     
     # User info
-    generated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='generated_reports')
+    generated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='analytics_generated_reports')
     shared_with = models.ManyToManyField(User, blank=True, related_name='shared_reports')
     
     # Scheduling

@@ -36,7 +36,7 @@ class MeritList(TimeStampedModel):
     class Meta:
         db_table = 'merit_lists'
         ordering = ['-generation_timestamp']
-        unique_together = [['program', 'admission_year', 'admission_semester', 'version']]
+        unique_together = (('program', 'admission_year', 'admission_semester', 'version'),)
         indexes = [
             models.Index(fields=['program', 'admission_year', 'is_published']),
         ]

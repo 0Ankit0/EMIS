@@ -68,7 +68,7 @@ class GradeRecord(TimeStampedModel):
     class Meta:
         db_table = 'grade_records'
         ordering = ['-created_at']
-        unique_together = [['course', 'student', 'semester', 'academic_year']]
+        unique_together = (('course', 'student', 'semester', 'academic_year'),)
         indexes = [
             models.Index(fields=['course']),
             models.Index(fields=['student']),

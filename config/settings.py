@@ -243,23 +243,34 @@ CELERY_TIMEZONE = TIME_ZONE
 REDIS_URL = env('REDIS_URL', default='redis://localhost:6379/0')
 
 # Cache Configuration
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': REDIS_URL,
-        'OPTIONS': {
-            'parser_class': 'redis.connection.PythonParser',
-            'pool_class': 'redis.BlockingConnectionPool',
-        },
-        'KEY_PREFIX': 'emis',
-        'TIMEOUT': 300,  # 5 minutes default
+if DEBUG:
+    # Use dummy cache for development (no Redis required)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'unique-snowflake',
+        }
     }
-}
-CACHE_DEFAULT_TIMEOUT = 300
+    # Use database-backed sessions for development
+    SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+else:
+    # Use Redis cache for production
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': REDIS_URL,
+            'OPTIONS': {
+                'parser_class': 'redis.connection.PythonParser',
+                'pool_class': 'redis.BlockingConnectionPool',
+            },
+            'KEY_PREFIX': 'emis',
+            'TIMEOUT': 300,  # 5 minutes default
+        }
+    }
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = 'default'
 
-# Session
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
-SESSION_CACHE_ALIAS = 'default'
+CACHE_DEFAULT_TIMEOUT = 300
 
 # Authentication URLs
 LOGIN_URL = 'authentication:login'

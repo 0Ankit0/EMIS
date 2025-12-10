@@ -102,7 +102,7 @@ class ScholarshipApplication(TimeStampedModel):
     class Meta:
         db_table = 'finance_scholarship_applications'
         ordering = ['-application_date']
-        unique_together = ['scholarship', 'student']
+        unique_together = (('scholarship', 'student'),)
         indexes = [
             models.Index(fields=['student', 'status']),
             models.Index(fields=['scholarship', 'status']),

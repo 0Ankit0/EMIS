@@ -1,0 +1,191 @@
+{% extends 'base_module.html' %}
+{% load static %}
+
+{% block title %}{{ action }} Application - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/admissions_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-file-alt mr-3"></i>{{ action }} Application
+        </h2>
+        <p class="text-gray-600">
+            {% if action == 'Create' %}Fill in the application details below{% else %}Update the application information{% endif %}
+        </p>
+    </div>
+
+    <!-- Form -->
+    <form method="post" enctype="multipart/form-data" class="bg-white rounded-xl shadow-md p-8">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg">
+            <p class="font-semibold"><i class="fas fa-exclamation-circle mr-2"></i>Please correct the errors below:</p>
+            <ul class="list-disc list-inside mt-2">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                    <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Personal Information -->
+        <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+                <i class="fas fa-user mr-2"></i>Personal Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">First Name *</label>
+                    {{ form.first_name }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Last Name *</label>
+                    {{ form.last_name }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
+                    {{ form.email }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Phone *</label>
+                    {{ form.phone }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Date of Birth *</label>
+                    {{ form.date_of_birth }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Gender *</label>
+                    {{ form.gender }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+                <i class="fas fa-map-marker-alt mr-2"></i>Address
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Address Line 1 *</label>
+                    {{ form.address_line1 }}
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Address Line 2</label>
+                    {{ form.address_line2 }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">City *</label>
+                    {{ form.city }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">State/Province *</label>
+                    {{ form.state }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Postal Code *</label>
+                    {{ form.postal_code }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Country *</label>
+                    {{ form.country }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Background -->
+        <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+                <i class="fas fa-graduation-cap mr-2"></i>Academic Background
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Previous School *</label>
+                    {{ form.previous_school }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Previous Grade *</label>
+                    {{ form.previous_grade }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">GPA (0.0 - 4.0)</label>
+                    {{ form.gpa }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Program Selection -->
+        <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+                <i class="fas fa-book mr-2"></i>Program Selection
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Program *</label>
+                    {{ form.program }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Admission Year *</label>
+                    {{ form.admission_year }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Semester *</label>
+                    {{ form.admission_semester }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Status and Review -->
+        {% if user.is_staff %}
+        <div class="mb-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">
+                <i class="fas fa-tasks mr-2"></i>Status and Review
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                    {{ form.status }}
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Merit Score</label>
+                    {{ form.merit_score }}
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Review Notes</label>
+                    {{ form.review_notes }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Action Buttons -->
+        <div class="flex justify-between items-center pt-6 border-t">
+            <a href="{% url 'admissions:application_list' %}" class="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition-colors">
+                <i class="fas fa-times mr-2"></i>Cancel
+            </a>
+            <div class="space-x-3">
+                <button type="submit" name="save" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors">
+                    <i class="fas fa-save mr-2"></i>Save
+                </button>
+                {% if action == 'Create' %}
+                <button type="submit" name="save_and_add" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Save & Add Another
+                </button>
+                {% else %}
+                <button type="submit" name="save_and_continue" class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-colors">
+                    <i class="fas fa-edit mr-2"></i>Save & Continue Editing
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+</div>
+{% endwith %}
+{% endblock %}

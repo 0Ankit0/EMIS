@@ -1,0 +1,172 @@
+{% extends 'base_module.html' %}
+{% load static %}
+
+{% block title %}Merit List: {{ merit_list.name }} - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/admissions_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="mb-6">
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-trophy mr-3"></i>{{ merit_list.name }}
+                </h2>
+                <p class="text-gray-600">{{ merit_list.program }} - {{ merit_list.admission_year }} ({{ merit_list.admission_semester }})</p>
+            </div>
+            <div class="flex space-x-3">
+                {% if user.is_staff and not merit_list.is_published %}
+                <button onclick="publishMeritList('{{ merit_list.pk }}')" 
+                        class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors">
+                    <i class="fas fa-check mr-2"></i>Publish
+                </button>
+                {% endif %}
+                <a href="{% url 'admissions:merit_list_list' %}" 
+                   class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-semibold transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to List
+                </a>
+            </div>
+        </div>
+
+        {% if merit_list.is_published %}
+        <div class="mt-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg">
+            <p class="font-semibold">
+                <i class="fas fa-check-circle mr-2"></i>Published on {{ merit_list.published_at|date:"F d, Y H:i" }}
+            </p>
+        </div>
+        {% else %}
+        <div class="mt-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg">
+            <p class="font-semibold">
+                <i class="fas fa-exclamation-triangle mr-2"></i>This merit list is not yet published
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <p class="text-sm text-gray-600 mb-1">Total Applications</p>
+            <p class="text-3xl font-bold text-gray-800">{{ merit_list.total_applications }}</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <p class="text-sm text-gray-600 mb-1">Version</p>
+            <p class="text-3xl font-bold text-gray-800">{{ merit_list.version }}</p>
+        </div>
+        {% if merit_list.cutoff_rank %}
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <p class="text-sm text-gray-600 mb-1">Cutoff Rank</p>
+            <p class="text-3xl font-bold text-gray-800">{{ merit_list.cutoff_rank }}</p>
+        </div>
+        {% endif %}
+        {% if merit_list.cutoff_score %}
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <p class="text-sm text-gray-600 mb-1">Cutoff Score</p>
+            <p class="text-3xl font-bold text-gray-800">{{ merit_list.cutoff_score }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Ranked Applications -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="p-6 border-b">
+            <h3 class="text-xl font-bold text-gray-800">
+                <i class="fas fa-list-ol mr-2"></i>Ranked Applications
+            </h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 uppercase">Rank</th>
+                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 uppercase">Application #</th>
+                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 uppercase">Name</th>
+                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 uppercase">Email</th>
+                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 uppercase">Merit Score</th>
+                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 uppercase">Status</th>
+                        <th class="text-left py-4 px-6 text-sm font-semibold text-gray-600 uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in ranked_applications %}
+                    <tr class="border-b hover:bg-gray-50 transition-colors">
+                        <td class="py-4 px-6">
+                            <span class="font-bold text-lg
+                                {% if app.rank == 1 %}text-yellow-600
+                                {% elif app.rank == 2 %}text-gray-600
+                                {% elif app.rank == 3 %}text-orange-600
+                                {% else %}text-gray-800{% endif %}">
+                                {% if app.rank == 1 %}🥇
+                                {% elif app.rank == 2 %}🥈
+                                {% elif app.rank == 3 %}🥉
+                                {% else %}{{ app.rank }}{% endif %}
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 font-medium">{{ app.application_number }}</td>
+                        <td class="py-4 px-6">{{ app.first_name }} {{ app.last_name }}</td>
+                        <td class="py-4 px-6">{{ app.email }}</td>
+                        <td class="py-4 px-6">
+                            <span class="font-semibold">{{ app.merit_score|default:"N/A" }}</span>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold
+                                {% if app.status == 'approved' %}bg-green-100 text-green-800
+                                {% elif app.status == 'rejected' %}bg-red-100 text-red-800
+                                {% elif app.status == 'under_review' %}bg-yellow-100 text-yellow-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ app.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="py-4 px-6">
+                            <a href="{% url 'admissions:application_detail' app.pk %}" 
+                               class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="py-12 text-center text-gray-500">
+                            <i class="fas fa-inbox text-5xl mb-4"></i>
+                            <p class="text-lg">No applications ranked</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function publishMeritList(meritListId) {
+    if (!confirm('Are you sure you want to publish this merit list? This action cannot be undone.')) {
+        return;
+    }
+    
+    fetch(`/admissions/merit-lists/${meritListId}/publish/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while publishing the merit list');
+    });
+}
+</script>
+
+{% endwith %}
+{% endblock %}

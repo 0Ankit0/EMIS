@@ -64,7 +64,7 @@ class Submission(TimeStampedModel):
     class Meta:
         db_table = 'submissions'
         ordering = ['-submitted_at']
-        unique_together = [['assignment', 'student']]
+        unique_together = (('assignment', 'student'),)
         indexes = [
             models.Index(fields=['assignment']),
             models.Index(fields=['student']),

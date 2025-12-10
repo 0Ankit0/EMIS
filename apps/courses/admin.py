@@ -10,8 +10,8 @@ class CourseAdmin(admin.ModelAdmin):
     """
     Admin interface for Course
     """
-    list_display = ['code', 'title', 'department', 'semester', 'credits', 'status', 'created_at']
-    list_filter = ['status', 'department', 'semester', 'academic_year']
+    list_display = ['code', 'title', 'department', 'semester', 'credits', 'created_at']
+    list_filter = ['department', 'semester', 'academic_year']
     search_fields = ['code', 'title', 'description', 'department']
     readonly_fields = ['created_at', 'updated_at']
     ordering = ['code']
@@ -54,8 +54,8 @@ class AssignmentAdmin(admin.ModelAdmin):
     """
     Admin interface for Assignment
     """
-    list_display = ['title', 'course', 'module', 'due_date', 'max_marks', 'status']
-    list_filter = ['status', 'course', 'due_date']
+    list_display = ['title', 'course', 'due_date']
+    list_filter = ['course', 'due_date']
     search_fields = ['title', 'description']
     readonly_fields = ['created_at', 'updated_at']
     date_hierarchy = 'due_date'
@@ -67,12 +67,11 @@ class SubmissionAdmin(admin.ModelAdmin):
     """
     Admin interface for Submission
     """
-    list_display = ['assignment', 'student', 'submission_date', 'marks_obtained', 'status']
-    list_filter = ['status', 'submission_date']
+    list_display = ['assignment', 'student']
+    list_filter = ['assignment']
     search_fields = ['student__first_name', 'student__last_name', 'assignment__title']
-    readonly_fields = ['submission_date', 'created_at', 'updated_at']
-    date_hierarchy = 'submission_date'
-    ordering = ['-submission_date']
+    readonly_fields = ['created_at', 'updated_at']
+    ordering = ['assignment']
 
 
 @admin.register(GradeRecord)
@@ -80,8 +79,8 @@ class GradeRecordAdmin(admin.ModelAdmin):
     """
     Admin interface for GradeRecord
     """
-    list_display = ['student', 'course', 'marks_obtained', 'total_marks', 'grade', 'semester']
-    list_filter = ['grade', 'semester', 'academic_year']
+    list_display = ['student', 'course', 'semester']
+    list_filter = ['semester', 'academic_year']
     search_fields = ['student__first_name', 'student__last_name', 'course__title']
     readonly_fields = ['created_at', 'updated_at']
     ordering = ['-academic_year', 'semester']

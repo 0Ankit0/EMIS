@@ -56,7 +56,7 @@ class Application(TimeStampedModel):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft', db_index=True)
     submitted_at = models.DateTimeField(null=True, blank=True, db_index=True)
     reviewed_by = models.ForeignKey('authentication.User', on_delete=models.SET_NULL, 
-                                    null=True, blank=True, related_name='reviewed_applications')
+                                    null=True, blank=True, related_name='admissions_reviewed_applications')
     reviewed_at = models.DateTimeField(null=True, blank=True)
     review_notes = models.TextField(blank=True)
     

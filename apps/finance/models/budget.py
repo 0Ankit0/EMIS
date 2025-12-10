@@ -78,7 +78,7 @@ class BudgetAllocation(TimeStampedModel):
     
     class Meta:
         db_table = 'finance_budget_allocations'
-        unique_together = ['budget', 'category']
+        unique_together = (('budget', 'category'),)
         ordering = ['budget', 'category']
     
     def __str__(self):

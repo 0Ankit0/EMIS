@@ -39,7 +39,7 @@ class AttendanceRecord(TimeStampedModel):
     class Meta:
         db_table = 'student_attendance_records'
         ordering = ['-session_date']
-        unique_together = [['student', 'course', 'session_date']]
+        unique_together = (('student', 'course', 'session_date'),)
         indexes = [
             models.Index(fields=['student']),
             models.Index(fields=['course']),

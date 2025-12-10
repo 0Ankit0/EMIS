@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
 from apps.core.models import TimeStampedModel
 
 
@@ -17,10 +16,10 @@ class Course(TimeStampedModel):
     credits = models.IntegerField(default=3)
     
     # Prerequisites stored as array of course IDs
-    prerequisites = ArrayField(
-        models.UUIDField(),
+    prerequisites = models.JSONField(
         default=list,
-        blank=True
+        blank=True,
+        help_text="Array of prerequisite course UUIDs"
     )
     
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')

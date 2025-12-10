@@ -516,7 +516,7 @@ class JobApplication(TimeStampedModel):
     
     application_date = models.DateTimeField(default=timezone.now)
     
-    reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='reviewed_applications')
+    reviewed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='hr_reviewed_applications')
     review_notes = models.TextField(blank=True)
     
     class Meta:

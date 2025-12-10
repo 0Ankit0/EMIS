@@ -42,7 +42,7 @@ class Enrollment(TimeStampedModel):
     class Meta:
         db_table = 'enrollments'
         ordering = ['-start_date']
-        unique_together = [['student', 'program', 'start_date']]
+        unique_together = (('student', 'program', 'start_date'),)
         indexes = [
             models.Index(fields=['student', 'status']),
             models.Index(fields=['program', 'batch']),

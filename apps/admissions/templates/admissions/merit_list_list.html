@@ -1,0 +1,145 @@
+{% extends 'base_module.html' %}
+{% load static %}
+
+{% block title %}Merit Lists - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/admissions_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-trophy mr-3"></i>Merit Lists
+            </h2>
+            <p class="text-gray-600">View and manage merit lists</p>
+        </div>
+        {% if user.is_staff %}
+        <a href="{% url 'admissions:merit_list_create' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+            <i class="fas fa-plus mr-2"></i>Generate Merit List
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Merit Lists -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for merit_list in merit_lists %}
+        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800">{{ merit_list.name }}</h3>
+                    <p class="text-gray-600 text-sm mt-1">{{ merit_list.program }}</p>
+                </div>
+                {% if merit_list.is_published %}
+                <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
+                    Published
+                </span>
+                {% else %}
+                <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-semibold rounded-full">
+                    Draft
+                </span>
+                {% endif %}
+            </div>
+
+            <div class="space-y-2 mb-4">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Year:</span>
+                    <span class="font-semibold text-gray-800">{{ merit_list.admission_year }}</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Semester:</span>
+                    <span class="font-semibold text-gray-800">{{ merit_list.admission_semester }}</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Total Applications:</span>
+                    <span class="font-semibold text-gray-800">{{ merit_list.total_applications }}</span>
+                </div>
+                {% if merit_list.cutoff_rank %}
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Cutoff Rank:</span>
+                    <span class="font-semibold text-gray-800">{{ merit_list.cutoff_rank }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="flex space-x-2">
+                <a href="{% url 'admissions:merit_list_detail' merit_list.pk %}" 
+                   class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2 rounded-lg font-semibold transition-colors">
+                    <i class="fas fa-eye mr-2"></i>View
+                </a>
+                {% if user.is_staff and not merit_list.is_published %}
+                <button onclick="publishMeritList('{{ merit_list.pk }}')" 
+                        class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold transition-colors">
+                    <i class="fas fa-check mr-2"></i>Publish
+                </button>
+                {% endif %}
+            </div>
+
+            <p class="text-xs text-gray-500 mt-4">
+                Generated on {{ merit_list.generation_timestamp|date:"M d, Y H:i" }}
+            </p>
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-12">
+            <i class="fas fa-trophy text-6xl text-gray-300 mb-4"></i>
+            <p class="text-gray-500 text-lg">No merit lists found</p>
+            {% if user.is_staff %}
+            <a href="{% url 'admissions:merit_list_create' %}" class="inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                <i class="fas fa-plus mr-2"></i>Generate Your First Merit List
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if merit_lists.has_other_pages %}
+    <div class="mt-8 flex justify-center">
+        <div class="flex space-x-2">
+            {% if merit_lists.has_previous %}
+            <a href="?page={{ merit_lists.previous_page_number }}" 
+               class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Previous</a>
+            {% endif %}
+            
+            <span class="px-4 py-2 bg-blue-600 text-white rounded-lg">{{ merit_lists.number }}</span>
+            
+            {% if merit_lists.has_next %}
+            <a href="?page={{ merit_lists.next_page_number }}" 
+               class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50">Next</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function publishMeritList(meritListId) {
+    if (!confirm('Are you sure you want to publish this merit list? This action cannot be undone.')) {
+        return;
+    }
+    
+    fetch(`/admissions/merit-lists/${meritListId}/publish/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while publishing the merit list');
+    });
+}
+</script>
+
+{% endwith %}
+{% endblock %}

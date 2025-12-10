@@ -77,18 +77,18 @@ class UserAdmin(BaseUserAdmin):
 @admin.register(Role)
 class RoleAdmin(admin.ModelAdmin):
     """Role admin"""
-    list_display = ['name', 'is_system_role', 'priority', 'is_active', 'created_at']
-    list_filter = ['is_system_role', 'is_active', 'created_at']
+    list_display = ['name', 'created_at']
+    list_filter = ['created_at']
     search_fields = ['name', 'description']
-    ordering = ['-priority', 'name']
+    ordering = ['name']
     readonly_fields = ['created_at', 'updated_at']
 
 
 @admin.register(UserRole)
 class UserRoleAdmin(admin.ModelAdmin):
     """User Role assignment admin"""
-    list_display = ['user', 'role', 'assigned_by', 'assigned_at', 'expires_at', 'is_active']
-    list_filter = ['role', 'is_active', 'assigned_at']
+    list_display = ['user', 'role', 'assigned_by', 'assigned_at']
+    list_filter = ['role', 'assigned_at']
     search_fields = ['user__email', 'user__username', 'role__name']
     ordering = ['-assigned_at']
     readonly_fields = ['assigned_at']

@@ -35,7 +35,7 @@ class Module(TimeStampedModel):
     class Meta:
         db_table = 'course_modules'
         ordering = ['course', 'sequence_order']
-        unique_together = [['course', 'sequence_order']]
+        unique_together = (('course', 'sequence_order'),)
         indexes = [
             models.Index(fields=['course', 'sequence_order']),
         ]
