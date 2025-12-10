@@ -1,173 +1,33 @@
-"""
-Comprehensive CMS Models for EMIS
-"""
-from django.db import models
-from django.utils import timezone
-from django.utils.text import slugify
-from django.core.validators import FileExtensionValidator
-from apps.authentication.models import User
-import uuid
 
+"""CMS Models"""
+from .category import Category
+from .tag import Tag
+from .page import Page
+from .post import Post
+from .media import Media
+from .comment import Comment
+from .menu import Menu
+from .menu_item import MenuItem
+from .slider import Slider
+from .widget import Widget
+from .newsletter import Newsletter
+from .seo import SEO
 
-class Category(models.Model):
-    """Content categories"""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=200, unique=True)
-    slug = models.SlugField(max_length=200, unique=True)
-    description = models.TextField(blank=True)
-    parent = models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='children'
-    )
-    
-    # Display
-    icon = models.CharField(max_length=50, blank=True)
-    color = models.CharField(max_length=7, default='#3B82F6')
-    order = models.IntegerField(default=0)
-    
-    # Meta
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    created_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='created_categories'
-    )
-    
-    class Meta:
-        db_table = 'cms_categories'
-        verbose_name_plural = 'Categories'
-        ordering = ['order', 'name']
-    
-    def __str__(self):
-        return self.name
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
+__all__ = [
+    'Category',
+    'Tag',
+    'Page',
+    'Post',
+    'Media',
+    'Comment',
+    'Menu',
+    'MenuItem',
+    'Slider',
+    'Widget',
+    'Newsletter',
+    'SEO',
+]
 
-
-class Tag(models.Model):
-    """Content tags"""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, unique=True)
-    description = models.TextField(blank=True)
-    color = models.CharField(max_length=7, default='#6B7280')
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        db_table = 'cms_tags'
-        ordering = ['name']
-    
-    def __str__(self):
-        return self.name
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
-
-class Page(models.Model):
-    """Static pages"""
-    STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('published', 'Published'),
-        ('archived', 'Archived'),
-    ]
-    
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=300)
-    slug = models.SlugField(max_length=300, unique=True)
-    
-    # Content
-    content = models.TextField()
-    excerpt = models.TextField(blank=True, help_text="Short description")
-    
-    # Meta
-    meta_title = models.CharField(max_length=300, blank=True)
-    meta_description = models.TextField(blank=True)
-    meta_keywords = models.CharField(max_length=500, blank=True)
-    
-    # Featured image
-    featured_image = models.ImageField(upload_to='cms/pages/%Y/%m/', blank=True, null=True)
-    
-    # Organization
-    parent = models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='children'
-    )
-    template = models.CharField(max_length=100, default='default')
-    order = models.IntegerField(default=0)
-    
-    # Status
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
-    is_homepage = models.BooleanField(default=False)
-    show_in_menu = models.BooleanField(default=True)
-    
-    # Publishing
-    published_at = models.DateTimeField(null=True, blank=True)
-    
-    # Views and stats
-    view_count = models.IntegerField(default=0)
-    
-    # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    # Authors
-    author = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='pages'
-    )
-    updated_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='updated_pages'
-    )
-    
-    class Meta:
-        db_table = 'cms_pages'
-        ordering = ['-created_at']
-        indexes = [
-            models.Index(fields=['slug']),
-            models.Index(fields=['status', 'published_at']),
-        ]
-    
-    def __str__(self):
-        return self.title
-    
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        
-        # Set published_at on first publish
-        if self.status == 'published' and not self.published_at:
-            self.published_at = timezone.now()
-        
-        # Only one homepage
-        if self.is_homepage:
-            Page.objects.filter(is_homepage=True).update(is_homepage=False)
-        
-        super().save(*args, **kwargs)
-
-
-class Post(models.Model):
     """Blog posts and news articles"""
     STATUS_CHOICES = [
         ('draft', 'Draft'),
