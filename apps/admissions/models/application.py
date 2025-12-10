@@ -7,17 +7,16 @@ from apps.core.models import TimeStampedModel
 class Application(TimeStampedModel):
     """Model representing an admission application"""
     
-    STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('submitted', 'Submitted'),
-        ('under_review', 'Under Review'),
-        ('documents_pending', 'Documents Pending'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
-        ('waitlisted', 'Waitlisted'),
-        ('enrolled', 'Enrolled'),
-        ('withdrawn', 'Withdrawn'),
-    ]
+    class Status(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        SUBMITTED = 'submitted', 'Submitted'
+        UNDER_REVIEW = 'under_review', 'Under Review'
+        DOCUMENTS_PENDING = 'documents_pending', 'Documents Pending'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+        WAITLISTED = 'waitlisted', 'Waitlisted'
+        ENROLLED = 'enrolled', 'Enrolled'
+        WITHDRAWN = 'withdrawn', 'Withdrawn'
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     application_number = models.CharField(max_length=20, unique=True, db_index=True)
@@ -53,7 +52,7 @@ class Application(TimeStampedModel):
     documents = models.JSONField(default=list, help_text="List of submitted documents")
     
     # Status and Review
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft', db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT, db_index=True)
     submitted_at = models.DateTimeField(null=True, blank=True, db_index=True)
     reviewed_by = models.ForeignKey('authentication.User', on_delete=models.SET_NULL, 
                                     null=True, blank=True, related_name='admissions_reviewed_applications')
