@@ -4,11 +4,10 @@ from apps.core.models import TimeStampedModel
 
 
 class Submission(TimeStampedModel):
-    GRADE_STATUS_CHOICES = [
-        ('pending', 'Pending Review'),
-        ('graded', 'Graded'),
-        ('returned', 'Returned to Student'),
-    ]
+    class GradeStatus(models.TextChoices):
+        PENDING = 'pending', 'Pending Review'
+        GRADED = 'graded', 'Graded'
+        RETURNED = 'returned', 'Returned to Student'
 
     assignment = models.ForeignKey(
         'courses.Assignment',
@@ -33,8 +32,8 @@ class Submission(TimeStampedModel):
     # Grading
     grade_status = models.CharField(
         max_length=20,
-        choices=GRADE_STATUS_CHOICES,
-        default='pending'
+        choices=GradeStatus.choices,
+        default=GradeStatus.PENDING
     )
     score = models.DecimalField(
         max_digits=6,
@@ -91,3 +90,4 @@ class Submission(TimeStampedModel):
         if not self.pk:
             self.calculate_late_penalty()
         super().save(*args, **kwargs)
+

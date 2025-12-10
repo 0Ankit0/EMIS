@@ -3,11 +3,10 @@ from apps.core.models import TimeStampedModel
 
 
 class Course(TimeStampedModel):
-    STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('active', 'Active'),
-        ('archived', 'Archived'),
-    ]
+    class Status(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        ACTIVE = 'active', 'Active'
+        ARCHIVED = 'archived', 'Archived'
 
     title = models.CharField(max_length=255)
     code = models.CharField(max_length=50, unique=True)
@@ -22,7 +21,7 @@ class Course(TimeStampedModel):
         help_text="Array of prerequisite course UUIDs"
     )
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
     created_by = models.ForeignKey(
         'authentication.User',
         on_delete=models.SET_NULL,
@@ -46,3 +45,4 @@ class Course(TimeStampedModel):
 
     def __str__(self):
         return f"{self.code} - {self.title}"
+

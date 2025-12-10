@@ -3,23 +3,22 @@ from apps.core.models import TimeStampedModel
 
 
 class GradeRecord(TimeStampedModel):
-    GRADE_LETTER_CHOICES = [
-        ('A+', 'A+'),
-        ('A', 'A'),
-        ('A-', 'A-'),
-        ('B+', 'B+'),
-        ('B', 'B'),
-        ('B-', 'B-'),
-        ('C+', 'C+'),
-        ('C', 'C'),
-        ('C-', 'C-'),
-        ('D', 'D'),
-        ('F', 'F'),
-        ('I', 'Incomplete'),
-        ('W', 'Withdrawn'),
-        ('P', 'Pass'),
-        ('NP', 'No Pass'),
-    ]
+    class GradeLetter(models.TextChoices):
+        A_PLUS = 'A+', 'A+'
+        A = 'A', 'A'
+        A_MINUS = 'A-', 'A-'
+        B_PLUS = 'B+', 'B+'
+        B = 'B', 'B'
+        B_MINUS = 'B-', 'B-'
+        C_PLUS = 'C+', 'C+'
+        C = 'C', 'C'
+        C_MINUS = 'C-', 'C-'
+        D = 'D', 'D'
+        F = 'F', 'F'
+        INCOMPLETE = 'I', 'Incomplete'
+        WITHDRAWN = 'W', 'Withdrawn'
+        PASS = 'P', 'Pass'
+        NO_PASS = 'NP', 'No Pass'
 
     course = models.ForeignKey(
         'courses.Course',
@@ -40,7 +39,7 @@ class GradeRecord(TimeStampedModel):
     )
     grade_letter = models.CharField(
         max_length=2,
-        choices=GRADE_LETTER_CHOICES,
+        choices=GradeLetter.choices,
         blank=True
     )
     grade_points = models.DecimalField(
@@ -81,35 +80,37 @@ class GradeRecord(TimeStampedModel):
     def calculate_grade_letter(self):
         """Calculate letter grade based on numeric value"""
         if self.grade_value >= 97:
-            return 'A+'
+            return GradeLetter.A_PLUS
         elif self.grade_value >= 93:
-            return 'A'
+            return GradeLetter.A
         elif self.grade_value >= 90:
-            return 'A-'
+            return GradeLetter.A_MINUS
         elif self.grade_value >= 87:
-            return 'B+'
+            return GradeLetter.B_PLUS
         elif self.grade_value >= 83:
-            return 'B'
+            return GradeLetter.B
         elif self.grade_value >= 80:
-            return 'B-'
+            return GradeLetter.B_MINUS
         elif self.grade_value >= 77:
-            return 'C+'
+            return GradeLetter.C_PLUS
         elif self.grade_value >= 73:
-            return 'C'
+            return GradeLetter.C
         elif self.grade_value >= 70:
-            return 'C-'
+            return GradeLetter.C_MINUS
         elif self.grade_value >= 60:
-            return 'D'
+            return GradeLetter.D
         else:
-            return 'F'
+            return GradeLetter.F
     
     def calculate_grade_points(self):
         """Calculate grade points based on letter grade"""
         grade_point_map = {
-            'A+': 4.00, 'A': 4.00, 'A-': 3.70,
-            'B+': 3.30, 'B': 3.00, 'B-': 2.70,
-            'C+': 2.30, 'C': 2.00, 'C-': 1.70,
-            'D': 1.00, 'F': 0.00,
-            'I': 0.00, 'W': 0.00, 'P': 0.00, 'NP': 0.00
+            GradeLetter.A_PLUS: 4.00, GradeLetter.A: 4.00, GradeLetter.A_MINUS: 3.70,
+            GradeLetter.B_PLUS: 3.30, GradeLetter.B: 3.00, GradeLetter.B_MINUS: 2.70,
+            GradeLetter.C_PLUS: 2.30, GradeLetter.C: 2.00, GradeLetter.C_MINUS: 1.70,
+            GradeLetter.D: 1.00, GradeLetter.F: 0.00,
+            GradeLetter.INCOMPLETE: 0.00, GradeLetter.WITHDRAWN: 0.00, 
+            GradeLetter.PASS: 0.00, GradeLetter.NO_PASS: 0.00
         }
         return grade_point_map.get(self.grade_letter, 0.00)
+
