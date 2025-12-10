@@ -4,7 +4,6 @@ from django.dispatch import receiver
 from django.utils import timezone
 from .models import Leave, Payroll, PerformanceReview
 
-
 @receiver(post_save, sender=Leave)
 def update_employee_status_on_leave(sender, instance, **kwargs):
     """Update employee status when leave is approved"""
@@ -17,7 +16,6 @@ def update_employee_status_on_leave(sender, instance, **kwargs):
         # TODO: Send notification to employee
         pass
 
-
 @receiver(post_save, sender=Leave)
 def notify_leave_status_change(sender, instance, created, **kwargs):
     """Send notification when leave status changes"""
@@ -25,12 +23,10 @@ def notify_leave_status_change(sender, instance, created, **kwargs):
         # TODO: Send email/SMS notification
         pass
 
-
 @receiver(pre_save, sender=PerformanceReview)
 def calculate_overall_rating_on_save(sender, instance, **kwargs):
     """Calculate overall rating before saving review"""
     instance.overall_rating = instance.calculate_overall_rating()
-
 
 @receiver(post_save, sender=Payroll)
 def notify_payroll_processed(sender, instance, created, **kwargs):

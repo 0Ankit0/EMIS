@@ -47,22 +47,21 @@ class Department(TimeStampedModel):
 class Designation(TimeStampedModel):
     """Job Designation/Position"""
     
-    LEVEL_CHOICES = [
-        ('entry', 'Entry Level'),
-        ('junior', 'Junior'),
-        ('mid', 'Mid Level'),
-        ('senior', 'Senior'),
-        ('lead', 'Lead'),
-        ('manager', 'Manager'),
-        ('director', 'Director'),
-        ('executive', 'Executive'),
-    ]
+    class Level(models.TextChoices):
+        ENTRY = 'entry', 'Entry Level'
+        JUNIOR = 'junior', 'Junior'
+        MID = 'mid', 'Mid Level'
+        SENIOR = 'senior', 'Senior'
+        LEAD = 'lead', 'Lead'
+        MANAGER = 'manager', 'Manager'
+        DIRECTOR = 'director', 'Director'
+        EXECUTIVE = 'executive', 'Executive'
     
     title = models.CharField(max_length=200, unique=True)
     code = models.CharField(max_length=50, unique=True, db_index=True)
     description = models.TextField(blank=True)
     
-    level = models.CharField(max_length=20, choices=LEVEL_CHOICES)
+    level = models.CharField(max_length=20, choices=Level.choices)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True, related_name='designations')
     
     min_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
@@ -86,35 +85,31 @@ class Designation(TimeStampedModel):
 class Employee(TimeStampedModel):
     """Employee/Staff Member"""
     
-    EMPLOYMENT_TYPE_CHOICES = [
-        ('full_time', 'Full Time'),
-        ('part_time', 'Part Time'),
-        ('contract', 'Contract'),
-        ('intern', 'Intern'),
-        ('consultant', 'Consultant'),
-    ]
+    class EmploymentType(models.TextChoices):
+        FULL_TIME = 'full_time', 'Full Time'
+        PART_TIME = 'part_time', 'Part Time'
+        CONTRACT = 'contract', 'Contract'
+        INTERN = 'intern', 'Intern'
+        CONSULTANT = 'consultant', 'Consultant'
     
-    GENDER_CHOICES = [
-        ('male', 'Male'),
-        ('female', 'Female'),
-        ('other', 'Other'),
-    ]
+    class Gender(models.TextChoices):
+        MALE = 'male', 'Male'
+        FEMALE = 'female', 'Female'
+        OTHER = 'other', 'Other'
     
-    MARITAL_STATUS_CHOICES = [
-        ('single', 'Single'),
-        ('married', 'Married'),
-        ('divorced', 'Divorced'),
-        ('widowed', 'Widowed'),
-    ]
+    class MaritalStatus(models.TextChoices):
+        SINGLE = 'single', 'Single'
+        MARRIED = 'married', 'Married'
+        DIVORCED = 'divorced', 'Divorced'
+        WIDOWED = 'widowed', 'Widowed'
     
-    STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('on_leave', 'On Leave'),
-        ('suspended', 'Suspended'),
-        ('terminated', 'Terminated'),
-        ('resigned', 'Resigned'),
-        ('retired', 'Retired'),
-    ]
+    class Status(models.TextChoices):
+        ACTIVE = 'active', 'Active'
+        ON_LEAVE = 'on_leave', 'On Leave'
+        SUSPENDED = 'suspended', 'Suspended'
+        TERMINATED = 'terminated', 'Terminated'
+        RESIGNED = 'resigned', 'Resigned'
+        RETIRED = 'retired', 'Retired'
     
     # Link to User
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee_profile')
@@ -128,8 +123,8 @@ class Employee(TimeStampedModel):
     last_name = models.CharField(max_length=100)
     
     date_of_birth = models.DateField()
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
-    marital_status = models.CharField(max_length=20, choices=MARITAL_STATUS_CHOICES)
+    gender = models.CharField(max_length=10, choices=Gender.choices)
+    marital_status = models.CharField(max_length=20, choices=MaritalStatus.choices)
     blood_group = models.CharField(max_length=10, blank=True)
     
     # Contact Information
@@ -154,7 +149,7 @@ class Employee(TimeStampedModel):
     # Employment Details
     department = models.ForeignKey(Department, on_delete=models.PROTECT, related_name='employees')
     designation = models.ForeignKey(Designation, on_delete=models.PROTECT, related_name='employees')
-    employment_type = models.CharField(max_length=20, choices=EMPLOYMENT_TYPE_CHOICES)
+    employment_type = models.CharField(max_length=20, choices=EmploymentType.choices)
     
     date_of_joining = models.DateField()
     date_of_leaving = models.DateField(null=True, blank=True)
@@ -171,7 +166,7 @@ class Employee(TimeStampedModel):
         related_name='reportees'
     )
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active', db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE, db_index=True)
     
     # Salary Information
     basic_salary = models.DecimalField(max_digits=12, decimal_places=2, validators=[MinValueValidator(0)])
@@ -244,19 +239,18 @@ class Employee(TimeStampedModel):
 class Attendance(TimeStampedModel):
     """Employee Attendance"""
     
-    STATUS_CHOICES = [
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ('half_day', 'Half Day'),
-        ('late', 'Late'),
-        ('on_leave', 'On Leave'),
-        ('work_from_home', 'Work From Home'),
-        ('holiday', 'Holiday'),
-    ]
+    class Status(models.TextChoices):
+        PRESENT = 'present', 'Present'
+        ABSENT = 'absent', 'Absent'
+        HALF_DAY = 'half_day', 'Half Day'
+        LATE = 'late', 'Late'
+        ON_LEAVE = 'on_leave', 'On Leave'
+        WORK_FROM_HOME = 'work_from_home', 'Work From Home'
+        HOLIDAY = 'holiday', 'Holiday'
     
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='attendance_records')
     date = models.DateField(db_index=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, choices=Status.choices)
     
     check_in_time = models.TimeField(null=True, blank=True)
     check_out_time = models.TimeField(null=True, blank=True)
@@ -283,32 +277,30 @@ class Attendance(TimeStampedModel):
 class Leave(TimeStampedModel):
     """Employee Leave Management"""
     
-    LEAVE_TYPE_CHOICES = [
-        ('casual', 'Casual Leave'),
-        ('sick', 'Sick Leave'),
-        ('earned', 'Earned Leave'),
-        ('maternity', 'Maternity Leave'),
-        ('paternity', 'Paternity Leave'),
-        ('unpaid', 'Unpaid Leave'),
-        ('compensatory', 'Compensatory Off'),
-    ]
+    class LeaveType(models.TextChoices):
+        CASUAL = 'casual', 'Casual Leave'
+        SICK = 'sick', 'Sick Leave'
+        EARNED = 'earned', 'Earned Leave'
+        MATERNITY = 'maternity', 'Maternity Leave'
+        PATERNITY = 'paternity', 'Paternity Leave'
+        UNPAID = 'unpaid', 'Unpaid Leave'
+        COMPENSATORY = 'compensatory', 'Compensatory Off'
     
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
-        ('cancelled', 'Cancelled'),
-    ]
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+        CANCELLED = 'cancelled', 'Cancelled'
     
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='leave_applications')
     
-    leave_type = models.CharField(max_length=20, choices=LEAVE_TYPE_CHOICES)
+    leave_type = models.CharField(max_length=20, choices=LeaveType.choices)
     start_date = models.DateField()
     end_date = models.DateField()
     number_of_days = models.IntegerField(validators=[MinValueValidator(1)])
     
     reason = models.TextField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING, db_index=True)
     
     approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_hr_leaves')
     approval_date = models.DateTimeField(null=True, blank=True)
@@ -337,15 +329,15 @@ class Leave(TimeStampedModel):
         super().save(*args, **kwargs)
 
 
+
 class Payroll(TimeStampedModel):
     """Monthly Payroll"""
     
-    STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('processed', 'Processed'),
-        ('paid', 'Paid'),
-        ('on_hold', 'On Hold'),
-    ]
+    class Status(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        PROCESSED = 'processed', 'Processed'
+        PAID = 'paid', 'Paid'
+        ON_HOLD = 'on_hold', 'On Hold'
     
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='payrolls')
     
@@ -379,7 +371,7 @@ class Payroll(TimeStampedModel):
     present_days = models.IntegerField(validators=[MinValueValidator(0)])
     leave_days = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft', db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT, db_index=True)
     
     payment_date = models.DateField(null=True, blank=True)
     payment_method = models.CharField(max_length=50, blank=True)
@@ -423,14 +415,11 @@ class Payroll(TimeStampedModel):
 class JobPosting(TimeStampedModel):
     """Job Opening/Vacancy Posting"""
     
-    STATUS_CHOICES = [
-        ('draft', 'Draft'),
-        ('open', 'Open'),
-        ('closed', 'Closed'),
-        ('on_hold', 'On Hold'),
-    ]
-    
-    EMPLOYMENT_TYPE_CHOICES = Employee.EMPLOYMENT_TYPE_CHOICES
+    class Status(models.TextChoices):
+        DRAFT = 'draft', 'Draft'
+        OPEN = 'open', 'Open'
+        CLOSED = 'closed', 'Closed'
+        ON_HOLD = 'on_hold', 'On Hold'
     
     title = models.CharField(max_length=200)
     job_code = models.CharField(max_length=50, unique=True, db_index=True)
@@ -438,7 +427,7 @@ class JobPosting(TimeStampedModel):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='job_postings')
     designation = models.ForeignKey(Designation, on_delete=models.CASCADE, related_name='job_postings')
     
-    employment_type = models.CharField(max_length=20, choices=EMPLOYMENT_TYPE_CHOICES)
+    employment_type = models.CharField(max_length=20, choices=Employee.EmploymentType.choices)
     
     vacancies = models.IntegerField(validators=[MinValueValidator(1)])
     
@@ -457,7 +446,7 @@ class JobPosting(TimeStampedModel):
     posted_date = models.DateField(default=timezone.now)
     closing_date = models.DateField(null=True, blank=True)
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft', db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT, db_index=True)
     
     posted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='posted_jobs')
     
@@ -478,18 +467,17 @@ class JobPosting(TimeStampedModel):
 class JobApplication(TimeStampedModel):
     """Job Application from Candidates"""
     
-    STATUS_CHOICES = [
-        ('submitted', 'Submitted'),
-        ('screening', 'Under Screening'),
-        ('shortlisted', 'Shortlisted'),
-        ('interview_scheduled', 'Interview Scheduled'),
-        ('selected', 'Selected'),
-        ('rejected', 'Rejected'),
-        ('offer_sent', 'Offer Sent'),
-        ('offer_accepted', 'Offer Accepted'),
-        ('offer_declined', 'Offer Declined'),
-        ('joined', 'Joined'),
-    ]
+    class Status(models.TextChoices):
+        SUBMITTED = 'submitted', 'Submitted'
+        SCREENING = 'screening', 'Under Screening'
+        SHORTLISTED = 'shortlisted', 'Shortlisted'
+        INTERVIEW_SCHEDULED = 'interview_scheduled', 'Interview Scheduled'
+        SELECTED = 'selected', 'Selected'
+        REJECTED = 'rejected', 'Rejected'
+        OFFER_SENT = 'offer_sent', 'Offer Sent'
+        OFFER_ACCEPTED = 'offer_accepted', 'Offer Accepted'
+        OFFER_DECLINED = 'offer_declined', 'Offer Declined'
+        JOINED = 'joined', 'Joined'
     
     job_posting = models.ForeignKey(JobPosting, on_delete=models.CASCADE, related_name='applications')
     
@@ -512,7 +500,7 @@ class JobApplication(TimeStampedModel):
     resume = models.FileField(upload_to='hr/applications/resumes/%Y/%m/')
     cover_letter = models.TextField(blank=True)
     
-    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='submitted', db_index=True)
+    status = models.CharField(max_length=30, choices=Status.choices, default=Status.SUBMITTED, db_index=True)
     
     application_date = models.DateTimeField(default=timezone.now)
     
@@ -536,43 +524,40 @@ class JobApplication(TimeStampedModel):
 class PerformanceReview(TimeStampedModel):
     """Employee Performance Review/Appraisal"""
     
-    REVIEW_TYPE_CHOICES = [
-        ('probation', 'Probation Review'),
-        ('quarterly', 'Quarterly Review'),
-        ('half_yearly', 'Half-Yearly Review'),
-        ('annual', 'Annual Review'),
-        ('special', 'Special Review'),
-    ]
+    class ReviewType(models.TextChoices):
+        PROBATION = 'probation', 'Probation Review'
+        QUARTERLY = 'quarterly', 'Quarterly Review'
+        HALF_YEARLY = 'half_yearly', 'Half-Yearly Review'
+        ANNUAL = 'annual', 'Annual Review'
+        SPECIAL = 'special', 'Special Review'
     
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
-    ]
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        IN_PROGRESS = 'in_progress', 'In Progress'
+        COMPLETED = 'completed', 'Completed'
     
-    RATING_CHOICES = [
-        (1, 'Poor'),
-        (2, 'Below Average'),
-        (3, 'Average'),
-        (4, 'Good'),
-        (5, 'Excellent'),
-    ]
+    class Rating(models.IntegerChoices):
+        POOR = 1, 'Poor'
+        BELOW_AVERAGE = 2, 'Below Average'
+        AVERAGE = 3, 'Average'
+        GOOD = 4, 'Good'
+        EXCELLENT = 5, 'Excellent'
     
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='performance_reviews')
     
-    review_type = models.CharField(max_length=20, choices=REVIEW_TYPE_CHOICES)
+    review_type = models.CharField(max_length=20, choices=ReviewType.choices)
     review_period_start = models.DateField()
     review_period_end = models.DateField()
     
     reviewer = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='conducted_reviews')
     
     # Ratings
-    technical_skills = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
-    communication = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
-    teamwork = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
-    leadership = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
-    punctuality = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
-    quality_of_work = models.IntegerField(choices=RATING_CHOICES, null=True, blank=True)
+    technical_skills = models.IntegerField(choices=Rating.choices, null=True, blank=True)
+    communication = models.IntegerField(choices=Rating.choices, null=True, blank=True)
+    teamwork = models.IntegerField(choices=Rating.choices, null=True, blank=True)
+    leadership = models.IntegerField(choices=Rating.choices, null=True, blank=True)
+    punctuality = models.IntegerField(choices=Rating.choices, null=True, blank=True)
+    quality_of_work = models.IntegerField(choices=Rating.choices, null=True, blank=True)
     
     overall_rating = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
     
@@ -584,7 +569,7 @@ class PerformanceReview(TimeStampedModel):
     comments = models.TextField(blank=True)
     employee_comments = models.TextField(blank=True)
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     
     review_date = models.DateField(null=True, blank=True)
     
@@ -613,12 +598,11 @@ class PerformanceReview(TimeStampedModel):
 class Training(TimeStampedModel):
     """Training Programs"""
     
-    STATUS_CHOICES = [
-        ('planned', 'Planned'),
-        ('ongoing', 'Ongoing'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled'),
-    ]
+    class Status(models.TextChoices):
+        PLANNED = 'planned', 'Planned'
+        ONGOING = 'ongoing', 'Ongoing'
+        COMPLETED = 'completed', 'Completed'
+        CANCELLED = 'cancelled', 'Cancelled'
     
     title = models.CharField(max_length=200)
     code = models.CharField(max_length=50, unique=True, db_index=True)
@@ -636,7 +620,7 @@ class Training(TimeStampedModel):
     
     cost_per_participant = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='planned')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PLANNED)
     
     organized_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='organized_trainings')
     
@@ -653,18 +637,17 @@ class Training(TimeStampedModel):
 class TrainingParticipant(TimeStampedModel):
     """Training Participants"""
     
-    STATUS_CHOICES = [
-        ('enrolled', 'Enrolled'),
-        ('attended', 'Attended'),
-        ('completed', 'Completed'),
-        ('dropped', 'Dropped'),
-    ]
+    class Status(models.TextChoices):
+        ENROLLED = 'enrolled', 'Enrolled'
+        ATTENDED = 'attended', 'Attended'
+        COMPLETED = 'completed', 'Completed'
+        DROPPED = 'dropped', 'Dropped'
     
     training = models.ForeignKey(Training, on_delete=models.CASCADE, related_name='participants')
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='training_participations')
     
     enrollment_date = models.DateField(default=timezone.now)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='enrolled')
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.ENROLLED)
     
     attendance_percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     assessment_score = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
@@ -681,6 +664,7 @@ class TrainingParticipant(TimeStampedModel):
     
     def __str__(self):
         return f"{self.employee.employee_id} - {self.training.title}"
+
 
 # Import and add managers
 from .managers import (
