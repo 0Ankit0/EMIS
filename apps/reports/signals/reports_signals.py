@@ -3,8 +3,7 @@ Reports Signals
 """
 from django.db.models.signals import post_save, pre_delete, post_delete
 from django.dispatch import receiver
-from .models import GeneratedReport, ScheduledReport, ReportTemplate
-
+from ..models import GeneratedReport, ScheduledReport, ReportTemplate
 
 @receiver(post_save, sender=GeneratedReport)
 def generated_report_post_save(sender, instance, created, **kwargs):
@@ -18,7 +17,6 @@ def generated_report_post_save(sender, instance, created, **kwargs):
         # Handle updates
         pass
 
-
 @receiver(pre_delete, sender=GeneratedReport)
 def generated_report_pre_delete(sender, instance, **kwargs):
     """
@@ -30,7 +28,6 @@ def generated_report_pre_delete(sender, instance, **kwargs):
             instance.file.delete(save=False)
         except Exception:
             pass
-
 
 @receiver(post_save, sender=ScheduledReport)
 def scheduled_report_post_save(sender, instance, created, **kwargs):
@@ -48,7 +45,6 @@ def scheduled_report_post_save(sender, instance, created, **kwargs):
                 instance.timezone
             )
             instance.save(update_fields=['next_run'])
-
 
 @receiver(post_delete, sender=ReportTemplate)
 def report_template_post_delete(sender, instance, **kwargs):

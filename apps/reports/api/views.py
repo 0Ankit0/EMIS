@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils import timezone
 
-from .models import (
+from ..models import (
     ReportTemplate, GeneratedReport, ScheduledReport,
     ReportWidget, ReportFavorite, ReportAccessLog
 )
