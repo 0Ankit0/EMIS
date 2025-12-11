@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from apps.core.models import TimeStampedModel
 from .faculty import Faculty
-from .managers import FacultyExperienceManager
+from ..managers import FacultyExperienceManager
 
 class FacultyExperience(TimeStampedModel):
     """Work Experience of Faculty"""

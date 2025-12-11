@@ -5,7 +5,7 @@ from django.utils import timezone
 from apps.core.models import TimeStampedModel
 from decimal import Decimal
 from .department import Department
-from .managers import FacultyManager
+from ..managers import FacultyManager
 
 User = get_user_model()
 

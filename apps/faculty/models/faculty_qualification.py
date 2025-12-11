@@ -1,7 +1,7 @@
 from django.db import models
 from apps.core.models import TimeStampedModel
 from .faculty import Faculty
-from .managers import FacultyQualificationManager
+from ..managers import FacultyQualificationManager
 
 class FacultyQualification(TimeStampedModel):
     """Educational Qualifications of Faculty"""

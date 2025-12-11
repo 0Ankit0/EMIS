@@ -20,5 +20,26 @@ urlpatterns = [
     path('students/', include('apps.students.api_urls')),
     
     # Courses URLs
-    path('courses/', include('apps.courses.urls')),
+    path('courses/', include('apps.courses.api_urls')),
+    
+    # Inventory URLs
+    path('inventory/', include('apps.inventory.api_urls')),
+    
+    # LMS URLs
+    path('lms/', include('apps.lms.api_urls')),
+    
+    # Library URLs
+    path('library/', include('apps.library.api_urls')),
+    
+    # Transport URLs
+    path('transport/', include('apps.transport.api_urls')),
+    
+    # Notifications URLs
+    path('notifications/', include('apps.notifications.api_urls')),
+    
+    # Portal URLs
+    path('portal/', include('apps.portal.api_urls')),
+    
+    # Reports URLs
+    path('reports/', include('apps.reports.api_urls')),
 ]

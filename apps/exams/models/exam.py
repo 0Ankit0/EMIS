@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from apps.core.models import TimeStampedModel
-from .managers import ExamManager
+from ..managers import ExamManager
 
 class Exam(TimeStampedModel):
     """
