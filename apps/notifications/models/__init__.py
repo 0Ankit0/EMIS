@@ -13,13 +13,8 @@ from .notification_channel import NotificationChannel
 from .notification import Notification
 from .notification_template import NotificationTemplate
 from .notification_preference import NotificationPreference
-    class Meta:
-        db_table = 'notification_preferences'
-        verbose_name = 'Notification Preference'
-        verbose_name_plural = 'Notification Preferences'
-    
-    def __str__(self):
-        return f"Preferences for {self.user.get_full_name()}"
+
+User = get_user_model()
 
 
 class ScheduledNotification(TimeStampedModel):

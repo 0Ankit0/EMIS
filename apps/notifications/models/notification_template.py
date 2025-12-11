@@ -1,7 +1,7 @@
 from django.db import models
 from apps.core.models import TimeStampedModel
 from .notification_type import NotificationType
-from .managers import NotificationTemplateManager
+from ..managers import NotificationTemplateManager
 
 class NotificationTemplate(TimeStampedModel):
     """

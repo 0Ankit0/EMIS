@@ -4,7 +4,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from apps.core.models import TimeStampedModel
 from .notification_type import NotificationType
-from .managers import NotificationManager
+from ..managers import NotificationManager
 
 User = get_user_model()
 
