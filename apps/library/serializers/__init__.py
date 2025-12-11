@@ -2,7 +2,7 @@
 Library Serializers
 """
 from rest_framework import serializers
-from .models import Book, BookIssue, LibraryMember
+from ..models import Book, BookIssue, LibraryMember
 
 
 class BookSerializer(serializers.ModelSerializer):

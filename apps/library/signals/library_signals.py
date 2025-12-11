@@ -3,8 +3,7 @@ Library Signals
 """
 from django.db.models.signals import post_save, pre_delete, pre_save
 from django.dispatch import receiver
-from .models import Book, BookIssue, LibraryMember
-
+from ..models import Book, BookIssue, LibraryMember
 
 @receiver(post_save, sender=BookIssue)
 def book_issue_post_save(sender, instance, created, **kwargs):
@@ -20,7 +19,6 @@ def book_issue_post_save(sender, instance, created, **kwargs):
             # Update book availability
             instance.book.return_book()
 
-
 @receiver(pre_delete, sender=BookIssue)
 def book_issue_pre_delete(sender, instance, **kwargs):
     """
@@ -29,7 +27,6 @@ def book_issue_pre_delete(sender, instance, **kwargs):
     # Return the book before deleting the issue record
     if instance.status == 'issued':
         instance.book.return_book()
-
 
 @receiver(pre_save, sender=BookIssue)
 def check_overdue_status(sender, instance, **kwargs):
