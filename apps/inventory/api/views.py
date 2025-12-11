@@ -7,8 +7,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Sum, Count
 from django.utils import timezone
 
-from .models import *
-from .serializers import *
+from ..models import *
+from ..serializers import *
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

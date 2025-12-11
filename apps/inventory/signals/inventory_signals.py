@@ -1,8 +1,8 @@
 """Inventory Signals"""
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from .models import StockTransaction, PurchaseOrderItem, Stock
-
+from ..models import StockTransaction, PurchaseOrderItem, Stock
+from django.db import models
 
 @receiver(post_save, sender=StockTransaction)
 def update_stock_on_transaction(sender, instance, created, **kwargs):
@@ -26,7 +26,6 @@ def update_stock_on_transaction(sender, instance, created, **kwargs):
             stock.quantity += instance.quantity
             stock.save()
 
-
 @receiver(post_save, sender=PurchaseOrderItem)
 def update_po_subtotal(sender, instance, **kwargs):
     """Update PO subtotal when items are added/modified"""
@@ -35,12 +34,8 @@ def update_po_subtotal(sender, instance, **kwargs):
     po.subtotal = subtotal
     po.save()
 
-
 @receiver(pre_save, sender=Stock)
 def validate_stock_quantity(sender, instance, **kwargs):
     """Ensure stock quantity doesn't go negative"""
     if instance.quantity < 0:
         instance.quantity = 0
-
-
-from django.db import models
