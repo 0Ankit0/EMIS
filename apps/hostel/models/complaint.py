@@ -3,7 +3,7 @@ from django.utils import timezone
 from apps.core.models import TimeStampedModel
 from django.contrib.auth import get_user_model
 from .room import Room
-from .managers import ComplaintManager
+from ..managers import ComplaintManager
 
 User = get_user_model()
 

@@ -667,7 +667,7 @@ class TrainingParticipant(TimeStampedModel):
 
 
 # Import and add managers
-from .managers import (
+from ..managers import (
     EmployeeManager, LeaveManager, PayrollManager,
     JobPostingManager, JobApplicationManager
 )

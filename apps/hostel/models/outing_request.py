@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from apps.core.models import TimeStampedModel
 from django.contrib.auth import get_user_model
-from .managers import OutingRequestManager
+from ..managers import OutingRequestManager
 
 User = get_user_model()
 

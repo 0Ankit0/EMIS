@@ -2,53 +2,56 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
-from apps.inventory.models.asset import Asset
-from apps.inventory.models.supplier import Supplier
 from apps.core.models import TimeStampedModel
+
 User = get_user_model()
 
-class MaintenanceRecord(TimeStampedModel):
-    """Asset Maintenance Record"""
-    
-    class MaintenanceType(models.TextChoices):
-        PREVENTIVE = 'preventive', 'Preventive Maintenance'
-        CORRECTIVE = 'corrective', 'Corrective Maintenance'
-        REPAIR = 'repair', 'Repair'
-        CALIBRATION = 'calibration', 'Calibration'
-        INSPECTION = 'inspection', 'Inspection'
+
+class Requisition(TimeStampedModel):
+    """Stock/Item Requisition"""
     
     class Status(models.TextChoices):
-        SCHEDULED = 'scheduled', 'Scheduled'
-        IN_PROGRESS = 'in_progress', 'In Progress'
-        COMPLETED = 'completed', 'Completed'
+        PENDING = 'pending', 'Pending'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+        PARTIALLY_FULFILLED = 'partially_fulfilled', 'Partially Fulfilled'
+        FULFILLED = 'fulfilled', 'Fulfilled'
         CANCELLED = 'cancelled', 'Cancelled'
     
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='maintenance_records')
+    requisition_number = models.CharField(max_length=50, unique=True, db_index=True)
     
-    maintenance_type = models.CharField(max_length=20, choices=MaintenanceType.choices)
+    requested_by = models.ForeignKey(User, on_delete=models.PROTECT, related_name='requisitions')
+    department = models.CharField(max_length=200)
     
-    scheduled_date = models.DateField()
-    completed_date = models.DateField(null=True, blank=True)
+    request_date = models.DateField(default=timezone.now)
+    required_date = models.DateField()
     
-    description = models.TextField()
-    work_performed = models.TextField(blank=True)
+    purpose = models.TextField()
     
-    cost = models.DecimalField(max_digits=10, decimal_places=2, default=0, validators=[MinValueValidator(0)])
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING, db_index=True)
     
-    vendor = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True, related_name='maintenance_jobs')
-    
-    performed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='performed_maintenance')
-    
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.SCHEDULED)
-    
-    next_maintenance_date = models.DateField(null=True, blank=True)
+    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_requisitions')
+    approval_date = models.DateTimeField(null=True, blank=True)
+    rejection_reason = models.TextField(blank=True)
     
     class Meta:
-        db_table = 'inventory_maintenance'
-        ordering = ['-scheduled_date']
-        verbose_name = 'Maintenance Record'
-        verbose_name_plural = 'Maintenance Records'
+        db_table = 'inventory_requisitions'
+        ordering = ['-request_date']
+        verbose_name = 'Requisition'
+        verbose_name_plural = 'Requisitions'
+        indexes = [
+            models.Index(fields=['requisition_number']),
+            models.Index(fields=['status']),
+        ]
     
     def __str__(self):
-        return f"{self.asset.asset_number} - {self.maintenance_type} ({self.scheduled_date})"
+        return f"{self.requisition_number} - {self.requested_by.get_full_name()}"
+    
+    def save(self, *args, **kwargs):
+        if not self.requisition_number:
+            year = timezone.now().year
+            from django.db.models import Count
+            count = Requisition.objects.filter(created_at__year=year).count() + 1
+            self.requisition_number = f"REQ-{year}-{count:06d}"
+        super().save(*args, **kwargs)
 

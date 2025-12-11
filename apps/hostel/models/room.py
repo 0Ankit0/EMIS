@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from apps.core.models import TimeStampedModel
-from .managers import RoomManager
+from ..managers import RoomManager
 
 class Room(TimeStampedModel):
     """Room in a Hostel"""

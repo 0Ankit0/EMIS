@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 from apps.core.models import TimeStampedModel
-from .managers import HostelManager
+from ..managers import HostelManager
 from decimal import Decimal
 
 User = get_user_model()
