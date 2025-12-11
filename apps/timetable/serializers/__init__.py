@@ -2,12 +2,39 @@
 Timetable Serializers
 """
 from rest_framework import serializers
-from .models import TimetableItem
+from ..models import AcademicYear, Semester, ClassPeriod, Timetable, Holiday
 
 
-class TimetableItemSerializer(serializers.ModelSerializer):
-    """
-    Serializer for TimetableItem
+class AcademicYearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AcademicYear
+        fields = '__all__'
+
+
+class SemesterSerializer(serializers.ModelSerializer):
+    academic_year_name = serializers.CharField(source='academic_year.name', read_only=True)
+    
+    class Meta:
+        model = Semester
+        fields = '__all__'
+
+
+class ClassPeriodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClassPeriod
+        fields = '__all__'
+
+
+class TimetableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Timetable
+        fields = '__all__'
+
+
+class HolidaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Holiday
+        fields = '__all__'
     """
     created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
     
