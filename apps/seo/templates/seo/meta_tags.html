@@ -1,0 +1,32 @@
+{% load static %}
+<!-- SEO Meta Tags -->
+{% if seo %}
+<!-- Basic Meta -->
+<title>{{ seo.meta_title }}</title>
+<meta name="description" content="{{ seo.meta_description }}">
+{% if seo.meta_keywords %}<meta name="keywords" content="{{ seo.meta_keywords }}">{% endif %}
+{% if seo.canonical_url %}<link rel="canonical" href="{{ seo.canonical_url }}">{% endif %}
+<meta name="robots" content="{{ seo.robots }}">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="{{ seo.og_type|default:'website' }}">
+<meta property="og:title" content="{{ seo.og_title }}">
+<meta property="og:description" content="{{ seo.og_description }}">
+{% if seo.og_url %}<meta property="og:url" content="{{ seo.og_url }}">{% endif %}
+{% if seo.og_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ seo.og_image.url }}">{% endif %}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="{{ seo.twitter_card }}">
+<meta name="twitter:title" content="{{ seo.twitter_title }}">
+<meta name="twitter:description" content="{{ seo.twitter_description }}">
+{% if seo.twitter_site %}<meta name="twitter:site" content="{{ seo.twitter_site }}">{% endif %}
+{% if seo.twitter_creator %}<meta name="twitter:creator" content="{{ seo.twitter_creator }}">{% endif %}
+{% if seo.twitter_image %}<meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ seo.twitter_image.url }}">{% endif %}
+
+<!-- Structured Data (JSON-LD) -->
+{% if seo.schema_markup %}
+<script type="application/ld+json">
+{{ seo.schema_markup|safe }}
+</script>
+{% endif %}
+{% endif %}

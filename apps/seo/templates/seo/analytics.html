@@ -1,0 +1,11 @@
+<!-- Analytics Scripts -->
+{% for script in scripts %}
+<!-- {{ script.name }} -->
+{% if script.tracking_id %}
+<!-- Platform: {{ script.get_platform_display }} -->
+<!-- Tracking ID: {{ script.tracking_id }} -->
+{% endif %}
+{% if script.script_code %}
+{{ script.script_code|safe }}
+{% endif %}
+{% endfor %}
