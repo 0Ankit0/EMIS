@@ -3,10 +3,9 @@ from django.dispatch import receiver
 from django.contrib.auth import get_user_model
 from apps.students.models import Student
 from apps.faculty.models import Faculty
-from .models import Dashboard, StudentPortalProfile, FacultyPortalProfile
+from ..models import Dashboard, StudentPortalProfile, FacultyPortalProfile
 
 User = get_user_model()
-
 
 @receiver(post_save, sender=Student)
 def create_student_portal_profile(sender, instance, created, **kwargs):
@@ -17,7 +16,6 @@ def create_student_portal_profile(sender, instance, created, **kwargs):
             user=instance.user,
             defaults={'role': 'student'}
         )
-
 
 @receiver(post_save, sender=Faculty)
 def create_faculty_portal_profile(sender, instance, created, **kwargs):

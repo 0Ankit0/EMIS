@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
 from django.db.models import Q
-from .models import (
+from ..models import (
     Dashboard, Widget, QuickLink, Announcement, AnnouncementView,
     StudentPortalProfile, FacultyPortalProfile, PortalActivity, PortalSettings
 )

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from .models import (
+from ..models import (
     Dashboard, Widget, QuickLink, Announcement, AnnouncementView,
     StudentPortalProfile, FacultyPortalProfile, PortalActivity, PortalSettings
 )
