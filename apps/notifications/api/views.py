@@ -8,11 +8,11 @@ from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
 from django.utils import timezone
 
-from .models import (
+from ..models import (
     Notification, NotificationTemplate, NotificationPreference,
     ScheduledNotification, NotificationLog
 )
-from .serializers import (
+from ..serializers import (
     NotificationSerializer, NotificationListSerializer, NotificationCreateSerializer,
     NotificationTemplateSerializer, NotificationPreferenceSerializer,
     ScheduledNotificationSerializer, NotificationLogSerializer,

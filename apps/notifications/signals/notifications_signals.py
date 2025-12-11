@@ -4,10 +4,9 @@ Notifications Signals
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
-from .models import Notification, NotificationPreference, ScheduledNotification
+from ..models import Notification, NotificationPreference, ScheduledNotification
 
 User = get_user_model()
-
 
 @receiver(post_save, sender=User)
 def create_notification_preference(sender, instance, created, **kwargs):
@@ -16,7 +15,6 @@ def create_notification_preference(sender, instance, created, **kwargs):
     """
     if created:
         NotificationPreference.objects.get_or_create(user=instance)
-
 
 @receiver(post_save, sender=Notification)
 def notification_post_save(sender, instance, created, **kwargs):
@@ -44,7 +42,6 @@ def notification_post_save(sender, instance, created, **kwargs):
                     error_message=str(e)
                 )
 
-
 @receiver(pre_delete, sender=Notification)
 def notification_pre_delete(sender, instance, **kwargs):
     """
@@ -52,7 +49,6 @@ def notification_pre_delete(sender, instance, **kwargs):
     Clean up related data if necessary
     """
     pass
-
 
 @receiver(post_save, sender=ScheduledNotification)
 def scheduled_notification_post_save(sender, instance, created, **kwargs):
