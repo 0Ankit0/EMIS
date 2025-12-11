@@ -9,12 +9,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count, Avg
 from django.utils import timezone
 
-from .models import (
+from ..models import (
     Course, Module, Lesson, Enrollment, LessonProgress,
     Quiz, Question, QuizAttempt, Assignment, AssignmentSubmission,
     Discussion, DiscussionReply, Certificate
 )
-from .serializers import (
+from ..serializers import (
     CourseListSerializer, CourseDetailSerializer, ModuleSerializer,
     LessonSerializer, EnrollmentSerializer, LessonProgressSerializer,
     QuizSerializer, QuestionSerializer, QuizAttemptSerializer,

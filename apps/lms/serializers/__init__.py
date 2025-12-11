@@ -2,7 +2,7 @@
 LMS Serializers
 """
 from rest_framework import serializers
-from .models import (
+from ..models import (
     Course, Module, Lesson, Enrollment, LessonProgress,
     Quiz, Question, QuizAttempt, QuizAnswer,
     Assignment, AssignmentSubmission, Discussion, DiscussionReply, Certificate
