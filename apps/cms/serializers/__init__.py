@@ -1,36 +1,27 @@
-"""
-Cms Serializers
-"""
-from rest_framework import serializers
-from .models import CmsItem
+"""CMS Serializers"""
+from .category import CategorySerializer
+from .tag import TagSerializer
+from .page import PageSerializer, PageListSerializer
+from .post import PostSerializer, PostListSerializer
+from .media import MediaSerializer
+from .comment import CommentSerializer
+from .menu import MenuSerializer, MenuItemSerializer
+from .slider_widget import SliderSerializer, WidgetSerializer
+from .newsletter_seo import NewsletterSerializer, SEOSerializer
 
-
-class CmsItemSerializer(serializers.ModelSerializer):
-    """
-    Serializer for CmsItem
-    """
-    created_by_name = serializers.CharField(source='created_by.get_full_name', read_only=True)
-    
-    class Meta:
-        model = CmsItem
-        fields = [
-            'id', 'name', 'description', 'status',
-            'created_by', 'created_by_name',
-            'created_at', 'updated_at'
-        ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
-    
-    def validate_name(self, value):
-        """Validate name field"""
-        if len(value) < 3:
-            raise serializers.ValidationError("Name must be at least 3 characters long")
-        return value
-
-
-class CmsItemListSerializer(serializers.ModelSerializer):
-    """
-    Lightweight serializer for listing cms items
-    """
-    class Meta:
-        model = CmsItem
-        fields = ['id', 'name', 'status', 'created_at']
+__all__ = [
+    'CategorySerializer',
+    'TagSerializer',
+    'PageSerializer',
+    'PageListSerializer',
+    'PostSerializer',
+    'PostListSerializer',
+    'MediaSerializer',
+    'CommentSerializer',
+    'MenuSerializer',
+    'MenuItemSerializer',
+    'SliderSerializer',
+    'WidgetSerializer',
+    'NewsletterSerializer',
+    'SEOSerializer',
+]
