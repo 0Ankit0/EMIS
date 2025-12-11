@@ -7,6 +7,14 @@ from apps.authentication.models import User
 class Student(User):
     """Student model extending User with student-specific fields"""
     
+    class Status(models.TextChoices):
+        ACTIVE = 'active', 'Active'
+        ON_LEAVE = 'on_leave', 'On Leave'
+        GRADUATED = 'graduated', 'Graduated'
+        WITHDRAWN = 'withdrawn', 'Withdrawn'
+        SUSPENDED = 'suspended', 'Suspended'
+        EXPELLED = 'expelled', 'Expelled'
+    
     student_id = models.CharField(max_length=20, unique=True, db_index=True, default='')
     admission_year = models.IntegerField(db_index=True, default=2024)
     
@@ -26,15 +34,7 @@ class Student(User):
     emergency_contact_phone = models.CharField(max_length=20, default='')
     
     # Student Status
-    STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('on_leave', 'On Leave'),
-        ('graduated', 'Graduated'),
-        ('withdrawn', 'Withdrawn'),
-        ('suspended', 'Suspended'),
-        ('expelled', 'Expelled'),
-    ]
-    student_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active', db_index=True)
+    student_status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE, db_index=True)
     
     # Application reference
     application = models.OneToOneField('admissions.Application', on_delete=models.SET_NULL, 

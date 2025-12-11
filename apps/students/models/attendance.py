@@ -3,12 +3,11 @@ from apps.core.models import TimeStampedModel
 
 
 class AttendanceRecord(TimeStampedModel):
-    STATUS_CHOICES = [
-        ('present', 'Present'),
-        ('absent', 'Absent'),
-        ('late', 'Late'),
-        ('excused', 'Excused'),
-    ]
+    class Status(models.TextChoices):
+        PRESENT = 'present', 'Present'
+        ABSENT = 'absent', 'Absent'
+        LATE = 'late', 'Late'
+        EXCUSED = 'excused', 'Excused'
 
     student = models.ForeignKey(
         'students.Student',
@@ -23,7 +22,7 @@ class AttendanceRecord(TimeStampedModel):
     
     session_date = models.DateField()
     session_time = models.TimeField(null=True, blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=20, choices=Status.choices)
     
     # Additional tracking
     marked_at = models.DateTimeField(auto_now_add=True)

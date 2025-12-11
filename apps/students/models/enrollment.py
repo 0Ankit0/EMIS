@@ -7,14 +7,13 @@ from apps.core.models import TimeStampedModel
 class Enrollment(TimeStampedModel):
     """Model representing student enrollment in a program"""
     
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('confirmed', 'Confirmed'),
-        ('active', 'Active'),
-        ('completed', 'Completed'),
-        ('withdrawn', 'Withdrawn'),
-        ('suspended', 'Suspended'),
-    ]
+    class Status(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        CONFIRMED = 'confirmed', 'Confirmed'
+        ACTIVE = 'active', 'Active'
+        COMPLETED = 'completed', 'Completed'
+        WITHDRAWN = 'withdrawn', 'Withdrawn'
+        SUSPENDED = 'suspended', 'Suspended'
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     student = models.ForeignKey('students.Student', on_delete=models.CASCADE, related_name='enrollments')
@@ -30,7 +29,7 @@ class Enrollment(TimeStampedModel):
     actual_end_date = models.DateField(null=True, blank=True)
     
     # Status
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING, db_index=True)
     
     # Application reference
     application = models.ForeignKey('admissions.Application', on_delete=models.SET_NULL, 
