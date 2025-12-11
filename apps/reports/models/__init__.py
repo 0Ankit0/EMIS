@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.validators import FileExtensionValidator
 from apps.core.models import TimeStampedModel
-from .managers import ReportTemplateManager, GeneratedReportManager
+from ..managers import ReportTemplateManager, GeneratedReportManager
 
 User = get_user_model()
 

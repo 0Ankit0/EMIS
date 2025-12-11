@@ -4,7 +4,7 @@ from django.core.validators import FileExtensionValidator
 from apps.core.models import TimeStampedModel
 from .report_category import ReportCategory
 from .report_format import ReportFormat
-from .managers import ReportTemplateManager
+from ..managers import ReportTemplateManager
 
 User = get_user_model()
 

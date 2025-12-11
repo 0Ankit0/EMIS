@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from apps.core.models import TimeStampedModel
 from .report_template import ReportTemplate
 from .report_format import ReportFormat
-from .managers import GeneratedReportManager
+from ..managers import GeneratedReportManager
 
 User = get_user_model()
 
