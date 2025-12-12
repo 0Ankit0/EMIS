@@ -163,7 +163,7 @@ class BulkAttendanceForm(forms.Form):
     """Form for marking bulk attendance"""
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
     status = forms.ChoiceField(
-        choices=FacultyAttendance.STATUS_CHOICES,
+        choices=FacultyAttendance.Status.choices,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     faculty_ids = forms.MultipleChoiceField(
