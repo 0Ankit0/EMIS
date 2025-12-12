@@ -3,7 +3,8 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from apps.students.models import Student
 from apps.faculty.models import Faculty
-from apps.courses.models import Course, Enrollment
+from apps.courses.models import Course
+from apps.lms.models import Enrollment
 
 User = get_user_model()
 
