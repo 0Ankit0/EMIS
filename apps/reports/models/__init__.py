@@ -28,11 +28,51 @@ class ReportFormat(models.TextChoices):
     EXCEL = 'excel', 'Excel'
     CSV = 'csv', 'CSV'
 
-    # Modularized reports models
-    from .report_category import ReportCategory
-    from .report_format import ReportFormat
-    from .report_template import ReportTemplate
-    from .generated_report import GeneratedReport
+
+class ReportTemplate(TimeStampedModel):
+    """Report template model"""
+    name = models.CharField(max_length=100)
+    
+    # Other fields would be here - placeholder for now
+    
+    class Meta:
+        db_table = 'report_templates'
+        ordering = ['name']
+        verbose_name = 'Report Template'
+        verbose_name_plural = 'Report Templates'
+    
+    def __str__(self):
+        return self.name
+
+
+class GeneratedReport(TimeStampedModel):
+    """Generated report model"""
+    template = models.ForeignKey(
+        ReportTemplate,
+        on_delete=models.CASCADE,
+        related_name='generated_reports'
+    )
+    
+    class Meta:
+        db_table = 'generated_reports'
+        ordering = ['-created_at']
+        verbose_name = 'Generated Report'
+        verbose_name_plural = 'Generated Reports'
+    
+    def __str__(self):
+        return f"{self.template.name}"
+
+
+class ScheduledReport(TimeStampedModel):
+    """
+    Scheduled report configuration
+    """
+    name = models.CharField(max_length=100)
+    template = models.ForeignKey(
+        ReportTemplate,
+        on_delete=models.CASCADE,
+        related_name='schedules'
+    )
     
     # Schedule configuration
     schedule_type = models.CharField(
