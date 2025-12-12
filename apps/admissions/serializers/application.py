@@ -56,7 +56,7 @@ class ApplicationResponseSerializer(serializers.ModelSerializer):
 class ApplicationStatusUpdateSerializer(serializers.Serializer):
     """Serializer for updating application status"""
     
-    status = serializers.ChoiceField(choices=Application.STATUS_CHOICES)
+    status = serializers.ChoiceField(choices=Application.Status.choices)
     review_notes = serializers.CharField(required=False, allow_blank=True)
     merit_score = serializers.DecimalField(max_digits=5, decimal_places=2, required=False, allow_null=True)
     rank = serializers.IntegerField(required=False, allow_null=True)

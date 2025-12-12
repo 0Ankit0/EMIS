@@ -11,6 +11,7 @@ from .permission import Permission
 from .role import Role
 from .role_permission import RolePermission
 from .user_role import UserRole
+from .resource_group import ResourceGroup
 
 __all__ = [
     'UserManager',
@@ -25,5 +26,6 @@ __all__ = [
     'Role',
     'RolePermission',
     'UserRole',
+    'ResourceGroup',
 ]
 
