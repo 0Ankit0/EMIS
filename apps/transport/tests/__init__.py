@@ -4,7 +4,7 @@ Transport Tests
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from .models import TransportItem
+from apps.transport.models import TransportItem
 
 User = get_user_model()
 

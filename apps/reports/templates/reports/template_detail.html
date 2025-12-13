@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ template.name }} Details{% endblock %}
+
+{% block content %}
+<h1>{{ template.name }}</h1>
+<p>{{ template.description }}</p>
+<p>Category: {{ template.get_category_display }}</p>
+<p>Default format: {{ template.default_format }}</p>
+{% if recent_generated %}
+  <h3>Recent Generated Reports</h3>
+  <ul>
+  {% for r in recent_generated %}
+    <li><a href="{% url 'reports:generated_detail' r.pk %}">{{ r.title }}</a> - {{ r.generated_at }}</li>
+  {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}

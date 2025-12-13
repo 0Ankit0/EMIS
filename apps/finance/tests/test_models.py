@@ -5,10 +5,7 @@ from django.utils import timezone
 from decimal import Decimal
 from datetime import timedelta
 
-from .models import (
-    FeeStructure, Invoice, Payment, ExpenseCategory, Expense,
-    Budget, BudgetAllocation, Scholarship, ScholarshipApplication
-)
+from apps.finance.models import FeeStructure, Invoice, Payment, ExpenseCategory, Expense, Budget, BudgetAllocation, Scholarship, ScholarshipApplication
 
 User = get_user_model()
 

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Generated Reports{% endblock %}
+
+{% block content %}
+<h1>Generated Reports</h1>
+{% if reports %}
+<ul>
+  {% for r in reports %}
+  <li><a href="{% url 'reports:generated_detail' r.pk %}">{{ r.title }}</a> - {{ r.generated_at }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No generated reports found.</p>
+{% endif %}
+{% endblock %}

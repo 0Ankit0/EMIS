@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Generated Report: {{ report.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ report.title }}</h1>
+<p>Template: {{ report.template.name }}</p>
+<p>Generated at: {{ report.generated_at }}</p>
+{% if report.file %}
+  <p><a href="{% url 'reports:download_report' report.pk %}">Download file</a></p>
+{% endif %}
+{% endblock %}

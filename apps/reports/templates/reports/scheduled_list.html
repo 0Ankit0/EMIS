@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Scheduled Reports{% endblock %}
+
+{% block content %}
+<h1>Scheduled Reports</h1>
+{% if scheduled_reports %}
+<ul>
+  {% for s in scheduled_reports %}
+  <li>{{ s.name }} - {{ s.schedule_type }} - {{ s.next_run }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No scheduled reports.</p>
+{% endif %}
+{% endblock %}

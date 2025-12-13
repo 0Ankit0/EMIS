@@ -4,7 +4,7 @@ Attendance Tests
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from .models import AttendanceItem
+from apps.attendance.models import AttendanceItem
 
 User = get_user_model()
 

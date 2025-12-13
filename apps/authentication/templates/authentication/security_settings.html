@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Security Settings - EMIS{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h3>Security Settings</h3>
+    <p>Manage two-factor auth, backup codes and recent account activity here.</p>
+    <div class="card mt-3">
+        <div class="card-body">
+            <a href="{% url 'authentication:setup_2fa' %}" class="btn btn-primary">Setup Two-Factor</a>
+            <a href="{% url 'authentication:setup_2fa' %}" class="btn btn-secondary">View Backup Codes</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

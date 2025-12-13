@@ -4,8 +4,8 @@ from django.contrib.auth import get_user_model
 from decimal import Decimal
 from datetime import date, timedelta
 
-from .models import Category, Location, Item, Stock, PurchaseOrder, Asset
-from .utils import get_total_stock, check_reorder_required
+from apps.inventory.models import Category, Location, Item, Stock, PurchaseOrder, Asset
+from apps.inventory.utils import get_total_stock, check_reorder_required
 
 User = get_user_model()
 
@@ -85,7 +85,7 @@ class PurchaseOrderTestCase(TestCase):
     """Test PurchaseOrder model"""
     
     def test_po_number_generation(self):
-        from .models import Supplier
+        from apps.inventory.models import Supplier
         
         supplier = Supplier.objects.create(
             name='Test Supplier',

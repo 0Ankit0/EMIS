@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Report Templates{% endblock %}
+
+{% block content %}
+<h1>Report Templates</h1>
+{% if templates %}
+<ul>
+  {% for t in templates %}
+  <li><a href="{% url 'reports:template_detail' t.pk %}">{{ t.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No report templates found.</p>
+{% endif %}
+{% endblock %}

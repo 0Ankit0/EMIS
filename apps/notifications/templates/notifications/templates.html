@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Notification Templates{% endblock %}
+
+{% block content %}
+<h1>Notification Templates</h1>
+{% for t in templates %}
+  <div><a href="{% url 'notifications:template_detail' t.pk %}">{{ t.name }}</a></div>
+{% endfor %}
+{% endblock %}

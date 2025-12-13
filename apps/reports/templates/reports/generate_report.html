@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Generate Report: {{ template.name }}{% endblock %}
+
+{% block content %}
+<h1>Generate: {{ template.name }}</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ param_form.as_p }}
+  <button type="submit">Generate</button>
+</form>
+{% endblock %}

@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from decimal import Decimal
 
-from .models import (
+from apps.hostel.models import (
     Hostel, Floor, Room, RoomAllocation, HostelFee, MessMenu,
     VisitorLog, Complaint, OutingRequest, Attendance
 )

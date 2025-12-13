@@ -73,7 +73,7 @@ class StudentTransportAssignmentAdmin(admin.ModelAdmin):
     """Admin for Student Transport Assignment"""
     list_display = ['student', 'route', 'pickup_stop', 'drop_stop', 'payment_status', 'is_active']
     list_filter = ['is_active', 'payment_status', 'route']
-    search_fields = ['student__first_name', 'student__last_name', 'student__student_id']
+    search_fields = ['student__user__first_name', 'student__user__last_name', 'student__student_id']
     readonly_fields = ['created_at', 'updated_at']
     date_hierarchy = 'start_date'
     ordering = ['-created_at']

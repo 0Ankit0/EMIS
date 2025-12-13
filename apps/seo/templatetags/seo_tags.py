@@ -11,7 +11,7 @@ def render_seo_meta(obj):
     """Render SEO meta tags for an object"""
     try:
         content_type = ContentType.objects.get_for_model(obj)
-        seo = SEOMetadata.objects.get(content_type=content_type, object_id=obj.pk)
+        seo = SEOMetadata.objects.get(content_type=content_type, object_id=str(obj.pk))
     except SEOMetadata.DoesNotExist:
         seo = None
     
@@ -38,7 +38,7 @@ def get_seo_meta(obj, field='meta_title'):
     """Get specific SEO meta field for an object"""
     try:
         content_type = ContentType.objects.get_for_model(obj)
-        seo = SEOMetadata.objects.get(content_type=content_type, object_id=obj.pk)
+        seo = SEOMetadata.objects.get(content_type=content_type, object_id=str(obj.pk))
         return getattr(seo, field, '')
     except SEOMetadata.DoesNotExist:
         return ''

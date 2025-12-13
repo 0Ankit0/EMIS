@@ -5,8 +5,8 @@ from django.utils import timezone
 from decimal import Decimal
 from datetime import date, timedelta
 
-from .models import Department, Designation, Employee, Attendance, Leave, Payroll
-from .utils import calculate_leave_balance, generate_payroll_for_employee
+from apps.hr.models import Department, Designation, Employee, Attendance, Leave, Payroll
+from apps.hr.utils import calculate_leave_balance, generate_payroll_for_employee
 
 User = get_user_model()
 
