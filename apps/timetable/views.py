@@ -57,7 +57,7 @@ def dashboard(request):
         'title': 'Timetable Dashboard',
     }
     
-    return render(request, 'dashboard.html', context)
+    return render(request, timetable/dashboard.htmltimetable/'timetable/dashboard.html, context)
 
 
 # ============================================================================
@@ -103,7 +103,7 @@ def timetable_list(request):
         'title': 'Timetable Entries',
     }
     
-    return render(request, 'view_timetable.html', context)
+    return render(request, timetable/view_timetable.htmltimetable/'timetable/view_timetable.html, context)
 
 
 @login_required
@@ -134,7 +134,7 @@ def timetable_create(request):
         'title': 'Create Timetable Entry',
     }
     
-    return render(request, 'create_timetable.html', context)
+    return render(request, timetable/create_timetable.htmltimetable/'timetable/create_timetable.html, context)
 
 
 @login_required
@@ -161,7 +161,7 @@ def timetable_update(request, pk):
         'title': 'Update Timetable Entry',
     }
     
-    return render(request, 'create_timetable.html', context)
+    return render(request, timetable/create_timetable.htmltimetable/'timetable/create_timetable.html, context)
 
 
 @login_required
@@ -213,7 +213,7 @@ def class_schedule(request):
         'title': 'Class Schedule',
     }
     
-    return render(request, 'class_schedule.html', context)
+    return render(request, timetable/class_schedule.htmltimetable/'timetable/class_schedule.html, context)
 
 
 @login_required
@@ -242,7 +242,7 @@ def teacher_schedule(request):
         'title': 'Teacher Schedule',
     }
     
-    return render(request, 'teacher_schedule.html', context)
+    return render(request, timetable/teacher_schedule.htmltimetable/'timetable/teacher_schedule.html, context)
 
 
 @login_required
@@ -272,7 +272,7 @@ def room_allocation(request):
         'title': 'Room Allocation',
     }
     
-    return render(request, 'room_allocation.html', context)
+    return render(request, timetable/room_allocation.htmltimetable/'timetable/room_allocation.html, context)
 
 
 # ============================================================================
@@ -289,7 +289,7 @@ def room_list(request):
         'title': 'Rooms',
     }
     
-    return render(request, 'room_list.html', context)
+    return render(request, timetable/room_list.htmltimetable/'timetable/room_list.html, context)
 
 
 @login_required
@@ -310,7 +310,7 @@ def room_create(request):
         'title': 'Create Room',
     }
     
-    return render(request, 'room_form.html', context)
+    return render(request, timetable/room_form.htmltimetable/'timetable/room_form.html, context)
 
 
 @login_required
@@ -323,7 +323,7 @@ def timeslot_list(request):
         'title': 'Time Slots',
     }
     
-    return render(request, 'timeslot_list.html', context)
+    return render(request, timetable/timeslot_list.htmltimetable/'timetable/timeslot_list.html, context)
 
 
 # ============================================================================

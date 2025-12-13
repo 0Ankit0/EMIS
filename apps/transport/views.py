@@ -62,7 +62,7 @@ def dashboard(request):
         'title': 'Transport Dashboard',
     }
     
-    return render(request, 'dashboard.html', context)
+    return render(request, transport/dashboard.htmltransport/'transport/dashboard.html, context)
 
 
 # ============================================================================
@@ -99,7 +99,7 @@ def vehicle_list(request):
         'title': 'Vehicles',
     }
     
-    return render(request, 'vehicle_management.html', context)
+    return render(request, transport/vehicle_management.htmltransport/'transport/vehicle_management.html, context)
 
 
 @login_required
@@ -120,7 +120,7 @@ def vehicle_create(request):
         'title': 'Create Vehicle',
     }
     
-    return render(request, 'vehicle_form.html', context)
+    return render(request, transport/vehicle_form.htmltransport/'transport/vehicle_form.html, context)
 
 
 @login_required
@@ -144,7 +144,7 @@ def vehicle_update(request, pk):
         'title': 'Update Vehicle',
     }
     
-    return render(request, 'vehicle_form.html', context)
+    return render(request, transport/vehicle_form.htmltransport/'transport/vehicle_form.html, context)
 
 
 @login_required
@@ -181,7 +181,7 @@ def driver_list(request):
         'title': 'Drivers',
     }
     
-    return render(request, 'driver_management.html', context)
+    return render(request, transport/driver_management.htmltransport/'transport/driver_management.html, context)
 
 
 @login_required
@@ -202,7 +202,7 @@ def driver_create(request):
         'title': 'Create Driver',
     }
     
-    return render(request, 'driver_form.html', context)
+    return render(request, transport/driver_form.htmltransport/'transport/driver_form.html, context)
 
 
 # ============================================================================
@@ -228,7 +228,7 @@ def route_list(request):
         'title': 'Routes',
     }
     
-    return render(request, 'route_management.html', context)
+    return render(request, transport/route_management.htmltransport/'transport/route_management.html, context)
 
 
 @login_required
@@ -249,7 +249,7 @@ def route_create(request):
         'title': 'Create Route',
     }
     
-    return render(request, 'route_form.html', context)
+    return render(request, transport/route_form.htmltransport/'transport/route_form.html, context)
 
 
 @login_required
@@ -264,7 +264,7 @@ def route_detail(request, pk):
         'title': f'Route: {route.route_number}',
     }
     
-    return render(request, 'route_detail.html', context)
+    return render(request, transport/route_detail.htmltransport/'transport/route_detail.html, context)
 
 
 # ============================================================================
@@ -296,7 +296,7 @@ def student_assignment_list(request):
         'title': 'Student Assignments',
     }
     
-    return render(request, 'student_assignment.html', context)
+    return render(request, transport/student_assignment.htmltransport/'transport/student_assignment.html, context)
 
 
 @login_required
@@ -317,7 +317,7 @@ def student_assignment_create(request):
         'title': 'Assign Student',
     }
     
-    return render(request, 'student_assignment_form.html', context)
+    return render(request, transport/student_assignment_form.htmltransport/'transport/student_assignment_form.html, context)
 
 
 # ============================================================================
@@ -344,7 +344,7 @@ def maintenance_list(request):
         'title': 'Vehicle Maintenance',
     }
     
-    return render(request, 'maintenance.html', context)
+    return render(request, transport/maintenance.htmltransport/'transport/maintenance.html, context)
 
 
 @login_required
@@ -365,7 +365,7 @@ def maintenance_create(request):
         'title': 'Create Maintenance Record',
     }
     
-    return render(request, 'maintenance_form.html', context)
+    return render(request, transport/maintenance_form.htmltransport/'transport/maintenance_form.html, context)
 
 
 # ============================================================================
@@ -395,7 +395,7 @@ def fuel_log_list(request):
         'title': 'Fuel Logs',
     }
     
-    return render(request, 'fuel_log.html', context)
+    return render(request, transport/fuel_log.htmltransport/'transport/fuel_log.html, context)
 
 
 @login_required
@@ -416,7 +416,7 @@ def fuel_log_create(request):
         'title': 'Create Fuel Log',
     }
     
-    return render(request, 'fuel_log_form.html', context)
+    return render(request, transport/fuel_log_form.htmltransport/'transport/fuel_log_form.html, context)
 
 
 # ============================================================================
@@ -445,7 +445,7 @@ def route_tracking_list(request):
         'title': 'Route Tracking',
     }
     
-    return render(request, 'route_tracking.html', context)
+    return render(request, transport/route_tracking.htmltransport/'transport/route_tracking.html, context)
 
 
 @login_required
@@ -466,7 +466,7 @@ def route_tracking_create(request):
         'title': 'Create Route Tracking',
     }
     
-    return render(request, 'route_tracking_form.html', context)
+    return render(request, transport/route_tracking_form.htmltransport/'transport/route_tracking_form.html, context)
 
 
 # ============================================================================
@@ -495,7 +495,7 @@ def reports(request):
         'title': 'Transport Reports',
     }
     
-    return render(request, 'reports.html', context)
+    return render(request, transport/reports.htmltransport/'transport/reports.html, context)
 
 
 # ============================================================================

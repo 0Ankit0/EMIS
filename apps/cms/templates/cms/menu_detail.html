@@ -1,0 +1,31 @@
+{% extends 'core/base_module.html' %}
+{% load static %}
+
+{% block title %}{{ menu.title }} - CMS{% endblock %}
+
+{% block module_sidebar %}
+    {% include 'cms/sidebar.html' %}
+{% endblock %}
+
+{% block module_content %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-6 flex justify-between items-start">
+        <div><h1 class="text-3xl font-bold text-gray-800">{{ menu.title }}</h1></div>
+        <div class="flex gap-2">
+            <a href="{% url 'cms:menu_update' menu.pk %}" class="btn btn-primary"><i class="fas fa-edit mr-2"></i>Edit</a>
+            <form method="post" action="{% url 'cms:menu_delete' menu.pk %}" onsubmit="return confirm('Delete?');"> {% csrf_token %}<button type="submit" class="btn btn-danger"><i class="fas fa-trash mr-2"></i>Delete</button></form>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="grid grid-cols-2 gap-4">
+            <div><span class="text-sm font-semibold text-gray-500">URL:</span><p class="text-gray-800">{{ menu.url }}</p></div>
+            <div><span class="text-sm font-semibold text-gray-500">Parent:</span><p class="text-gray-800">{{ menu.parent.title|default:"-" }}</p></div>
+            <div><span class="text-sm font-semibold text-gray-500">Order:</span><p class="text-gray-800">{{ menu.order }}</p></div>
+            <div><span class="text-sm font-semibold text-gray-500">Status:</span><p class="text-gray-800">{% if menu.is_active %}Active{% else %}Inactive{% endif %}</p></div>
+        </div>
+    </div>
+
+    <div class="mt-6"><a href="{% url 'cms:menu_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left mr-2"></i>Back</a></div>
+</div>
+{% endblock %}

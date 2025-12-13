@@ -1,0 +1,69 @@
+{% extends 'core/base_module.html' %}
+{% load static %}
+
+{% block title %}Hr Dashboard - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/hr_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-user-friends mr-3"></i>Hr Dashboard
+        </h2>
+        <p class="text-gray-600">Human Resources management</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 font-semibold uppercase">Total Items</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-2">0</h3>
+                </div>
+                <div class="bg-blue-100 rounded-full p-4">
+                    <i class="fas fa-user-friends text-2xl text-blue-500"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+            <i class="fas fa-bolt mr-2"></i>Quick Actions
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a href="{% url 'hr:employees' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Employees</span>
+            </a>
+            <a href="{% url 'hr:add_employee' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Add Employee</span>
+            </a>
+            <a href="{% url 'hr:attendance' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Attendance</span>
+            </a>
+            <a href="{% url 'hr:leave_management' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Leave Management</span>
+            </a>
+            <a href="{% url 'hr:payroll' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Payroll</span>
+            </a>
+            <a href="{% url 'hr:reports' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <span class="font-semibold">Reports</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+            <i class="fas fa-list mr-2"></i>Recent Activity
+        </h3>
+        <p class="text-gray-600">No recent activity to display.</p>
+    </div>
+</div>
+{% endwith %}
+{% endblock %}

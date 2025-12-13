@@ -1,0 +1,33 @@
+{% extends 'core/base_module.html' %}
+{% load static %}
+
+{% block title %}Scheduled Reports - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/reports_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Scheduled Reports</h2>
+            <nav class="text-sm">
+                <a href="{% url 'core:dashboard' %}" class="text-blue-600 hover:text-blue-800">Home</a>
+                <span class="mx-2">/</span>
+                <a href="{% url 'reports:dashboard' %}" class="text-blue-600 hover:text-blue-800">Reports</a>
+                <span class="mx-2">/</span>
+                <span class="text-gray-600">Scheduled Reports</span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="text-center py-12">
+            <i class="fas fa-cog fa-spin text-6xl text-gray-300 mb-4"></i>
+            <p class="text-gray-600 text-lg">This page is under development</p>
+            <p class="text-gray-500 text-sm mt-2">Add your content here</p>
+        </div>
+    </div>
+</div>
+{% endwith %}
+{% endblock %}

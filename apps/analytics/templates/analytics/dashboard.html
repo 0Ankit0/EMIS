@@ -1,0 +1,219 @@
+{% extends 'core/base_module.html' %}
+{% load static %}
+
+{% block title %}Analytics Dashboard - EMIS{% endblock %}
+
+{% with sidebar_template='includes/analytics_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-chart-line mr-3"></i>Analytics Dashboard
+            </h2>
+            <p class="text-gray-600">Comprehensive insights and metrics</p>
+        </div>
+        <div class="flex space-x-3">
+            <select id="period-selector" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <option value="7" {% if selected_period == 7 %}selected{% endif %}>Last 7 Days</option>
+                <option value="30" {% if selected_period == 30 %}selected{% endif %}>Last 30 Days</option>
+                <option value="90" {% if selected_period == 90 %}selected{% endif %}>Last 90 Days</option>
+                <option value="365" {% if selected_period == 365 %}selected{% endif %}>Last Year</option>
+            </select>
+            <button onclick="refreshMetrics()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors">
+                <i class="fas fa-sync-alt mr-2"></i>Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Admissions Metrics -->
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-800">
+                <i class="fas fa-user-graduate mr-2"></i>Admissions Overview
+            </h3>
+            <a href="{% url 'analytics:admissions_analytics' %}" class="text-blue-600 hover:text-blue-800">
+                View Details <i class="fas fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 font-semibold uppercase">Total Applications</p>
+                        <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ summary.admissions_metrics.total_applications|default:0 }}</h3>
+                    </div>
+                    <div class="bg-blue-100 rounded-full p-4">
+                        <i class="fas fa-file-alt text-2xl text-blue-500"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 font-semibold uppercase">Under Review</p>
+                        <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ summary.admissions_metrics.under_review|default:0 }}</h3>
+                    </div>
+                    <div class="bg-yellow-100 rounded-full p-4">
+                        <i class="fas fa-search text-2xl text-yellow-500"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 font-semibold uppercase">Approved</p>
+                        <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ summary.admissions_metrics.approved|default:0 }}</h3>
+                    </div>
+                    <div class="bg-green-100 rounded-full p-4">
+                        <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600 font-semibold uppercase">Acceptance Rate</p>
+                        <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ summary.admissions_metrics.acceptance_rate|default:0 }}%</h3>
+                    </div>
+                    <div class="bg-purple-100 rounded-full p-4">
+                        <i class="fas fa-percentage text-2xl text-purple-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance & Finance Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Attendance Metrics -->
+        <div>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-calendar-check mr-2"></i>Attendance
+                </h3>
+                <a href="{% url 'analytics:attendance_analytics' %}" class="text-blue-600 hover:text-blue-800">
+                    View Details <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Attendance Rate</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ summary.attendance_metrics.attendance_rate|default:0 }}%</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Total Records</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ summary.attendance_metrics.total_records|default:0 }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Present</p>
+                        <p class="text-xl font-bold text-green-600">{{ summary.attendance_metrics.present|default:0 }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Absent</p>
+                        <p class="text-xl font-bold text-red-600">{{ summary.attendance_metrics.absent|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finance Metrics -->
+        <div>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">
+                    <i class="fas fa-dollar-sign mr-2"></i>Finance
+                </h3>
+                <a href="{% url 'analytics:financial_analytics' %}" class="text-blue-600 hover:text-blue-800">
+                    View Details <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Collection Rate</p>
+                        <p class="text-2xl font-bold text-gray-800">{{ summary.finance_metrics.collection_rate|default:0 }}%</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Total Collected</p>
+                        <p class="text-2xl font-bold text-green-600">${{ summary.finance_metrics.total_collected|default:0|floatformat:2 }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Pending</p>
+                        <p class="text-xl font-bold text-yellow-600">${{ summary.finance_metrics.total_pending|default:0|floatformat:2 }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Overdue</p>
+                        <p class="text-xl font-bold text-red-600">${{ summary.finance_metrics.total_overdue|default:0|floatformat:2 }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Academic Performance -->
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-gray-800">
+                <i class="fas fa-graduation-cap mr-2"></i>Academic Performance
+            </h3>
+            <a href="{% url 'analytics:academic_analytics' %}" class="text-blue-600 hover:text-blue-800">
+                View Details <i class="fas fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <p class="text-sm text-gray-600">Total Enrollments</p>
+                <p class="text-3xl font-bold text-gray-800 mt-2">{{ summary.course_metrics.total_enrollments|default:0 }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <p class="text-sm text-gray-600">Completed</p>
+                <p class="text-3xl font-bold text-green-600 mt-2">{{ summary.course_metrics.completed|default:0 }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <p class="text-sm text-gray-600">In Progress</p>
+                <p class="text-3xl font-bold text-blue-600 mt-2">{{ summary.course_metrics.in_progress|default:0 }}</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <p class="text-sm text-gray-600">Completion Rate</p>
+                <p class="text-3xl font-bold text-purple-600 mt-2">{{ summary.course_metrics.completion_rate|default:0 }}%</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function refreshMetrics() {
+    fetch("{% url 'analytics:api_refresh_metrics' %}", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error refreshing metrics: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while refreshing metrics');
+    });
+}
+
+document.getElementById('period-selector').addEventListener('change', function() {
+    window.location.href = '?period=' + this.value;
+});
+</script>
+
+{% endwith %}
+{% endblock %}

@@ -47,7 +47,7 @@ def dashboard(request):
         'recent_students': recent_students,
     }
     
-    return render(request, 'dashboard.html', context)
+    return render(request, students/dashboard.htmlstudents/'students/dashboard.html, context)
 
 
 # ============================================================================
@@ -110,7 +110,7 @@ def item_list(request):
         'title': 'Students List',
     }
     
-    return render(request, 'student_list.html', context)
+    return render(request, students/student_list.htmlstudents/'students/student_list.html, context)
 
 
 # ============================================================================
@@ -135,7 +135,7 @@ def item_detail(request, pk):
         'title': f'Student: {student.get_full_name()}',
     }
     
-    return render(request, 'student_detail.html', context)
+    return render(request, students/student_detail.htmlstudents/'students/student_detail.html, context)
 
 
 # ============================================================================
@@ -181,7 +181,7 @@ def item_create(request):
         'title': 'Create New Student',
     }
     
-    return render(request, 'student_form.html', context)
+    return render(request, students/student_form.htmlstudents/'students/student_form.html, context)
 
 
 # ============================================================================
@@ -226,7 +226,7 @@ def item_update(request, pk):
         'title': f'Update Student: {student.get_full_name()}',
     }
     
-    return render(request, 'student_form.html', context)
+    return render(request, students/student_form.htmlstudents/'students/student_form.html, context)
 
 
 # ============================================================================
@@ -465,7 +465,7 @@ def statistics(request):
         'title': 'Student Statistics',
     }
     
-    return render(request, 'statistics.html', context)
+    return render(request, students/statistics.htmlstudents/'students/statistics.html, context)
 
 
 # ============================================================================
@@ -509,4 +509,4 @@ def search(request):
         'title': 'Search Students',
     }
     
-    return render(request, 'search_results.html', context)
+    return render(request, students/search_results.htmlstudents/'students/search_results.html, context)

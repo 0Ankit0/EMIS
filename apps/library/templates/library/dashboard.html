@@ -1,0 +1,157 @@
+{% extends 'core/base_module.html' %}
+{% load static %}
+
+{% block title %}Library Dashboard - EMIS{% endblock %}
+
+{% with sidebar_template='includes/sidebars/library_sidebar.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">
+            <i class="fas fa-book mr-3"></i>Library Dashboard
+        </h2>
+        <p class="text-gray-600">Library management system</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 font-semibold uppercase">Total Books</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ total_books }}</h3>
+                </div>
+                <div class="bg-blue-100 rounded-full p-4">
+                    <i class="fas fa-book text-2xl text-blue-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 font-semibold uppercase">Available</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ available_books }}</h3>
+                </div>
+                <div class="bg-green-100 rounded-full p-4">
+                    <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 font-semibold uppercase">Issued</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ issued_books }}</h3>
+                </div>
+                <div class="bg-yellow-100 rounded-full p-4">
+                    <i class="fas fa-hand-holding text-2xl text-yellow-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500 hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 font-semibold uppercase">Overdue</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ overdue_books }}</h3>
+                </div>
+                <div class="bg-red-100 rounded-full p-4">
+                    <i class="fas fa-exclamation-triangle text-2xl text-red-500"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-all">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-600 font-semibold uppercase">Members</p>
+                    <h3 class="text-3xl font-bold text-gray-800 mt-2">{{ total_members }}</h3>
+                </div>
+                <div class="bg-purple-100 rounded-full p-4">
+                    <i class="fas fa-users text-2xl text-purple-500"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+            <i class="fas fa-bolt mr-2"></i>Quick Actions
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a href="{% url 'library:books_catalog' %}" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <i class="fas fa-book mr-2"></i>
+                <span class="font-semibold">Books Catalog</span>
+            </a>
+            <a href="{% url 'library:add_book' %}" class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <i class="fas fa-plus mr-2"></i>
+                <span class="font-semibold">Add Book</span>
+            </a>
+            <a href="{% url 'library:issue_book' %}" class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <i class="fas fa-hand-holding mr-2"></i>
+                <span class="font-semibold">Issue Book</span>
+            </a>
+            <a href="{% url 'library:return_book' %}" class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <i class="fas fa-undo mr-2"></i>
+                <span class="font-semibold">Return Book</span>
+            </a>
+            <a href="{% url 'library:issued_books' %}" class="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <i class="fas fa-list mr-2"></i>
+                <span class="font-semibold">Issued Books</span>
+            </a>
+            <a href="{% url 'library:overdue' %}" class="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg p-4 hover:-translate-y-1 hover:shadow-lg transition-all flex items-center justify-center">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <span class="font-semibold">Overdue Books</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-history mr-2"></i>Recent Issues
+            </h3>
+            {% if recent_issues %}
+                <div class="space-y-3">
+                    {% for issue in recent_issues %}
+                        <div class="border-l-4 border-blue-500 pl-4 py-2">
+                            <p class="font-semibold text-gray-800">{{ issue.book.title }}</p>
+                            <p class="text-sm text-gray-600">Issued to: {{ issue.borrower_name }}</p>
+                            <p class="text-xs text-gray-500">{{ issue.issue_date }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-600">No recent issues.</p>
+            {% endif %}
+        </div>
+
+        <!-- Popular Books -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-fire mr-2"></i>Popular Books
+            </h3>
+            {% if popular_books %}
+                <div class="space-y-3">
+                    {% for book in popular_books %}
+                        <div class="border-l-4 border-green-500 pl-4 py-2">
+                            <p class="font-semibold text-gray-800">{{ book.title }}</p>
+                            <p class="text-sm text-gray-600">by {{ book.author }}</p>
+                            <p class="text-xs text-gray-500">Issues: {{ book.issue_count }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-gray-600">No data available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endwith %}
+{% endblock %}
